@@ -205,7 +205,10 @@ namespace GBDotNet.Core
         private void Instruction_0x04_Increment_B()
         {
             Registers.B++;
-            //TODO: flags
+
+            Registers.SetFlagTo(Flags.Zero, Registers.B == 0);
+            Registers.SetFlagTo(Flags.HalfCarry, (Registers.B & 0b0000_1111) == 0);
+            Registers.ClearFlag(Flags.AddSubtract);
         }
 
         //...

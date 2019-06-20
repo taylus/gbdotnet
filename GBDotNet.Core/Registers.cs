@@ -59,6 +59,35 @@ namespace GBDotNet.Core
             }
         }
 
+        private Flags Flags => (Flags)F;
+
+        public void SetFlag(Flags flag)
+        {
+            F |= (byte)flag;
+        }
+
+        public void SetFlagTo(Flags flag, bool set)
+        {
+            if (set)
+            {
+                SetFlag(flag);
+            }
+            else
+            {
+                ClearFlag(flag);
+            }
+        }
+
+        public void ClearFlag(Flags flag)
+        {
+            F &= (byte)~flag;
+        }
+
+        public bool HasFlag(Flags flag)
+        {
+            return Flags.HasFlag(flag);
+        }
+
         public override string ToString()
         {
             return
