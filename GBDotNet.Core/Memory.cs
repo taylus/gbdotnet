@@ -2,6 +2,9 @@
 
 namespace GBDotNet.Core
 {
+    /// <summary>
+    /// Implements a region of memory as an addressable byte array.
+    /// </summary>
     public class Memory
     {
         private const int size = ushort.MaxValue;
@@ -20,7 +23,7 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
-        /// Prints the first N bytes of the ROM to the console.
+        /// Prints the first N bytes of memory to the console.
         /// </summary>
         public void HexDump(int bytesPerLine = 16, int? stopAfterBytes = null)
         {

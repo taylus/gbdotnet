@@ -66,9 +66,14 @@ namespace GBDotNet.Core
             F |= (byte)flag;
         }
 
-        public void SetFlagTo(Flags flag, bool set)
+        /// <summary>
+        /// Sets the given flag if the given condition is true.
+        /// </summary>
+        /// <param name="flag">The flag to set (make true).</param>
+        /// <param name="condition">The condition under which the flag should be set.</param>
+        public void SetFlagTo(Flags flag, bool condition)
         {
-            if (set)
+            if (condition)
             {
                 SetFlag(flag);
             }

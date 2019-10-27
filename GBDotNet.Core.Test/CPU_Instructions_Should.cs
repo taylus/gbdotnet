@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test
 {
@@ -58,6 +59,7 @@ namespace GBDotNet.Core.Test
             var memory = new Memory(0x04);
             var cpu = new CPU(new Registers(), memory);
 
+            //loop up since we're incrementing (making sure to cover wraparound)
             for (int i = 0; i <= byte.MaxValue; i++)
             {
                 cpu.Tick();
@@ -76,14 +78,52 @@ namespace GBDotNet.Core.Test
 
                 if (cpu.Registers.B % 16 == 0)
                 {
-                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be set when B is {cpu.Registers.B}");
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be set when B is incremented to {cpu.Registers.B}");
                 }
                 else
                 {
-                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be cleared when B is {cpu.Registers.B}");
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be cleared when B is incremented to {cpu.Registers.B}");
                 }
 
-                Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be cleared.");
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be cleared whenever an 8-bit register is incremented.");
+
+                cpu.Registers.PC--;
+            }
+        }
+
+        [TestMethod]
+        public void Instruction_0x05_Decrement_B()
+        {
+            var memory = new Memory(0x05);
+            var cpu = new CPU(new Registers() { B = 255 }, memory);
+
+            //loop down since we're decrementing (making sure to cover wraparound)
+            for (int i = byte.MaxValue; i >= 0; i--)
+            {
+                cpu.Tick();
+
+                var expected = (i - 1) & byte.MaxValue;
+                Assert.AreEqual(expected, cpu.Registers.B);
+
+                if (cpu.Registers.B == 0)
+                {
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), $"Expected zero flag to be set when B is {cpu.Registers.B}.");
+                }
+                else
+                {
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), $"Expected zero flag to be cleared when B is {cpu.Registers.B}.");
+                }
+
+                if (cpu.Registers.B % 16 == 0)
+                {
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be set when B is decremented to {cpu.Registers.B}");
+                }
+                else
+                {
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be cleared when B is decremented to {cpu.Registers.B}");
+                }
+
+                Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be set whenever an 8-bit register is decremented.");
 
                 cpu.Registers.PC--;
             }

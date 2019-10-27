@@ -3,8 +3,8 @@
 namespace GBDotNet.Core
 {
     /// <summary>
-    /// Represents the flag bits of the F register, indicating results from
-    /// the most recent instruction which affects flags. E.g. the zero bit
+    /// Represents the individual flag bits of the F register, indicating results
+    /// from the most recent instruction which affects flags. E.g. the zero bit
     /// being set to 1 means the most recent instruction resulted in zero.
     /// </summary>
     /// <see cref="http://bgb.bircd.org/pandocs.htm#cpuregistersandflags"/>
@@ -19,7 +19,7 @@ namespace GBDotNet.Core
 
         /// <summary>
         /// Indicates that an operation was addition (if 0) or subtraction (if 1).
-        /// Also known as the "N" flag.
+        /// Also known as the "N" or "Negative" flag.
         /// </summary>
         AddSubtract = 64,
 
