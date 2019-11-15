@@ -116,6 +116,34 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x07_Should_Rotate_A_Left_Circular()
+        {
+            var memory = new Memory(0x07);
+            var cpu = new CPU(new Registers() { A = 0b0100_0110 }, memory);
+            cpu.Registers.SetFlag(Flags.Zero);
+            cpu.Registers.SetFlag(Flags.AddSubtract);
+            cpu.Registers.SetFlag(Flags.HalfCarry);
+
+            cpu.Tick();
+            Assert.AreEqual(0b1000_1100, cpu.Registers.A, "Accumulator has incorrect value after first rlca instruction.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be zero after first rlca instruction.");
+            AssertOtherFlagsAreCleared();
+            cpu.Registers.PC--;
+
+            cpu.Tick();
+            Assert.AreEqual(0b0001_1001, cpu.Registers.A, "Accumulator has incorrect value after second rlca instruction.");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set after first rlca instruction.");
+            AssertOtherFlagsAreCleared();
+
+            void AssertOtherFlagsAreCleared()
+            {
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "rlca instruction should clear Z flag.");
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "rlca instruction should clear N flag.");
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "rlca instruction should clear H flag.");
+            }
+        }
+
+        [TestMethod]
         public void Instruction_0x0C_Should_Increment_C()
         {
             var memory = new Memory(0x0C);
