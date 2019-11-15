@@ -42,7 +42,7 @@ namespace GBDotNet.Core
                 () => { },
                 () => { },
                 () => { },
-                () => { },
+                () => Instruction_0x0C_Increment_C(),
                 () => { },
                 () => { },
                 () => { },
@@ -51,6 +51,7 @@ namespace GBDotNet.Core
                 () => { },
                 () => { },
                 () => { },
+                () => Instruction_0x14_Increment_D(),
                 () => { },
                 () => { },
                 () => { },
@@ -58,8 +59,7 @@ namespace GBDotNet.Core
                 () => { },
                 () => { },
                 () => { },
-                () => { },
-                () => { },
+                () => Instruction_0x1C_Increment_E(),
                 () => { },
                 () => { },
                 () => { },
@@ -68,6 +68,7 @@ namespace GBDotNet.Core
                 () => { },
                 () => { },
                 () => { },
+                () => Instruction_0x24_Increment_H(),
                 () => { },
                 () => { },
                 () => { },
@@ -75,8 +76,7 @@ namespace GBDotNet.Core
                 () => { },
                 () => { },
                 () => { },
-                () => { },
-                () => { },
+                () => Instruction_0x2C_Increment_L(),
                 () => { },
                 () => { },
                 () => { },
@@ -93,7 +93,7 @@ namespace GBDotNet.Core
                 () => { },
                 () => { },
                 () => { },
-                () => { },
+                () => Instruction_0x3C_Increment_A(),
                 () => { },
                 () => { },
                 () => { },
@@ -211,27 +211,52 @@ namespace GBDotNet.Core
             Registers.BC++;
         }
 
-        /// <see cref="https://github.com/TASVideos/BizHawk/blob/6d0973ca7ea3907abdcf482e6ce8f2767ae6f297/BizHawk.Emulation.Cores/CPUs/Z80A/Operations.cs#L467"/>
         private void Instruction_0x04_Increment_B()
         {
-            //https://robdor.com/2016/08/10/gameboy-emulator-half-carry-flag/
-            //var halfCarry = (((Registers.B & 0xf) + 1) & 0x10) == 0x10;
-            //TODO: am I doing this half carry stuff right? (compare to execution in bgb)
             Registers.B++;
-
-            Registers.SetFlagTo(Flags.Zero, Registers.B == 0);
-            Registers.SetFlagTo(Flags.HalfCarry, (Registers.B & 0b0000_1111) == 0);
-            Registers.ClearFlag(Flags.AddSubtract);
+            SetFlagsForIncrement(Registers.B);
         }
 
-        /// <see cref="https://github.com/TASVideos/BizHawk/blob/6d0973ca7ea3907abdcf482e6ce8f2767ae6f297/BizHawk.Emulation.Cores/CPUs/Z80A/Operations.cs#L491"/>
         private void Instruction_0x05_Decrement_B()
         {
             Registers.B--;
+            SetFlagsForDecrement(Registers.B);
+        }
 
-            Registers.SetFlagTo(Flags.Zero, Registers.B == 0);
-            Registers.SetFlagTo(Flags.HalfCarry, (Registers.B & 0b0000_1111) == 0);
-            Registers.SetFlag(Flags.AddSubtract);
+        private void Instruction_0x0C_Increment_C()
+        {
+            Registers.C++;
+            SetFlagsForIncrement(Registers.C);
+        }
+
+        private void Instruction_0x14_Increment_D()
+        {
+            Registers.D++;
+            SetFlagsForIncrement(Registers.D);
+        }
+
+        private void Instruction_0x1C_Increment_E()
+        {
+            Registers.E++;
+            SetFlagsForIncrement(Registers.E);
+        }
+
+        private void Instruction_0x24_Increment_H()
+        {
+            Registers.H++;
+            SetFlagsForIncrement(Registers.H);
+        }
+
+        private void Instruction_0x2C_Increment_L()
+        {
+            Registers.L++;
+            SetFlagsForIncrement(Registers.L);
+        }
+
+        private void Instruction_0x3C_Increment_A()
+        {
+            Registers.A++;
+            SetFlagsForIncrement(Registers.A);
         }
 
         //...
@@ -239,6 +264,28 @@ namespace GBDotNet.Core
         private void Instruction_0x76_Halt()
         {
             IsHalted = true;
+        }
+
+        /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#INC_r8"/>
+        /// <see cref="https://github.com/TASVideos/BizHawk/blob/6d0973ca7ea3907abdcf482e6ce8f2767ae6f297/BizHawk.Emulation.Cores/CPUs/Z80A/Operations.cs#L467"/>
+        private void SetFlagsForIncrement(byte register)
+        {
+            //https://robdor.com/2016/08/10/gameboy-emulator-half-carry-flag/
+            //var halfCarry = (((register & 0xf) + 1) & 0x10) == 0x10;
+            //TODO: am I doing this half carry stuff right? (compare to execution in bgb)
+
+            Registers.SetFlagTo(Flags.Zero, register == 0);
+            Registers.SetFlagTo(Flags.HalfCarry, (register & 0b0000_1111) == 0);
+            Registers.ClearFlag(Flags.AddSubtract);
+        }
+
+        /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#DEC_r8"/>
+        /// <see cref="https://github.com/TASVideos/BizHawk/blob/6d0973ca7ea3907abdcf482e6ce8f2767ae6f297/BizHawk.Emulation.Cores/CPUs/Z80A/Operations.cs#L491"/>
+        private void SetFlagsForDecrement(byte register)
+        {
+            Registers.SetFlagTo(Flags.Zero, register == 0);
+            Registers.SetFlagTo(Flags.HalfCarry, (register & 0b0000_1111) == 0);
+            Registers.SetFlag(Flags.AddSubtract);
         }
 
         public override string ToString() => Registers.ToString();
