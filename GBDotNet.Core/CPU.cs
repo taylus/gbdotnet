@@ -36,7 +36,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x03_Increment_BC(),
                 () => Instruction_0x04_Increment_B(),
                 () => Instruction_0x05_Decrement_B(),
-                () => { },
+                () => Instruction_0x06_Load_B_With_8_Bit_Immediate(),
                 () => { },
                 () => { },
                 () => { },
@@ -221,6 +221,11 @@ namespace GBDotNet.Core
         {
             Registers.B--;
             SetFlagsForDecrement(Registers.B);
+        }
+
+        private void Instruction_0x06_Load_B_With_8_Bit_Immediate()
+        {
+            Registers.B = Fetch();
         }
 
         private void Instruction_0x0C_Increment_C()

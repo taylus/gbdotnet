@@ -100,6 +100,22 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x06_Should_Load_B_With_8_Bit_Immediate()
+        {
+            var memory = new Memory(0x06);
+            var cpu = new CPU(new Registers(), memory);
+
+            //test setting the register to all possible byte values
+            for (int i = 0; i <= byte.MaxValue; i++)
+            {
+                cpu.Memory[1] = (byte)i;
+                cpu.Tick();
+                Assert.AreEqual(i, cpu.Registers.B, $"Expected register B to be set to {i} after executing ld b, {i}.");
+                cpu.Registers.PC -= 2;  //rewind by the size of this instruction
+            }
+        }
+
+        [TestMethod]
         public void Instruction_0x0C_Should_Increment_C()
         {
             var memory = new Memory(0x0C);
