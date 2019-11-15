@@ -19,7 +19,7 @@ namespace GBDotNet.Core
         public Memory Memory { get; private set; }
         public bool IsHalted { get; private set; }
 
-        private Action[] instructionSet;
+        private readonly Action[] instructionSet;
 
         public CPU(Registers registers, Memory memory)
         {
@@ -39,21 +39,21 @@ namespace GBDotNet.Core
                 () => Instruction_0x06_Load_B_With_8_Bit_Immediate(),
                 () => Instruction_0x07_Rotate_A_Left_Circular(),
                 () => Instruction_0x08_Load_Address_With_Stack_Pointer(),
-                () => { },
-                () => { },
-                () => { },
+                () => Instruction_0x09_Add_BC_To_HL(),
+                () => Instruction_0x0A_Load_A_From_Address_Pointed_To_By_BC(),
+                () => Instruction_0x0B_Decrement_BC(),
                 () => Instruction_0x0C_Increment_C(),
-                () => { },
-                () => { },
-                () => { },
+                () => Instruction_0x0D_Decrement_C(),
+                () => Instruction_0x0E_Load_C_With_8_Bit_Immediate(),
+                () => Instruction_0x0F_Rotate_A_Right_With_Carry(),
                 //0x10
-                () => { },
-                () => { },
-                () => { },
-                () => { },
+                () => Instruction_0x10_Stop(),
+                () => Instruction_0x11_Load_DE_With_16_Bit_Immediate(),
+                () => Instruction_0x12_Load_Address_Pointed_To_By_DE_With_A(),
+                () => Instruction_0x13_Increment_DE(),
                 () => Instruction_0x14_Increment_D(),
-                () => { },
-                () => { },
+                () => Instruction_0x15_Decrement_D(),
+                () => Instruction_0x16_Load_D_With_8_Bit_Immediate(),
                 () => { },
                 () => { },
                 () => { },
@@ -264,16 +264,92 @@ namespace GBDotNet.Core
             Memory[address + 1] = (byte)(Registers.SP >> 8);
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_HL,r16
+        /// </summary>
+        private void Instruction_0x09_Add_BC_To_HL()
+        {
+            Registers.ClearFlag(Flags.AddSubtract);
+            Registers.SetFlagTo(Flags.HalfCarry, ((Registers.HL & 0xFFF) + (Registers.BC & 0xFFF) > 0xFFF));
+            Registers.SetFlagTo(Flags.Carry, (Registers.HL + Registers.BC > 0xFFFF));
+            Registers.HL += Registers.BC;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_r16_
+        /// </summary>
+        private void Instruction_0x0A_Load_A_From_Address_Pointed_To_By_BC()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Instruction_0x0B_Decrement_BC()
+        {
+            throw new NotImplementedException();
+        }
+
         private void Instruction_0x0C_Increment_C()
         {
             Registers.C++;
             SetFlagsForIncrement(Registers.C);
         }
 
+        private void Instruction_0x0D_Decrement_C()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Instruction_0x0E_Load_C_With_8_Bit_Immediate()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RRCA
+        /// </summary>
+        private void Instruction_0x0F_Rotate_A_Right_With_Carry()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#STOP
+        /// https://github.com/sinamas/gambatte/blob/master/libgambatte/src/cpu.cpp#L613
+        /// </summary>
+        private void Instruction_0x10_Stop()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Instruction_0x11_Load_DE_With_16_Bit_Immediate()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Instruction_0x12_Load_Address_Pointed_To_By_DE_With_A()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Instruction_0x13_Increment_DE()
+        {
+            throw new NotImplementedException();
+        }
+
         private void Instruction_0x14_Increment_D()
         {
             Registers.D++;
             SetFlagsForIncrement(Registers.D);
+        }
+
+        private void Instruction_0x15_Decrement_D()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Instruction_0x16_Load_D_With_8_Bit_Immediate()
+        {
+            throw new NotImplementedException();
         }
 
         private void Instruction_0x1C_Increment_E()

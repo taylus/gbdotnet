@@ -156,6 +156,55 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x09_Should_Add_BC_To_HL()
+        {
+            var memory = new Memory(0x09);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestCaseWithCarries();
+            TestCaseWithoutCarries();
+
+            void TestCaseWithoutCarries()
+            {
+                TestCase(bc: 0b1010_0000_0101_0101, 
+                         hl: 0b0001_0000_0100_0000, 
+                         expectedHalfCarry: false,
+                         expectedCarry: false);
+            }
+            
+            void TestCaseWithCarries()
+            {
+                TestCase(bc: 0b1010_1100_0101_0101,
+                         hl: 0b1001_0100_0100_0000,
+                         expectedHalfCarry: true,
+                         expectedCarry: true);
+            }
+
+            void TestCase(ushort bc, ushort hl, bool expectedHalfCarry, bool expectedCarry)
+            {
+                cpu.Registers.PC = 0;
+                cpu.Registers.BC = bc;
+                cpu.Registers.HL = hl;
+                cpu.Registers.SetFlag(Flags.AddSubtract);
+
+                cpu.Tick();
+
+                Assert.AreEqual((ushort)(bc + hl), cpu.Registers.HL);
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "add hl, bc instruction should clear N flag.");
+
+                if (expectedHalfCarry)
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Half carry flag should be set.");
+                else
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "Half carry flag should not be set.");
+
+                if (expectedCarry)
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set.");
+                else
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should not be set.");
+            }
+        }
+
+        [TestMethod]
         public void Instruction_0x0C_Should_Increment_C()
         {
             var memory = new Memory(0x0C);
