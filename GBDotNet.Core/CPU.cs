@@ -38,7 +38,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x05_Decrement_B(),
                 () => Instruction_0x06_Load_B_With_8_Bit_Immediate(),
                 () => Instruction_0x07_Rotate_A_Left_Circular(),
-                () => { },
+                () => Instruction_0x08_Load_Address_With_Stack_Pointer(),
                 () => { },
                 () => { },
                 () => { },
@@ -248,6 +248,20 @@ namespace GBDotNet.Core
             Registers.ClearFlag(Flags.Zero);
             Registers.ClearFlag(Flags.AddSubtract);
             Registers.ClearFlag(Flags.HalfCarry);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__n16_,SP
+        /// https://github.com/sinamas/gambatte/blob/master/libgambatte/src/cpu.cpp#L570
+        /// </summary>
+        private void Instruction_0x08_Load_Address_With_Stack_Pointer()
+        {
+            byte addressLow = Fetch();
+            byte addressHigh = Fetch();
+            ushort address = Common.ToLittleEndian(addressLow, addressHigh);
+
+            Memory[address] = (byte)(Registers.SP & 0xFF);
+            Memory[address + 1] = (byte)(Registers.SP >> 8);
         }
 
         private void Instruction_0x0C_Increment_C()

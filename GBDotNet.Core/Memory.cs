@@ -16,7 +16,7 @@ namespace GBDotNet.Core
             memory = bytes;
         }
 
-        public byte this[ushort i]
+        public byte this[int i]
         {
             get => memory[i];
             set => memory[i] = value;

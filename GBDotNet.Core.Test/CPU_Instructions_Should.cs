@@ -144,6 +144,18 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x08_Should_Load_Address_With_Stack_Pointer()
+        {
+            var memory = new Memory(0x08, 0x10, 0xFF);
+            var cpu = new CPU(new Registers() { SP = 0xABCD }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xCD, memory[0xFF10], "Expected low byte of stack pointer to be stored at given address.");
+            Assert.AreEqual(0xAB, memory[0xFF11], "Expected high byte of stack pointer to be stored at given address + 1.");
+        }
+
+        [TestMethod]
         public void Instruction_0x0C_Should_Increment_C()
         {
             var memory = new Memory(0x0C);
