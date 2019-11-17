@@ -205,6 +205,26 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x0A_Should_Load_A_From_Address_Pointed_To_By_BC()
+        {
+            var memory = new Memory(0x0A, 0x01, 0x02);
+            var cpu = new CPU(new Registers(), memory);
+
+            cpu.Tick();
+            Assert.AreEqual(0x0A, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.BC}.");
+
+            cpu.Registers.PC = 0;
+            cpu.Registers.BC = 1;
+            cpu.Tick();
+            Assert.AreEqual(0x01, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.BC}.");
+
+            cpu.Registers.PC = 0;
+            cpu.Registers.BC = 2;
+            cpu.Tick();
+            Assert.AreEqual(0x02, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.BC}.");
+        }
+
+        [TestMethod]
         public void Instruction_0x0C_Should_Increment_C()
         {
             var memory = new Memory(0x0C);

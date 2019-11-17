@@ -280,7 +280,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x0A_Load_A_From_Address_Pointed_To_By_BC()
         {
-            throw new NotImplementedException();
+            Registers.A = Memory[Registers.BC];
         }
 
         private void Instruction_0x0B_Decrement_BC()
@@ -318,7 +318,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x10_Stop()
         {
-            throw new NotImplementedException();
+            //is this all this should do?
+            IsHalted = true;
         }
 
         private void Instruction_0x11_Load_DE_With_16_Bit_Immediate()
