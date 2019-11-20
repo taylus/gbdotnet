@@ -304,7 +304,7 @@ namespace GBDotNet.Core
 
         private void Instruction_0x0E_Load_C_With_8_Bit_Immediate()
         {
-            throw new NotImplementedException();
+            Registers.C = Fetch();
         }
 
         /// <summary>
