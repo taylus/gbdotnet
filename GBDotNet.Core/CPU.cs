@@ -352,7 +352,7 @@ namespace GBDotNet.Core
 
         private void Instruction_0x16_Load_D_With_8_Bit_Immediate()
         {
-            throw new NotImplementedException();
+            Registers.D = Fetch();
         }
 
         private void Instruction_0x1C_Increment_E()
