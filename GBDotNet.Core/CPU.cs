@@ -54,7 +54,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x14_Increment_D(),
                 () => Instruction_0x15_Decrement_D(),
                 () => Instruction_0x16_Load_D_With_8_Bit_Immediate(),
-                () => { },
+                () => Instruction_0x17_Rotate_A_Left(),
                 () => { },
                 () => { },
                 () => { },
@@ -353,6 +353,20 @@ namespace GBDotNet.Core
         private void Instruction_0x16_Load_D_With_8_Bit_Immediate()
         {
             Registers.D = Fetch();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RLA
+        /// https://ez80.readthedocs.io/en/latest/docs/bit-shifts/rla.html
+        /// </summary>
+        private void Instruction_0x17_Rotate_A_Left()
+        {
+            bool oldCarry = Registers.HasFlag(Flags.Carry);
+            Registers.SetFlagTo(Flags.Carry, (Registers.A & 0b1000_0000) != 0);
+            Registers.A = (byte)((Registers.A << 1) | (oldCarry ? 1 : 0));
+            Registers.ClearFlag(Flags.Zero);
+            Registers.ClearFlag(Flags.AddSubtract);
+            Registers.ClearFlag(Flags.HalfCarry);
         }
 
         private void Instruction_0x1C_Increment_E()
