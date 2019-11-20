@@ -70,7 +70,7 @@ namespace GBDotNet.Core
                 () => { },
                 () => Instruction_0x24_Increment_H(),
                 () => { },
-                () => { },
+                () => Instruction_0x26_Load_H_With_8_Bit_Immediate(),
                 () => { },
                 () => { },
                 () => { },
@@ -78,7 +78,7 @@ namespace GBDotNet.Core
                 () => { },
                 () => Instruction_0x2C_Increment_L(),
                 () => { },
-                () => { },
+                () => Instruction_0x2E_Load_L_With_8_Bit_Immediate(),
                 () => { },
                 //0x30
                 () => { },
@@ -370,9 +370,19 @@ namespace GBDotNet.Core
             Registers.H = Increment8BitRegisterAndSetFlags(Registers.H);
         }
 
+        private void Instruction_0x26_Load_H_With_8_Bit_Immediate()
+        {
+            Registers.H = Fetch();
+        }
+
         private void Instruction_0x2C_Increment_L()
         {
             Registers.L = Increment8BitRegisterAndSetFlags(Registers.L);
+        }
+
+        private void Instruction_0x2E_Load_L_With_8_Bit_Immediate()
+        {
+            Registers.L = Fetch();
         }
 
         private void Instruction_0x3C_Increment_A()

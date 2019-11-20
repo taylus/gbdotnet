@@ -303,11 +303,27 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x26_Should_Load_H_With_8_Bit_Immediate()
+        {
+            var memory = new Memory(0x26);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterWith8BitImmediate(cpu, () => cpu.Registers.H);
+        }
+
+        [TestMethod]
         public void Instruction_0x2C_Should_Increment_L()
         {
             var memory = new Memory(0x2C);
             var cpu = new CPU(new Registers(), memory);
             TestIncrement8BitRegister(cpu, () => cpu.Registers.L);
+        }
+
+        [TestMethod]
+        public void Instruction_0x2E_Should_Load_L_With_8_Bit_Immediate()
+        {
+            var memory = new Memory(0x2E);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterWith8BitImmediate(cpu, () => cpu.Registers.L);
         }
 
         [TestMethod]
