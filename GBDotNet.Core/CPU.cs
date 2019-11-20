@@ -213,14 +213,12 @@ namespace GBDotNet.Core
 
         private void Instruction_0x04_Increment_B()
         {
-            Registers.B++;
-            SetFlagsForIncrement(Registers.B);
+            Registers.B = Increment8BitRegisterAndSetFlags(Registers.B);
         }
 
         private void Instruction_0x05_Decrement_B()
         {
-            Registers.B--;
-            SetFlagsForDecrement(Registers.B);
+            Registers.B = Decrement8BitRegisterAndSetFlags(Registers.B);
         }
 
         private void Instruction_0x06_Load_B_With_8_Bit_Immediate()
@@ -293,13 +291,15 @@ namespace GBDotNet.Core
 
         private void Instruction_0x0C_Increment_C()
         {
-            Registers.C++;
-            SetFlagsForIncrement(Registers.C);
+            Registers.C = Increment8BitRegisterAndSetFlags(Registers.C);
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#DEC_r8
+        /// </summary>
         private void Instruction_0x0D_Decrement_C()
         {
-            throw new NotImplementedException();
+            Registers.C = Decrement8BitRegisterAndSetFlags(Registers.C);
         }
 
         private void Instruction_0x0E_Load_C_With_8_Bit_Immediate()
@@ -342,8 +342,7 @@ namespace GBDotNet.Core
 
         private void Instruction_0x14_Increment_D()
         {
-            Registers.D++;
-            SetFlagsForIncrement(Registers.D);
+            Registers.D = Increment8BitRegisterAndSetFlags(Registers.D);
         }
 
         private void Instruction_0x15_Decrement_D()
@@ -358,26 +357,22 @@ namespace GBDotNet.Core
 
         private void Instruction_0x1C_Increment_E()
         {
-            Registers.E++;
-            SetFlagsForIncrement(Registers.E);
+            Registers.E = Increment8BitRegisterAndSetFlags(Registers.E);
         }
 
         private void Instruction_0x24_Increment_H()
         {
-            Registers.H++;
-            SetFlagsForIncrement(Registers.H);
+            Registers.H = Increment8BitRegisterAndSetFlags(Registers.H);
         }
 
         private void Instruction_0x2C_Increment_L()
         {
-            Registers.L++;
-            SetFlagsForIncrement(Registers.L);
+            Registers.L = Increment8BitRegisterAndSetFlags(Registers.L);
         }
 
         private void Instruction_0x3C_Increment_A()
         {
-            Registers.A++;
-            SetFlagsForIncrement(Registers.A);
+            Registers.A = Increment8BitRegisterAndSetFlags(Registers.A);
         }
 
         //...
@@ -389,24 +384,36 @@ namespace GBDotNet.Core
 
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#INC_r8"/>
         /// <see cref="https://github.com/TASVideos/BizHawk/blob/6d0973ca7ea3907abdcf482e6ce8f2767ae6f297/BizHawk.Emulation.Cores/CPUs/Z80A/Operations.cs#L467"/>
-        private void SetFlagsForIncrement(byte register)
+        private byte Increment8BitRegisterAndSetFlags(byte oldValue)
         {
-            //https://robdor.com/2016/08/10/gameboy-emulator-half-carry-flag/
-            //var halfCarry = (((register & 0xf) + 1) & 0x10) == 0x10;
-            //TODO: am I doing this half carry stuff right? (compare to execution in bgb)
+            var newValue = (byte)(oldValue + 1);
 
-            Registers.SetFlagTo(Flags.Zero, register == 0);
-            Registers.SetFlagTo(Flags.HalfCarry, (register & 0b0000_1111) == 0);
+            Registers.SetFlagTo(Flags.Zero, newValue == 0);
             Registers.ClearFlag(Flags.AddSubtract);
+
+            //half carry will occur if the lower nibble of the old value is all ones
+            //this means that adding one must cause a carry into the upper nibble
+            //https://github.com/rylev/DMG-01/blob/17c08f5103b52cf06b0a4606ece2f71b48567c0b/lib-dmg-01/src/cpu/mod.rs#L1191
+            Registers.SetFlagTo(Flags.HalfCarry, (oldValue & 0xF) == 0xF);
+
+            return newValue;
         }
 
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#DEC_r8"/>
         /// <see cref="https://github.com/TASVideos/BizHawk/blob/6d0973ca7ea3907abdcf482e6ce8f2767ae6f297/BizHawk.Emulation.Cores/CPUs/Z80A/Operations.cs#L491"/>
-        private void SetFlagsForDecrement(byte register)
+        private byte Decrement8BitRegisterAndSetFlags(byte oldValue)
         {
-            Registers.SetFlagTo(Flags.Zero, register == 0);
-            Registers.SetFlagTo(Flags.HalfCarry, (register & 0b0000_1111) == 0);
+            var newValue = (byte)(oldValue - 1);
+
+            Registers.SetFlagTo(Flags.Zero, newValue == 0);
             Registers.SetFlag(Flags.AddSubtract);
+
+            //half carry will occur if the lower nibble of the old value is zero
+            //this means that subtracting one must cause a borrow from the upper nibble
+            //https://github.com/rylev/DMG-01/blob/17c08f5103b52cf06b0a4606ece2f71b48567c0b/lib-dmg-01/src/cpu/mod.rs#L1208
+            Registers.SetFlagTo(Flags.HalfCarry, (oldValue & 0xF) == 0);
+
+            return newValue;
         }
 
         public override string ToString() => Registers.ToString();
