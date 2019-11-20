@@ -61,7 +61,7 @@ namespace GBDotNet.Core
                 () => { },
                 () => Instruction_0x1C_Increment_E(),
                 () => { },
-                () => { },
+                () => Instruction_0x1E_Load_E_With_8_Bit_Immediate(),
                 () => { },
                 //0x20
                 () => { },
@@ -358,6 +358,11 @@ namespace GBDotNet.Core
         private void Instruction_0x1C_Increment_E()
         {
             Registers.E = Increment8BitRegisterAndSetFlags(Registers.E);
+        }
+
+        private void Instruction_0x1E_Load_E_With_8_Bit_Immediate()
+        {
+            Registers.E = Fetch();
         }
 
         private void Instruction_0x24_Increment_H()

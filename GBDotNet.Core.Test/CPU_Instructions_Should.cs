@@ -287,6 +287,14 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x1E_Should_Load_E_With_8_Bit_Immediate()
+        {
+            var memory = new Memory(0x1E);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterWith8BitImmediate(cpu, () => cpu.Registers.E);
+        }
+
+        [TestMethod]
         public void Instruction_0x24_Should_Increment_H()
         {
             var memory = new Memory(0x24);
