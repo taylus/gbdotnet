@@ -55,10 +55,10 @@ namespace GBDotNet.Core
                 () => Instruction_0x15_Decrement_D(),
                 () => Instruction_0x16_Load_D_With_8_Bit_Immediate(),
                 () => Instruction_0x17_Rotate_A_Left(),
-                () => { },
-                () => { },
-                () => { },
-                () => { },
+                () => Instruction_0x18_Relative_Jump_By_8_Bit_Signed_Immediate(),
+                () => Instruction_0x19_Add_DE_To_HL(),
+                () => Instruction_0x1A_Load_A_From_Address_Pointed_To_By_DE(),
+                () => Instruction_0x1B_Decrement_DE(),
                 () => Instruction_0x1C_Increment_E(),
                 () => { },
                 () => Instruction_0x1E_Load_E_With_8_Bit_Immediate(),
@@ -367,6 +367,29 @@ namespace GBDotNet.Core
             Registers.ClearFlag(Flags.Zero);
             Registers.ClearFlag(Flags.AddSubtract);
             Registers.ClearFlag(Flags.HalfCarry);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#JR_e8
+        /// </summary>
+        private void Instruction_0x18_Relative_Jump_By_8_Bit_Signed_Immediate()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Instruction_0x19_Add_DE_To_HL()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Instruction_0x1A_Load_A_From_Address_Pointed_To_By_DE()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Instruction_0x1B_Decrement_DE()
+        {
+            throw new NotImplementedException();
         }
 
         private void Instruction_0x1C_Increment_E()
