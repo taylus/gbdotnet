@@ -164,7 +164,7 @@ namespace GBDotNet.Core
                 () => { },
                 () => { },
                 () => { },
-                () => { },
+                () => { },  //ld a, a => nop (https://stackoverflow.com/questions/50187678/whats-the-purpose-of-instructions-for-loading-a-register-to-itself)
             };
         }
 
@@ -433,6 +433,8 @@ namespace GBDotNet.Core
         {
             IsHalted = true;
         }
+
+        //...
 
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#INC_r8"/>
         /// <see cref="https://github.com/TASVideos/BizHawk/blob/6d0973ca7ea3907abdcf482e6ce8f2767ae6f297/BizHawk.Emulation.Cores/CPUs/Z80A/Operations.cs#L467"/>
