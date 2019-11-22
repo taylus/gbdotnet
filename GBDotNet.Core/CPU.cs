@@ -194,11 +194,12 @@ namespace GBDotNet.Core
             instructionSet[opcode]();
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r16,n16
+        /// </summary>
         private void Instruction_0x01_Load_BC_With_16_Bit_Immediate()
         {
-            byte a = Fetch();
-            byte b = Fetch();
-            Registers.BC = Common.ToLittleEndian(a, b);
+            Registers.BC = Common.ToLittleEndian(Fetch(), Fetch());
         }
 
         private void Instruction_0x02_Load_Address_Pointed_To_By_BC_With_A()
@@ -325,9 +326,12 @@ namespace GBDotNet.Core
             IsHalted = true;
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r16,n16
+        /// </summary>
         private void Instruction_0x11_Load_DE_With_16_Bit_Immediate()
         {
-            throw new NotImplementedException();
+            Registers.DE = Common.ToLittleEndian(Fetch(), Fetch());
         }
 
         private void Instruction_0x12_Load_Address_Pointed_To_By_DE_With_A()

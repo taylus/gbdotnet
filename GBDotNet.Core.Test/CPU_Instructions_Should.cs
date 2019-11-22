@@ -3,6 +3,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test
 {
+    /// <summary>
+    /// TODO: Break up CPU and test classes by types of instructions:
+    /// - Loads and stores
+    /// - Arithmetic
+    /// - Jumps
+    /// - etc
+    /// <see cref="http://www.devrs.com/gb/files/opcodes.html"/>
+    /// </summary>
     [TestClass]
     public class CPU_Instructions
     {
@@ -11,18 +19,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x01);
             var cpu = new CPU(new Registers(), memory);
-
-            for (int i = 0; i <= byte.MaxValue; i++)
-            {
-                memory[1] = (byte)i;
-                for (int j = 0; j <= byte.MaxValue; j++)
-                {
-                    memory[2] = (byte)j;
-                    cpu.Tick();
-                    Assert.AreEqual((j << 8) | i, cpu.Registers.BC);
-                    cpu.Registers.PC -= 3;  //rewind to run again w/ new value
-                }
-            }
+            TestLoadRegisterWith16BitImmediate(cpu, () => cpu.Registers.BC);
         }
 
         [TestMethod]
@@ -205,6 +202,14 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x11_Should_Load_DE_With_16_Bit_Immediate()
+        {
+            var memory = new Memory(0x11);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterWith16BitImmediate(cpu, () => cpu.Registers.DE);
+        }
+
+        [TestMethod]
         public void Instruction_0x0A_Should_Load_A_From_Address_Pointed_To_By_BC()
         {
             var memory = new Memory(0x0A, 0x01, 0x02);
@@ -368,7 +373,7 @@ namespace GBDotNet.Core.Test
             TestIncrement8BitRegister(cpu, () => cpu.Registers.A);
         }
 
-        private void TestIncrement8BitRegister(CPU cpu, Func<byte> registerUnderTest)
+        private static void TestIncrement8BitRegister(CPU cpu, Func<byte> registerUnderTest)
         {
             //loop up since we're incrementing (making sure to cover wraparound)
             for (int i = 0; i <= byte.MaxValue; i++)
@@ -403,7 +408,7 @@ namespace GBDotNet.Core.Test
             }
         }
 
-        private void TestDecrement8BitRegister(CPU cpu, Func<byte> registerUnderTest)
+        private static void TestDecrement8BitRegister(CPU cpu, Func<byte> registerUnderTest)
         {
             //loop down since we're decrementing (making sure to cover wraparound)
             for (int i = byte.MaxValue; i >= 0; i--)
@@ -440,7 +445,7 @@ namespace GBDotNet.Core.Test
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,n8
         /// </summary>
-        private void TestLoadRegisterWith8BitImmediate(CPU cpu, Func<byte> registerUnderTest)
+        private static void TestLoadRegisterWith8BitImmediate(CPU cpu, Func<byte> registerUnderTest)
         {
             //test setting the register to all possible byte values
             //assumes a memory layout of address 0 = the instruction and address 1 = the immediate value
@@ -450,6 +455,24 @@ namespace GBDotNet.Core.Test
                 cpu.Tick();
                 Assert.AreEqual(i, registerUnderTest(), $"Expected register to be set to {i} after executing ld instruction w/ 8-bit immediate {i}.");
                 cpu.Registers.PC -= 2;  //rewind by the size of the instruction
+            }
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r16,n16
+        /// </summary>
+        private static void TestLoadRegisterWith16BitImmediate(CPU cpu, Func<ushort> registerUnderTest)
+        {
+            for (int i = 0; i <= byte.MaxValue; i++)
+            {
+                cpu.Memory[1] = (byte)i;
+                for (int j = 0; j <= byte.MaxValue; j++)
+                {
+                    cpu.Memory[2] = (byte)j;
+                    cpu.Tick();
+                    Assert.AreEqual((j << 8) | i, registerUnderTest());
+                    cpu.Registers.PC -= 3;  //rewind to run again w/ new value
+                }
             }
         }
     }
