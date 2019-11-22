@@ -202,6 +202,9 @@ namespace GBDotNet.Core
             Registers.BC = Common.ToLittleEndian(Fetch(), Fetch());
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__r16_,A
+        /// </summary>
         private void Instruction_0x02_Load_Address_Pointed_To_By_BC_With_A()
         {
             Memory[Registers.BC] = Registers.A;
@@ -334,9 +337,12 @@ namespace GBDotNet.Core
             Registers.DE = Common.ToLittleEndian(Fetch(), Fetch());
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__r16_,A
+        /// </summary>
         private void Instruction_0x12_Load_Address_Pointed_To_By_DE_With_A()
         {
-            throw new NotImplementedException();
+            Memory[Registers.DE] = Registers.A;
         }
 
         private void Instruction_0x13_Increment_DE()

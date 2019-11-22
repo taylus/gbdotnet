@@ -4,13 +4,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GBDotNet.Core.Test
 {
     /// <summary>
+    /// Tests the CPU's instructions by executing them in controlled environments.
+    /// </summary>
+    /// <remarks>
     /// TODO: Break up CPU and test classes by types of instructions:
     /// - Loads and stores
     /// - Arithmetic
     /// - Jumps
     /// - etc
     /// <see cref="http://www.devrs.com/gb/files/opcodes.html"/>
-    /// </summary>
+    /// </remarks>
     [TestClass]
     public class CPU_Instructions
     {
@@ -26,10 +29,8 @@ namespace GBDotNet.Core.Test
         public void Instruction_0x02_Should_Load_Address_Pointed_To_By_BC_With_A()
         {
             var memory = new Memory(0x02);
-            var cpu = new CPU(new Registers(), memory);
+            var cpu = new CPU(new Registers() { A = 123, BC = 4000 }, memory);
 
-            cpu.Registers.BC = 5000;
-            cpu.Registers.A = 100;
             cpu.Tick();
 
             Assert.AreEqual(cpu.Registers.A, memory[cpu.Registers.BC]);
@@ -202,14 +203,6 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
-        public void Instruction_0x11_Should_Load_DE_With_16_Bit_Immediate()
-        {
-            var memory = new Memory(0x11);
-            var cpu = new CPU(new Registers(), memory);
-            TestLoadRegisterWith16BitImmediate(cpu, () => cpu.Registers.DE);
-        }
-
-        [TestMethod]
         public void Instruction_0x0A_Should_Load_A_From_Address_Pointed_To_By_BC()
         {
             var memory = new Memory(0x0A, 0x01, 0x02);
@@ -265,6 +258,25 @@ namespace GBDotNet.Core.Test
             var memory = new Memory(0x0E);
             var cpu = new CPU(new Registers(), memory);
             TestLoadRegisterWith8BitImmediate(cpu, () => cpu.Registers.C);
+        }
+
+        [TestMethod]
+        public void Instruction_0x11_Should_Load_DE_With_16_Bit_Immediate()
+        {
+            var memory = new Memory(0x11);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterWith16BitImmediate(cpu, () => cpu.Registers.DE);
+        }
+
+        [TestMethod]
+        public void Instruction_0x12_Should_Load_Address_Pointed_To_By_DE_With_A()
+        {
+            var memory = new Memory(0x12);
+            var cpu = new CPU(new Registers() { A = 123, DE = 5000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(cpu.Registers.A, memory[cpu.Registers.DE]);
         }
 
         [TestMethod]
@@ -373,6 +385,10 @@ namespace GBDotNet.Core.Test
             TestIncrement8BitRegister(cpu, () => cpu.Registers.A);
         }
 
+        /// <summary>
+        /// Tests instructions like inc b.
+        /// </summary>
+        /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#INC_r8"/>
         private static void TestIncrement8BitRegister(CPU cpu, Func<byte> registerUnderTest)
         {
             //loop up since we're incrementing (making sure to cover wraparound)
@@ -408,6 +424,10 @@ namespace GBDotNet.Core.Test
             }
         }
 
+        /// <summary>
+        /// Tests instructions like dec b.
+        /// </summary>
+        /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#DEC_r8"/>
         private static void TestDecrement8BitRegister(CPU cpu, Func<byte> registerUnderTest)
         {
             //loop down since we're decrementing (making sure to cover wraparound)
@@ -443,8 +463,9 @@ namespace GBDotNet.Core.Test
         }
 
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,n8
+        /// Tests instructions like ld d, 5.
         /// </summary>
+        /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,n8"/>
         private static void TestLoadRegisterWith8BitImmediate(CPU cpu, Func<byte> registerUnderTest)
         {
             //test setting the register to all possible byte values
@@ -459,8 +480,9 @@ namespace GBDotNet.Core.Test
         }
 
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r16,n16
+        /// Tests instructions like ld de, 9000.
         /// </summary>
+        /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#LD_r16,n16"/>
         private static void TestLoadRegisterWith16BitImmediate(CPU cpu, Func<ushort> registerUnderTest)
         {
             for (int i = 0; i <= byte.MaxValue; i++)
