@@ -208,20 +208,6 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
-        public void Instruction_0x0B_Should_Decrement_BC()
-        {
-            var memory = new Memory(0x0B);
-            var cpu = new CPU(new Registers(), memory);
-
-            for (int i = ushort.MaxValue; i >= 0; i--)
-            {
-                cpu.Tick();
-                Assert.AreEqual(i, cpu.Registers.BC);
-                cpu.Registers.PC--;
-            }
-        }
-
-        [TestMethod]
         public void Instruction_0x0C_Should_Increment_C()
         {
             var memory = new Memory(0x0C);
