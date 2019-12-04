@@ -210,6 +210,9 @@ namespace GBDotNet.Core
             Memory[Registers.BC] = Registers.A;
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#INC_r16
+        /// </summary>
         private void Instruction_0x03_Increment_BC()
         {
             Registers.BC++;
@@ -345,9 +348,12 @@ namespace GBDotNet.Core
             Memory[Registers.DE] = Registers.A;
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#INC_r16
+        /// </summary>
         private void Instruction_0x13_Increment_DE()
         {
-            throw new NotImplementedException();
+            Registers.DE++;
         }
 
         private void Instruction_0x14_Increment_D()

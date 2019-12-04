@@ -41,14 +41,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x03);
             var cpu = new CPU(new Registers(), memory);
-
-            for (int i = 0; i <= ushort.MaxValue; i++)
-            {
-                cpu.Tick();
-                var expected = (i + 1) & ushort.MaxValue;
-                Assert.AreEqual(expected, cpu.Registers.BC);
-                cpu.Registers.PC--;
-            }
+            TestIncrement16BitRegister(cpu, () => cpu.Registers.BC);
         }
 
         [TestMethod]
@@ -280,6 +273,14 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x13_Should_Increment_DE()
+        {
+            var memory = new Memory(0x13);
+            var cpu = new CPU(new Registers(), memory);
+            TestIncrement16BitRegister(cpu, () => cpu.Registers.DE);
+        }
+
+        [TestMethod]
         public void Instruction_0x14_Should_Increment_D()
         {
             var memory = new Memory(0x14);
@@ -420,6 +421,21 @@ namespace GBDotNet.Core.Test
 
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be cleared whenever an 8-bit register is incremented.");
 
+                cpu.Registers.PC--;
+            }
+        }
+
+        /// <summary>
+        /// Tests instructions like inc bc.
+        /// </summary>
+        /// <remarks>Simpler to test since no pesky flags are set.</remarks>
+        private static void TestIncrement16BitRegister(CPU cpu, Func<ushort> registerPairUnderTest)
+        {
+            for (int i = 0; i <= ushort.MaxValue; i++)
+            {
+                cpu.Tick();
+                var expected = (ushort)(i + 1);
+                Assert.AreEqual(expected, registerPairUnderTest());
                 cpu.Registers.PC--;
             }
         }
