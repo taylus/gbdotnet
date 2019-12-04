@@ -15,7 +15,7 @@ namespace GBDotNet.Core.Test
     /// <see cref="http://www.devrs.com/gb/files/opcodes.html"/>
     /// </remarks>
     [TestClass]
-    public class CPU_Instructions
+    public class CPU_Instruction_Tests
     {
         [TestMethod]
         public void Instruction_0x01_Should_Load_BC_With_16_Bit_Immediate()
@@ -34,14 +34,6 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(cpu.Registers.A, memory[cpu.Registers.BC]);
-        }
-
-        [TestMethod]
-        public void Instruction_0x03_Should_Increment_BC()
-        {
-            var memory = new Memory(0x03);
-            var cpu = new CPU(new Registers(), memory);
-            TestIncrement16BitRegister(cpu, () => cpu.Registers.BC);
         }
 
         [TestMethod]
@@ -273,14 +265,6 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
-        public void Instruction_0x13_Should_Increment_DE()
-        {
-            var memory = new Memory(0x13);
-            var cpu = new CPU(new Registers(), memory);
-            TestIncrement16BitRegister(cpu, () => cpu.Registers.DE);
-        }
-
-        [TestMethod]
         public void Instruction_0x14_Should_Increment_D()
         {
             var memory = new Memory(0x14);
@@ -421,21 +405,6 @@ namespace GBDotNet.Core.Test
 
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be cleared whenever an 8-bit register is incremented.");
 
-                cpu.Registers.PC--;
-            }
-        }
-
-        /// <summary>
-        /// Tests instructions like inc bc.
-        /// </summary>
-        /// <remarks>Simpler to test since no pesky flags are set.</remarks>
-        private static void TestIncrement16BitRegister(CPU cpu, Func<ushort> registerPairUnderTest)
-        {
-            for (int i = 0; i <= ushort.MaxValue; i++)
-            {
-                cpu.Tick();
-                var expected = (ushort)(i + 1);
-                Assert.AreEqual(expected, registerPairUnderTest());
                 cpu.Registers.PC--;
             }
         }
