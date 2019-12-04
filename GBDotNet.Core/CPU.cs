@@ -403,9 +403,12 @@ namespace GBDotNet.Core
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#DEC_r16
+        /// </summary>
         private void Instruction_0x1B_Decrement_DE()
         {
-            throw new NotImplementedException();
+            Registers.DE--;
         }
 
         private void Instruction_0x1C_Increment_E()
