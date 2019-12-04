@@ -92,7 +92,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x3B_Decrement_SP(),
                 () => Instruction_0x3C_Increment_A(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -463,6 +463,14 @@ namespace GBDotNet.Core
         private void Instruction_0x33_Increment_SP()
         {
             Registers.SP++;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#DEC_SP
+        /// </summary>
+        private void Instruction_0x3B_Decrement_SP()
+        {
+            Registers.SP--;
         }
 
         private void Instruction_0x3C_Increment_A()
