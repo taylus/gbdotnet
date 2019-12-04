@@ -67,7 +67,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x23_Increment_HL(),
                 () => Instruction_0x24_Increment_H(),
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0x26_Load_H_With_8_Bit_Immediate(),
@@ -419,6 +419,14 @@ namespace GBDotNet.Core
         private void Instruction_0x1E_Load_E_With_8_Bit_Immediate()
         {
             Registers.E = Fetch();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#INC_r16
+        /// </summary>
+        private void Instruction_0x23_Increment_HL()
+        {
+            Registers.HL++;
         }
 
         private void Instruction_0x24_Increment_H()
