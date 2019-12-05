@@ -78,66 +78,39 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x09);
             var cpu = new CPU(new Registers(), memory);
-
-            TestCaseWithCarries();
-            TestCaseWithoutCarries();
-
-            void TestCaseWithoutCarries()
-            {
-                TestCase(bc: 0b1010_0000_0101_0101,
-                         hl: 0b0001_0000_0100_0000,
-                         expectedHalfCarry: false,
-                         expectedCarry: false);
-            }
-
-            void TestCaseWithCarries()
-            {
-                TestCase(bc: 0b1010_1100_0101_0101,
-                         hl: 0b1001_0100_0100_0000,
-                         expectedHalfCarry: true,
-                         expectedCarry: true);
-            }
-
-            void TestCase(ushort bc, ushort hl, bool expectedHalfCarry, bool expectedCarry)
-            {
-                cpu.Registers.PC = 0;
-                cpu.Registers.BC = bc;
-                cpu.Registers.HL = hl;
-                cpu.Registers.SetFlag(Flags.AddSubtract);
-
-                cpu.Tick();
-
-                Assert.AreEqual((ushort)(bc + hl), cpu.Registers.HL);
-                Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "add hl, bc instruction should clear N flag.");
-
-                if (expectedHalfCarry)
-                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Half carry flag should be set.");
-                else
-                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "Half carry flag should not be set.");
-
-                if (expectedCarry)
-                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set.");
-                else
-                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should not be set.");
-            }
+            TestAdd16BitRegisterToHL(cpu,
+                registerPairGetter: () => cpu.Registers.BC, 
+                registerPairSetter: (value) => cpu.Registers.BC = value);
         }
 
         [TestMethod]
         public void Instruction_0x19_Should_Add_DE_To_HL()
         {
-
+            var memory = new Memory(0x19);
+            var cpu = new CPU(new Registers(), memory);
+            TestAdd16BitRegisterToHL(cpu,
+                registerPairGetter: () => cpu.Registers.DE,
+                registerPairSetter: (value) => cpu.Registers.DE = value);
         }
 
         [TestMethod]
         public void Instruction_0x29_Should_Add_HL_To_HL()
         {
-
+            var memory = new Memory(0x29);
+            var cpu = new CPU(new Registers(), memory);
+            TestAdd16BitRegisterToHL(cpu,
+                registerPairGetter: () => cpu.Registers.HL,
+                registerPairSetter: (value) => cpu.Registers.HL = value);
         }
 
         [TestMethod]
         public void Instruction_0x39_Should_Add_SP_To_HL()
         {
-
+            var memory = new Memory(0x39);
+            var cpu = new CPU(new Registers(), memory);
+            TestAdd16BitRegisterToHL(cpu,
+                registerPairGetter: () => cpu.Registers.SP,
+                registerPairSetter: (value) => cpu.Registers.SP = value);
         }
 
         private static void TestIncrement16BitRegister(CPU cpu, Func<ushort> registerPairUnderTest)
@@ -158,6 +131,51 @@ namespace GBDotNet.Core.Test
                 cpu.Tick();
                 Assert.AreEqual(i, registerPairUnderTest());
                 cpu.Registers.PC--;
+            }
+        }
+
+        private static void TestAdd16BitRegisterToHL(CPU cpu, Func<ushort> registerPairGetter, Action<ushort> registerPairSetter)
+        {
+            TestCaseWithCarries();
+            TestCaseWithoutCarries();
+
+            void TestCaseWithCarries()
+            {
+                const ushort testInput = 0b1000_1000_0000_0000; //use same value for add hl, hl case
+                registerPairSetter(testInput);
+                cpu.Registers.HL = testInput;
+                ExecuteTestCase(expectedHalfCarry: true, expectedCarry: true);
+            }
+
+            void TestCaseWithoutCarries()
+            {
+                const ushort testInput = 0b0001_0000_0100_0011; ////use same value for add hl, hl case
+                registerPairSetter(testInput);
+                cpu.Registers.HL = testInput;
+                ExecuteTestCase(expectedHalfCarry: false, expectedCarry: false);
+            }
+
+            void ExecuteTestCase(bool expectedHalfCarry, bool expectedCarry)
+            {
+                cpu.Registers.PC = 0;
+                cpu.Registers.SetFlag(Flags.AddSubtract);
+
+                ushort oldRegisterPairValue = registerPairGetter(); //capture for when this register pair is also hl (add hl, hl)
+                ushort oldHL = cpu.Registers.HL;
+                cpu.Tick();
+
+                Assert.AreEqual((ushort)(oldRegisterPairValue + oldHL), cpu.Registers.HL);
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "add hl, r16 instruction should clear N flag.");
+
+                if (expectedHalfCarry)
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Half carry flag should be set.");
+                else
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "Half carry flag should not be set.");
+
+                if (expectedCarry)
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set.");
+                else
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should not be set.");
             }
         }
     }

@@ -73,7 +73,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x26_Load_H_With_8_Bit_Immediate(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x29_Add_HL_To_HL(),
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0x2B_Decrement_HL(),
                 () => Instruction_0x2C_Increment_L(),
@@ -90,7 +90,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x39_Add_SP_To_HL(),
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0x3B_Decrement_SP(),
                 () => Instruction_0x3C_Increment_A(),
@@ -274,10 +274,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x09_Add_BC_To_HL()
         {
-            Registers.ClearFlag(Flags.AddSubtract);
-            Registers.SetFlagTo(Flags.HalfCarry, ((Registers.HL & 0xFFF) + (Registers.BC & 0xFFF) > 0xFFF));
-            Registers.SetFlagTo(Flags.Carry, (Registers.HL + Registers.BC > 0xFFFF));
-            Registers.HL += Registers.BC;
+            AddToHLAndSetFlags(Registers.BC);
         }
 
         /// <summary>
@@ -393,9 +390,12 @@ namespace GBDotNet.Core
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_HL,r16
+        /// </summary>
         private void Instruction_0x19_Add_DE_To_HL()
         {
-            throw new NotImplementedException();
+            AddToHLAndSetFlags(Registers.DE);
         }
 
         private void Instruction_0x1A_Load_A_From_Address_Pointed_To_By_DE()
@@ -440,6 +440,14 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_HL,r16
+        /// </summary>
+        private void Instruction_0x29_Add_HL_To_HL()
+        {
+            AddToHLAndSetFlags(Registers.HL);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#DEC_r16
         /// </summary>
         private void Instruction_0x2B_Decrement_HL()
@@ -466,6 +474,14 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_HL,r16
+        /// </summary>
+        private void Instruction_0x39_Add_SP_To_HL()
+        {
+            AddToHLAndSetFlags(Registers.SP);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#DEC_SP
         /// </summary>
         private void Instruction_0x3B_Decrement_SP()
@@ -486,6 +502,17 @@ namespace GBDotNet.Core
         }
 
         //...
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_HL,r16
+        /// </summary>
+        private void AddToHLAndSetFlags(ushort value)
+        {
+            Registers.ClearFlag(Flags.AddSubtract);
+            Registers.SetFlagTo(Flags.HalfCarry, ((Registers.HL & 0xFFF) + (value & 0xFFF) > 0xFFF));
+            Registers.SetFlagTo(Flags.Carry, (Registers.HL + value > 0xFFFF));
+            Registers.HL += value;
+        }
 
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#INC_r8"/>
         /// <see cref="https://github.com/TASVideos/BizHawk/blob/6d0973ca7ea3907abdcf482e6ce8f2767ae6f297/BizHawk.Emulation.Cores/CPUs/Z80A/Operations.cs#L467"/>
