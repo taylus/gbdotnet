@@ -3,19 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test
 {
-    /// <summary>
-    /// Tests the CPU's instructions by executing them in controlled environments.
-    /// </summary>
-    /// <remarks>
-    /// TODO: Break up CPU and test classes by types of instructions:
-    /// - Loads and stores
-    /// - Arithmetic
-    /// - Jumps
-    /// - etc
-    /// <see cref="http://www.devrs.com/gb/files/opcodes.html"/>
-    /// </remarks>
     [TestClass]
-    public class CPU_Instruction_Tests
+    public class CPU_Instruction_8_Bit_Load_And_Store_Tests
     {
         [TestMethod]
         public void Instruction_0x02_Should_Load_Address_Pointed_To_By_BC_With_A()
