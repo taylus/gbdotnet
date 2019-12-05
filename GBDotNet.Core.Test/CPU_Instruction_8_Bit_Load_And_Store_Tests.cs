@@ -73,6 +73,26 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x1A_Should_Load_A_From_Address_Pointed_To_By_DE()
+        {
+            var memory = new Memory(0x1A, 0x01, 0x02);
+            var cpu = new CPU(new Registers(), memory);
+
+            cpu.Tick();
+            Assert.AreEqual(0x1A, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.DE}.");
+
+            cpu.Registers.PC = 0;
+            cpu.Registers.DE = 1;
+            cpu.Tick();
+            Assert.AreEqual(0x01, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.DE}.");
+
+            cpu.Registers.PC = 0;
+            cpu.Registers.DE = 2;
+            cpu.Tick();
+            Assert.AreEqual(0x02, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.DE}.");
+        }
+
+        [TestMethod]
         public void Instruction_0x1E_Should_Load_E_With_8_Bit_Immediate()
         {
             var memory = new Memory(0x1E);
