@@ -18,14 +18,6 @@ namespace GBDotNet.Core.Test
     public class CPU_Instruction_Tests
     {
         [TestMethod]
-        public void Instruction_0x01_Should_Load_BC_With_16_Bit_Immediate()
-        {
-            var memory = new Memory(0x01);
-            var cpu = new CPU(new Registers(), memory);
-            TestLoadRegisterWith16BitImmediate(cpu, () => cpu.Registers.BC);
-        }
-
-        [TestMethod]
         public void Instruction_0x02_Should_Load_Address_Pointed_To_By_BC_With_A()
         {
             var memory = new Memory(0x02);
@@ -42,18 +34,6 @@ namespace GBDotNet.Core.Test
             var memory = new Memory(0x06);
             var cpu = new CPU(new Registers(), memory);
             TestLoadRegisterWith8BitImmediate(cpu, () => cpu.Registers.B);
-        }
-
-        [TestMethod]
-        public void Instruction_0x08_Should_Load_Address_With_Stack_Pointer()
-        {
-            var memory = new Memory(0x08, 0x10, 0xFF);
-            var cpu = new CPU(new Registers() { SP = 0xABCD }, memory);
-
-            cpu.Tick();
-
-            Assert.AreEqual(0xCD, memory[0xFF10], "Expected low byte of stack pointer to be stored at given address.");
-            Assert.AreEqual(0xAB, memory[0xFF11], "Expected high byte of stack pointer to be stored at given address + 1.");
         }
 
         [TestMethod]
@@ -82,14 +62,6 @@ namespace GBDotNet.Core.Test
             var memory = new Memory(0x0E);
             var cpu = new CPU(new Registers(), memory);
             TestLoadRegisterWith8BitImmediate(cpu, () => cpu.Registers.C);
-        }
-
-        [TestMethod]
-        public void Instruction_0x11_Should_Load_DE_With_16_Bit_Immediate()
-        {
-            var memory = new Memory(0x11);
-            var cpu = new CPU(new Registers(), memory);
-            TestLoadRegisterWith16BitImmediate(cpu, () => cpu.Registers.DE);
         }
 
         [TestMethod]
@@ -149,25 +121,6 @@ namespace GBDotNet.Core.Test
                 cpu.Tick();
                 Assert.AreEqual(i, registerUnderTest(), $"Expected register to be set to {i} after executing ld instruction w/ 8-bit immediate {i}.");
                 cpu.Registers.PC -= 2;  //rewind by the size of the instruction
-            }
-        }
-
-        /// <summary>
-        /// Tests instructions like ld de, 9000.
-        /// </summary>
-        /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#LD_r16,n16"/>
-        private static void TestLoadRegisterWith16BitImmediate(CPU cpu, Func<ushort> registerUnderTest)
-        {
-            for (int i = 0; i <= byte.MaxValue; i++)
-            {
-                cpu.Memory[1] = (byte)i;
-                for (int j = 0; j <= byte.MaxValue; j++)
-                {
-                    cpu.Memory[2] = (byte)j;
-                    cpu.Tick();
-                    Assert.AreEqual((j << 8) | i, registerUnderTest());
-                    cpu.Registers.PC -= 3;  //rewind to run again w/ new value
-                }
             }
         }
     }
