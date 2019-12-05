@@ -112,40 +112,6 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
-        public void Instruction_0x17_Should_Rotate_A_Left()
-        {
-            var memory = new Memory(0x17);
-            var cpu = new CPU(new Registers(), memory);
-            cpu.Registers.SetFlag(Flags.Carry);
-            cpu.Registers.SetFlag(Flags.Zero);
-            cpu.Registers.SetFlag(Flags.AddSubtract);
-            cpu.Registers.SetFlag(Flags.HalfCarry);
-
-            //test by shifting the carry bit all the way across the accumulator:
-            //00000000 C:1, then 00000001 C:0, then 00000010 C:0, ..., all the way back to 00000000 C:1
-            for (int i = 0; i < 8; i++)
-            {
-                cpu.Tick();
-                Assert.AreEqual((byte)(1 << i), cpu.Registers.A, "Accumulator has incorrect value after rla instruction.");
-                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be cleared after rla instruction.");
-                AssertOtherFlagsAreCleared();
-                cpu.Registers.PC--;
-            }
-
-            cpu.Tick();
-            Assert.AreEqual(0, cpu.Registers.A, "Accumulator should be zero after a full left rotation.");
-            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set again after a full left rotation.");
-            AssertOtherFlagsAreCleared();
-
-            void AssertOtherFlagsAreCleared()
-            {
-                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "rlca instruction should clear Z flag.");
-                Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "rlca instruction should clear N flag.");
-                Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "rlca instruction should clear H flag.");
-            }
-        }
-
-        [TestMethod]
         public void Instruction_0x1E_Should_Load_E_With_8_Bit_Immediate()
         {
             var memory = new Memory(0x1E);

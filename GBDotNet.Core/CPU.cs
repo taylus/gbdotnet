@@ -249,16 +249,15 @@ namespace GBDotNet.Core
         /// bits of A always circle around and are preserved. RLA copies the
         /// old carry value into bit 0 *before* copying bit 7 into the carry.
         /// </remarks>
+        /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#RLCA"/>
         /// <see cref="https://ez80.readthedocs.io/en/latest/docs/bit-shifts/rla.html"/>
         /// <see cref="https://stackoverflow.com/questions/812022/c-sharp-bitwise-rotate-left-and-rotate-right"/>
         /// <see cref="https://github.com/sinamas/gambatte/blob/master/libgambatte/src/cpu.cpp#L561"/>
         private void Instruction_0x07_Rotate_A_Left_Circular()
         {
             Registers.A = (byte)((Registers.A << 1) | (Registers.A >> 7));
-            Registers.SetFlagTo(Flags.Carry, (Registers.A & 0b0000_0001) != 0);
-            Registers.ClearFlag(Flags.Zero);
-            Registers.ClearFlag(Flags.AddSubtract);
-            Registers.ClearFlag(Flags.HalfCarry);
+            Registers.SetFlagTo(Flags.Carry, (Registers.A & 0b0000_0001) != 0); //set carry to LSB (original MSB)
+            Registers.ClearFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
         }
 
         /// <summary>
@@ -321,11 +320,16 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#RRCA
+        /// Shifts every bit of A right by one position. The 0th bit of A
+        /// is also copied into the carry flag and the 7th bit of A, e.g.
+        /// [0] -> [7 -> 0] -> C
         /// </summary>
+        /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#RRCA"/>
         private void Instruction_0x0F_Rotate_A_Right_With_Carry()
         {
-            throw new NotImplementedException();
+            Registers.A = (byte)((Registers.A >> 1) | (Registers.A << 7));
+            Registers.SetFlagTo(Flags.Carry, (Registers.A & 0b1000_0000) != 0); //set carry to MSB (original LSB)
+            Registers.ClearFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
         }
 
         /// <summary>
@@ -392,9 +396,7 @@ namespace GBDotNet.Core
             bool oldCarry = Registers.HasFlag(Flags.Carry);
             Registers.SetFlagTo(Flags.Carry, (Registers.A & 0b1000_0000) != 0);
             Registers.A = (byte)((Registers.A << 1) | (oldCarry ? 1 : 0));
-            Registers.ClearFlag(Flags.Zero);
-            Registers.ClearFlag(Flags.AddSubtract);
-            Registers.ClearFlag(Flags.HalfCarry);
+            Registers.ClearFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
         }
 
         /// <summary>
