@@ -3,9 +3,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test
 {
-    /// <summary>
-    /// Tests the CPU's 8-bit math instructions by executing them in controlled environments.
-    /// </summary>
     [TestClass]
     public class CPU_Instruction_8_Bit_Math_Tests
     {
