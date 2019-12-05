@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test
 {
@@ -11,9 +10,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x07);
             var cpu = new CPU(new Registers() { A = 0b0100_0110 }, memory);
-            cpu.Registers.SetFlag(Flags.Zero);
-            cpu.Registers.SetFlag(Flags.AddSubtract);
-            cpu.Registers.SetFlag(Flags.HalfCarry);
+            cpu.Registers.SetFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
 
             cpu.Tick();
             Assert.AreEqual(0b1000_1100, cpu.Registers.A, "Accumulator has incorrect value after first rlca instruction.");
@@ -32,9 +29,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x0F);
             var cpu = new CPU(new Registers() { A = 0b0100_0110 }, memory);
-            cpu.Registers.SetFlag(Flags.Zero);
-            cpu.Registers.SetFlag(Flags.AddSubtract);
-            cpu.Registers.SetFlag(Flags.HalfCarry);
+            cpu.Registers.SetFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
 
             cpu.Tick();
             Assert.AreEqual(0b0010_0011, cpu.Registers.A, "Accumulator has incorrect value after first rrca instruction.");
@@ -53,10 +48,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x17);
             var cpu = new CPU(new Registers(), memory);
-            cpu.Registers.SetFlag(Flags.Carry);
-            cpu.Registers.SetFlag(Flags.Zero);
-            cpu.Registers.SetFlag(Flags.AddSubtract);
-            cpu.Registers.SetFlag(Flags.HalfCarry);
+            cpu.Registers.SetFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry | Flags.Carry);
 
             //test by shifting the carry bit all the way across the accumulator:
             //00000000 C:1, then 00000001 C:0, then 00000010 C:0, ..., all the way back to 00000000 C:1
@@ -80,11 +72,23 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x1F);
             var cpu = new CPU(new Registers(), memory);
-            //...
+            cpu.Registers.SetFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry | Flags.Carry);
+
+            //test by shifting the carry bit all the way across the accumulator:
+            //00000000 C:1, then 10000000 C:0, then 01000000 C:0, ..., all the way back to 00000000 C:1
+            for (int i = 0; i < 8; i++)
+            {
+                cpu.Tick();
+                Assert.AreEqual((byte)(1 << (7 - i)), cpu.Registers.A, "Accumulator has incorrect value after rra instruction.");
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be cleared after rra instruction.");
+                AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+                cpu.Registers.PC--;
+            }
 
             cpu.Tick();
-
-            //...
+            Assert.AreEqual(0, cpu.Registers.A, "Accumulator should be zero after a full right rotation.");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set again after a full right rotation.");
+            AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
         }
 
         private static void AssertFlagsAreCleared(CPU cpu, Flags flags)

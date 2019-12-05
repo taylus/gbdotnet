@@ -45,7 +45,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x0C_Increment_C(),
                 () => Instruction_0x0D_Decrement_C(),
                 () => Instruction_0x0E_Load_C_With_8_Bit_Immediate(),
-                () => Instruction_0x0F_Rotate_A_Right_With_Carry(),
+                () => Instruction_0x0F_Rotate_A_Right_Circular(),
                 //0x10
                 () => Instruction_0x10_Stop(),
                 () => Instruction_0x11_Load_DE_With_16_Bit_Immediate(),
@@ -62,7 +62,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x1C_Increment_E(),
                 () => Instruction_0x1D_Decrement_E(),
                 () => Instruction_0x1E_Load_E_With_8_Bit_Immediate(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x1F_Rotate_A_Right(),
                 //0x20
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -325,7 +325,7 @@ namespace GBDotNet.Core
         /// [0] -> [7 -> 0] -> C
         /// </summary>
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#RRCA"/>
-        private void Instruction_0x0F_Rotate_A_Right_With_Carry()
+        private void Instruction_0x0F_Rotate_A_Right_Circular()
         {
             Registers.A = (byte)((Registers.A >> 1) | (Registers.A << 7));
             Registers.SetFlagTo(Flags.Carry, (Registers.A & 0b1000_0000) != 0); //set carry to MSB (original LSB)
@@ -447,6 +447,17 @@ namespace GBDotNet.Core
         private void Instruction_0x1E_Load_E_With_8_Bit_Immediate()
         {
             Registers.E = Fetch();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RRA
+        /// </summary>
+        private void Instruction_0x1F_Rotate_A_Right()
+        {
+            bool oldCarry = Registers.HasFlag(Flags.Carry);
+            Registers.SetFlagTo(Flags.Carry, (Registers.A & 0b0000_0001) != 0);
+            Registers.A = (byte)((Registers.A >> 1) | (oldCarry ? 1 << 7 : 0));
+            Registers.ClearFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
         }
 
         /// <summary>
