@@ -101,6 +101,12 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x22_Should_Load_Address_Pointed_To_By_HL_With_A_Then_Increment_HL()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
         public void Instruction_0x26_Should_Load_H_With_8_Bit_Immediate()
         {
             var memory = new Memory(0x26);
@@ -114,6 +120,12 @@ namespace GBDotNet.Core.Test
             var memory = new Memory(0x2E);
             var cpu = new CPU(new Registers(), memory);
             TestLoadRegisterWith8BitImmediate(cpu, () => cpu.Registers.L);
+        }
+
+        [TestMethod]
+        public void Instruction_0x32_Should_Load_Address_Pointed_To_By_HL_With_A_Then_Decrement_HL()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
