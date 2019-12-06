@@ -65,7 +65,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x1F_Rotate_A_Right(),
                 //0x20
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x21_Load_HL_With_16_Bit_Immediate(),
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0x23_Increment_HL(),
                 () => Instruction_0x24_Increment_H(),
@@ -597,6 +597,14 @@ namespace GBDotNet.Core
             Registers.SetFlagTo(Flags.Carry, (Registers.A & 0b0000_0001) != 0);
             Registers.A = (byte)((Registers.A >> 1) | (oldCarry ? 1 << 7 : 0));
             Registers.ClearFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r16,n16
+        /// </summary>
+        private void Instruction_0x21_Load_HL_With_16_Bit_Immediate()
+        {
+            Registers.HL = Common.ToLittleEndian(Fetch(), Fetch());
         }
 
         /// <summary>
