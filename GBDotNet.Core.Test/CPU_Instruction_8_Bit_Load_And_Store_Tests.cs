@@ -115,6 +115,12 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0x2A_Should_Load_A_With_Address_Pointed_To_By_HL_Then_Increment_HL()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
         public void Instruction_0x2E_Should_Load_L_With_8_Bit_Immediate()
         {
             var memory = new Memory(0x2E);
@@ -124,6 +130,74 @@ namespace GBDotNet.Core.Test
 
         [TestMethod]
         public void Instruction_0x32_Should_Load_Address_Pointed_To_By_HL_With_A_Then_Decrement_HL()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x36_Should_Load_Address_Pointed_To_By_HL_With_8_Bit_Immediate()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x3A_Should_Load_A_With_Address_Pointed_To_By_HL_Then_Decrement_HL()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x3E_Should_Load_A_With_8_Bit_Immediate()
+        {
+            var memory = new Memory(0x3E);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterWith8BitImmediate(cpu, () => cpu.Registers.A);
+        }
+
+        [TestMethod]
+        public void Instruction_0x40_Should_Load_B_From_B()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x41_Should_Load_B_From_C()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x42_Should_Load_B_From_D()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x43_Should_Load_B_From_E()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x44_Should_Load_B_From_H()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x45_Should_Load_B_From_L()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x46_Should_Load_B_From_Address_Pointed_To_By_HL()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x47_Should_Load_B_From_A()
         {
             throw new NotImplementedException();
         }
