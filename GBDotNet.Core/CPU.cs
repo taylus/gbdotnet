@@ -82,7 +82,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 //0x30
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x31_Load_SP_With_16_Bit_Immediate(),
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0x33_Increment_SP(),
                 () => { throw new NotImplementedException(); },
@@ -671,6 +671,14 @@ namespace GBDotNet.Core
         private void Instruction_0x2E_Load_L_With_8_Bit_Immediate()
         {
             Registers.L = Fetch();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r16,n16
+        /// </summary>
+        private void Instruction_0x31_Load_SP_With_16_Bit_Immediate()
+        {
+            Registers.SP = Common.ToLittleEndian(Fetch(), Fetch());
         }
 
         /// <summary>
