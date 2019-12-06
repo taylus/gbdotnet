@@ -235,7 +235,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 //0xC0
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xC1_Pop_Stack_Into_BC(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -252,7 +252,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 //0xD0
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xD1_Pop_Stack_Into_DE(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -269,7 +269,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 //0xE0
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xD1_Pop_Stack_Into_HL(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -286,7 +286,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 //0xF0
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xD1_Pop_Stack_Into_AF(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -328,6 +328,27 @@ namespace GBDotNet.Core
         private void Execute(byte opcode)
         {
             instructionSet[opcode]();
+        }
+
+        /// <summary>
+        /// Pushes the given register pair onto the stack and decrements the stack pointer by 2.
+        /// </summary>
+        private void PushStack(byte high, byte low)
+        {
+            Registers.SP--;
+            Memory[Registers.SP] = high;
+            Registers.SP--;
+            Memory[Registers.SP] = low;
+        }
+
+        /// <summary>
+        /// Returns the 16-bit value at the top of the stack and increments the stack pointer by 2.
+        /// </summary>
+        private ushort PopStack()
+        {
+            byte low = Memory[Registers.SP++];
+            byte high = Memory[Registers.SP++];
+            return Common.ToLittleEndian(low, high);
         }
 
         /// <summary>
@@ -723,9 +744,44 @@ namespace GBDotNet.Core
 
         //...
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#HALT
+        /// </summary>
         private void Instruction_0x76_Halt()
         {
             IsHalted = true;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#POP_r16
+        /// </summary>
+        private void Instruction_0xC1_Pop_Stack_Into_BC()
+        {
+            Registers.BC = PopStack();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#POP_r16
+        /// </summary>
+        private void Instruction_0xD1_Pop_Stack_Into_DE()
+        {
+            Registers.DE = PopStack();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#POP_r16
+        /// </summary>
+        private void Instruction_0xD1_Pop_Stack_Into_HL()
+        {
+            Registers.HL = PopStack();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#POP_AF
+        /// </summary>
+        private void Instruction_0xD1_Pop_Stack_Into_AF()
+        {
+            Registers.AF = PopStack();
         }
 
         //...

@@ -53,13 +53,13 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xC1_Should_Pop_Stack_Into_BC()
         {
-            var memory = new Memory(0xC1);
-            var cpu = new CPU(new Registers(), memory);
-            //TODO: finish arranging test
+            var memory = new Memory(0xC1, 0xCD, 0xAB);
+            var cpu = new CPU(new Registers() { SP = 0x0001 }, memory);
 
             cpu.Tick();
 
-            //TODO: assertions
+            Assert.AreEqual(0xABCD, cpu.Registers.BC);
+            Assert.AreEqual(0x0003, cpu.Registers.SP);
         }
 
         [TestMethod]
@@ -77,13 +77,13 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xD1_Should_Pop_Stack_Into_DE()
         {
-            var memory = new Memory(0xD1);
-            var cpu = new CPU(new Registers(), memory);
-            //TODO: finish arranging test
+            var memory = new Memory(0xD1, 0x00, 0x34, 0x12);
+            var cpu = new CPU(new Registers() { SP = 0x0002 }, memory);
 
             cpu.Tick();
 
-            //TODO: assertions
+            Assert.AreEqual(0x1234, cpu.Registers.DE);
+            Assert.AreEqual(0x0004, cpu.Registers.SP);
         }
 
         [TestMethod]
@@ -101,13 +101,13 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xE1_Should_Pop_Stack_Into_HL()
         {
-            var memory = new Memory(0xE1);
-            var cpu = new CPU(new Registers(), memory);
-            //TODO: finish arranging test
+            var memory = new Memory(0xE1, 0xAD, 0xDE);
+            var cpu = new CPU(new Registers() { SP = 0x0001 }, memory);
 
             cpu.Tick();
 
-            //TODO: assertions
+            Assert.AreEqual(0xDEAD, cpu.Registers.HL);
+            Assert.AreEqual(0x0003, cpu.Registers.SP);
         }
 
         [TestMethod]
@@ -125,13 +125,13 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xF1_Should_Pop_Stack_Into_AF()
         {
-            var memory = new Memory(0xF1);
-            var cpu = new CPU(new Registers(), memory);
-            //TODO: finish arranging test
+            var memory = new Memory(0xF1, 0xEF, 0xBE);
+            var cpu = new CPU(new Registers() { SP = 0x0001 }, memory);
 
             cpu.Tick();
 
-            //TODO: assertions
+            Assert.AreEqual(0xBEEF, cpu.Registers.AF);
+            Assert.AreEqual(0x0003, cpu.Registers.SP);
         }
 
         [TestMethod]
