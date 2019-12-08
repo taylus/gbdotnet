@@ -202,6 +202,54 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        [TestMethod]
+        public void Instruction_0x48_Should_Load_C_From_B()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x49_Should_Load_C_From_C()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x4A_Should_Load_C_From_D()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x4B_Should_Load_C_From_E()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x4C_Should_Load_C_From_H()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x4D_Should_Load_C_From_L()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x4E_Should_Load_C_From_Address_Pointed_To_By_HL()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x4F_Should_Load_C_From_A()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Tests instructions like ld d, 5.
         /// </summary>
