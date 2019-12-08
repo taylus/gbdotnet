@@ -74,7 +74,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0x29_Add_HL_To_HL(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x2A_Load_A_With_Address_Pointed_To_By_HL_Then_Increment_HL(),
                 () => Instruction_0x2B_Decrement_HL(),
                 () => Instruction_0x2C_Increment_L(),
                 () => Instruction_0x2D_Decrement_L(),
@@ -674,6 +674,17 @@ namespace GBDotNet.Core
         private void Instruction_0x29_Add_HL_To_HL()
         {
             AddToHLAndSetFlags(Registers.HL);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_HL+_
+        /// </summary>
+        /// <remarks>
+        /// Also known as: ldi a, [hl]
+        /// </remarks>
+        private void Instruction_0x2A_Load_A_With_Address_Pointed_To_By_HL_Then_Increment_HL()
+        {
+            Registers.A = Memory[Registers.HL++];
         }
 
         /// <summary>

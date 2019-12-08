@@ -123,7 +123,13 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x2A_Should_Load_A_With_Address_Pointed_To_By_HL_Then_Increment_HL()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x2A, 0xFF);
+            var cpu = new CPU(new Registers() { HL = 0x0001 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xFF, cpu.Registers.A);
+            Assert.AreEqual(0x0002, cpu.Registers.HL);
         }
 
         [TestMethod]
