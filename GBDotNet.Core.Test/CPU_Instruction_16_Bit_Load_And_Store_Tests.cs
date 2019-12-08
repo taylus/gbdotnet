@@ -152,13 +152,18 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xF8_Should_Add_8_Bit_Signed_Immediate_To_Stack_Pointer_And_Store_Result_In_HL()
         {
-            var memory = new Memory(0xF8);
-            var cpu = new CPU(new Registers(), memory);
-            //TODO: finish arranging test
+            var memory = new Memory(0xF8, 0x00);
+            var cpu = new CPU(new Registers() { SP = initialStackPointer }, memory);
 
-            cpu.Tick();
-
-            //TODO: assertions
+            //test adding all possible offsets in range [-128, 127] to SP
+            for(int i = sbyte.MinValue; i <= sbyte.MaxValue; i++)
+            {
+                cpu.Memory[1] = (byte)i;
+                cpu.Tick();
+                var expected = (ushort)(cpu.Registers.SP + i);
+                Assert.AreEqual(expected, cpu.Registers.HL);
+                cpu.Registers.PC -= 2;
+            }
         }
 
         [TestMethod]

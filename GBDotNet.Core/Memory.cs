@@ -10,7 +10,7 @@ namespace GBDotNet.Core
     public class Memory : IEnumerable<byte>
     {
         private const int size = ushort.MaxValue;
-        private byte[] memory;
+        private readonly byte[] memory;
 
         public Memory(params byte[] bytes)
         {
