@@ -66,7 +66,7 @@ namespace GBDotNet.Core
                 //0x20
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0x21_Load_HL_With_16_Bit_Immediate(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x22_Load_Address_Pointed_To_By_HL_With_A_Then_Increment_HL(),
                 () => Instruction_0x23_Increment_HL(),
                 () => Instruction_0x24_Increment_H(),
                 () => Instruction_0x25_Decrement_H(),
@@ -626,6 +626,17 @@ namespace GBDotNet.Core
         private void Instruction_0x21_Load_HL_With_16_Bit_Immediate()
         {
             Registers.HL = Common.ToLittleEndian(Fetch(), Fetch());
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__HL+_,A
+        /// </summary>
+        /// <remarks>
+        /// Also known as: ldi [hl], a
+        /// </remarks>
+        private void Instruction_0x22_Load_Address_Pointed_To_By_HL_With_A_Then_Increment_HL()
+        {
+            Memory[Registers.HL++] = Registers.A;
         }
 
         /// <summary>
