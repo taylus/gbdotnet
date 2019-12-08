@@ -93,12 +93,12 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xD5_Should_Push_DE_Onto_Stack()
         {
             var memory = new Memory(0xD5);
-            var cpu = new CPU(new Registers(), memory);
-            //TODO: finish arranging test
+            var cpu = new CPU(new Registers() { DE = 0x1234, SP = initialStackPointer }, memory);
 
             cpu.Tick();
 
-            //TODO: assertions
+            CollectionAssert.AreEqual(new byte[] { 0xD5, 0x34, 0x12 }, memory.Take(3).ToArray());
+            Assert.AreEqual(initialStackPointer - 2, cpu.Registers.SP);
         }
 
         [TestMethod]

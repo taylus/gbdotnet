@@ -256,7 +256,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xD5_Push_DE_Onto_Stack(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -774,6 +774,14 @@ namespace GBDotNet.Core
         private void Instruction_0xD1_Pop_Stack_Into_DE()
         {
             Registers.DE = PopStack();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#PUSH_r16
+        /// </summary>
+        private void Instruction_0xD5_Push_DE_Onto_Stack()
+        {
+            PushOntoStack(Registers.D, Registers.E);
         }
 
         /// <summary>
