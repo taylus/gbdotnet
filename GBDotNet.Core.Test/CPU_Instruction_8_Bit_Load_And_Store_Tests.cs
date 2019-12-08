@@ -358,6 +358,102 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        [TestMethod]
+        public void Instruction_0x60_Should_Load_H_From_B()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x61_Should_Load_H_From_C()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x62_Should_Load_H_From_D()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x63_Should_Load_H_From_E()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x64_Should_Load_H_From_H()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x65_Should_Load_H_From_L()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x66_Should_Load_H_From_Address_Pointed_To_By_HL()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x67_Should_Load_H_From_A()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x68_Should_Load_L_From_B()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x69_Should_Load_L_From_C()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x6A_Should_Load_L_From_D()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x6B_Should_Load_L_From_E()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x6C_Should_Load_L_From_H()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x6D_Should_Load_L_From_L()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x6E_Should_Load_L_From_Address_Pointed_To_By_HL()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x6F_Should_Load_L_From_A()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Tests instructions like ld d, 5.
         /// </summary>
