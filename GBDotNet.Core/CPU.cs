@@ -239,7 +239,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xC5_Push_BC_Onto_Stack(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -333,7 +333,7 @@ namespace GBDotNet.Core
         /// <summary>
         /// Pushes the given register pair onto the stack and decrements the stack pointer by 2.
         /// </summary>
-        private void PushStack(byte high, byte low)
+        private void PushOntoStack(byte high, byte low)
         {
             Registers.SP--;
             Memory[Registers.SP] = high;
@@ -758,6 +758,14 @@ namespace GBDotNet.Core
         private void Instruction_0xC1_Pop_Stack_Into_BC()
         {
             Registers.BC = PopStack();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#PUSH_r16
+        /// </summary>
+        private void Instruction_0xC5_Push_BC_Onto_Stack()
+        {
+            PushOntoStack(Registers.B, Registers.C);
         }
 
         /// <summary>

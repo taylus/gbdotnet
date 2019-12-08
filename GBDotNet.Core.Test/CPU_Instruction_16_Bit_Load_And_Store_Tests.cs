@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test
@@ -6,6 +7,8 @@ namespace GBDotNet.Core.Test
     [TestClass]
     public class CPU_Instruction_16_Bit_Load_And_Store_Tests
     {
+        private const int initialStackPointer = 0x0003;
+
         [TestMethod]
         public void Instruction_0x01_Should_Load_BC_With_16_Bit_Immediate()
         {
@@ -53,25 +56,25 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xC1_Should_Pop_Stack_Into_BC()
         {
-            var memory = new Memory(0xC1, 0xCD, 0xAB);
-            var cpu = new CPU(new Registers() { SP = 0x0001 }, memory);
+            var memory = new Memory(0xC1, 0x00, 0x00, 0xCD, 0xAB);
+            var cpu = new CPU(new Registers() { SP = initialStackPointer }, memory);
 
             cpu.Tick();
 
             Assert.AreEqual(0xABCD, cpu.Registers.BC);
-            Assert.AreEqual(0x0003, cpu.Registers.SP);
+            Assert.AreEqual(initialStackPointer + 2, cpu.Registers.SP);
         }
 
         [TestMethod]
         public void Instruction_0xC5_Should_Push_BC_Onto_Stack()
         {
             var memory = new Memory(0xC5);
-            var cpu = new CPU(new Registers(), memory);
-            //TODO: finish arranging test
+            var cpu = new CPU(new Registers() { BC = 0xBEEF, SP = initialStackPointer }, memory);
 
             cpu.Tick();
 
-            //TODO: assertions
+            CollectionAssert.AreEqual(new byte[] { 0xC5, 0xEF, 0xBE }, memory.Take(3).ToArray());
+            Assert.AreEqual(initialStackPointer - 2, cpu.Registers.SP);
         }
 
         [TestMethod]

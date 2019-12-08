@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace GBDotNet.Core
 {
     /// <summary>
     /// Implements a region of memory as an addressable byte array.
     /// </summary>
-    public class Memory
+    public class Memory : IEnumerable<byte>
     {
         private const int size = ushort.MaxValue;
         private byte[] memory;
@@ -41,6 +43,16 @@ namespace GBDotNet.Core
                 Console.Write("{0:x2} ", bytes[i]);
                 if (i % bytesPerLine == bytesPerLine - 1) Console.WriteLine();
             }
+        }
+
+        public IEnumerator<byte> GetEnumerator()
+        {
+            return ((IEnumerable<byte>)memory).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<byte>)memory).GetEnumerator();
         }
     }
 }
