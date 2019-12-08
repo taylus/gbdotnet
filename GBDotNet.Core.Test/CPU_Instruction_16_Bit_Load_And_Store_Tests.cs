@@ -141,12 +141,12 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xF5_Should_Push_AF_Onto_Stack()
         {
             var memory = new Memory(0xF5);
-            var cpu = new CPU(new Registers(), memory);
-            //TODO: finish arranging test
+            var cpu = new CPU(new Registers() { AF = 0xFFF0, SP = initialStackPointer }, memory);
 
             cpu.Tick();
 
-            //TODO: assertions
+            CollectionAssert.AreEqual(new byte[] { 0xF5, 0xF0, 0xFF }, memory.Take(3).ToArray());
+            Assert.AreEqual(initialStackPointer - 2, cpu.Registers.SP);
         }
 
         [TestMethod]
