@@ -117,12 +117,12 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xE5_Should_Push_HL_Onto_Stack()
         {
             var memory = new Memory(0xE5);
-            var cpu = new CPU(new Registers(), memory);
-            //TODO: finish arranging test
+            var cpu = new CPU(new Registers() { HL = 0x4000, SP = initialStackPointer }, memory);
 
             cpu.Tick();
 
-            //TODO: assertions
+            CollectionAssert.AreEqual(new byte[] { 0xE5, 0x00, 0x40 }, memory.Take(3).ToArray());
+            Assert.AreEqual(initialStackPointer - 2, cpu.Registers.SP);
         }
 
         [TestMethod]
