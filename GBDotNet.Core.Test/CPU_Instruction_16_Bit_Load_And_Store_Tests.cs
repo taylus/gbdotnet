@@ -165,12 +165,11 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xF9_Should_Load_Stack_Pointer_From_HL()
         {
             var memory = new Memory(0xF9);
-            var cpu = new CPU(new Registers(), memory);
-            //TODO: finish arranging test
+            var cpu = new CPU(new Registers() { HL = 0xBABE }, memory);
 
             cpu.Tick();
 
-            //TODO: assertions
+            Assert.AreEqual(0xBABE, cpu.Registers.SP);
         }
 
         /// <summary>

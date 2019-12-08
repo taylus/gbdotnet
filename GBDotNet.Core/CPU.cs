@@ -294,7 +294,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xF9_Load_Stack_Pointer_From_HL(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -814,6 +814,14 @@ namespace GBDotNet.Core
         private void Instruction_0xF5_Push_AF_Onto_Stack()
         {
             PushOntoStack(Registers.A, Registers.F);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_SP,HL
+        /// </summary>
+        private void Instruction_0xF9_Load_Stack_Pointer_From_HL()
+        {
+            Registers.SP = Registers.HL;
         }
 
         //...
