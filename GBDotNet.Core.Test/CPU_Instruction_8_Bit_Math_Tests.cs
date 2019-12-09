@@ -156,6 +156,118 @@ namespace GBDotNet.Core.Test
             TestDecrement8BitRegister(cpu, () => cpu.Registers.A);
         }
 
+        [TestMethod]
+        public void Instruction_0x80_Should_Add_B_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x81_Should_Add_C_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x82_Should_Add_D_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x83_Should_Add_E_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x84_Should_Add_H_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x85_Should_Add_L_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x86_Should_Add_Address_Pointed_To_By_HL_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x87_Should_Add_A_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x88_Should_Add_B_Plus_Carry_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x89_Should_Add_C_Plus_Carry_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x8A_Should_Add_D_Plus_Carry_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x8B_Should_Add_E_Plus_Carry_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x8C_Should_Add_H_Plus_Carry_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x8D_Should_Add_L_Plus_Carry_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x8E_Should_Add_Address_Pointed_To_By_HL_Plus_Carry_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x8F_Should_Add_A_Plus_Carry_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Tests instructions like inc b.
         /// </summary>
