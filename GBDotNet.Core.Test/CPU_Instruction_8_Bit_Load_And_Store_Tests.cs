@@ -454,6 +454,145 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        [TestMethod]
+        public void Instruction_0x70_Should_Load_Address_Pointed_To_By_HL_With_B()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x71_Should_Load_Address_Pointed_To_By_HL_With_C()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x72_Should_Load_Address_Pointed_To_By_HL_With_D()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x73_Should_Load_Address_Pointed_To_By_HL_With_E()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x74_Should_Load_Address_Pointed_To_By_HL_With_H()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x75_Should_Load_Address_Pointed_To_By_HL_With_L()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x76_Should_Halt_The_Processor()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x77_Should_Load_Address_Pointed_To_By_HL_With_A()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x78_Should_Load_A_From_B()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x79_Should_Load_A_From_C()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x7A_Should_Load_A_From_D()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x7B_Should_Load_A_From_E()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x7C_Should_Load_A_From_H()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x7D_Should_Load_A_From_L()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x7E_Should_Load_A_From_Address_Pointed_To_By_HL()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x7F_Should_Load_A_From_A()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xE0_Should_Load_A_Into_High_Memory_Address_Offset_By_8_Bit_Immediate()
+        {
+            //notes for later: immediate is unsigned
+            //see https://rednex.github.io/rgbds/gbz80.7.html#LD__$FF00+n8_,A
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xE2_Should_Load_A_Into_High_Memory_Address_Offset_By_C()
+        {
+            //see https://rednex.github.io/rgbds/gbz80.7.html#LD__$FF00+C_,A
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xEA_Should_Load_Immediate_Memory_Location_From_A()
+        {
+            //see https://rednex.github.io/rgbds/gbz80.7.html#LD__n16_,A
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xF0_Should_Load_A_From_High_Memory_Address_Offset_By_8_Bit_Immediate()
+        {
+            //see https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_$FF00+n8_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xF2_Should_Load_A_From_High_Memory_Address_Offset_By_C()
+        {
+            //see https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_$FF00+C_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xFA_Should_Load_A_From_Immediate_Memory_Location()
+        {
+            //see https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_n16_
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Tests instructions like ld d, 5.
         /// </summary>
