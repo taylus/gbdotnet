@@ -268,6 +268,118 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        [TestMethod]
+        public void Instruction_0x90_Should_Subtract_B_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x91_Should_Subtract_C_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x92_Should_Subtract_D_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x93_Should_Subtract_E_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x94_Should_Subtract_H_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x95_Should_Subtract_L_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x96_Should_Subtract_Address_Pointed_To_By_HL_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x97_Should_Subtract_A_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x98_Should_Subtract_B_Plus_Carry_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x99_Should_Subtract_C_Plus_Carry_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x9A_Should_Subtract_D_Plus_Carry_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x9B_Should_Subtract_E_Plus_Carry_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x9C_Should_Subtract_H_Plus_Carry_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x9D_Should_Subtract_L_Plus_Carry_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x9E_Should_Subtract_Address_Pointed_To_By_HL_Plus_Carry_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0x9F_Should_Subtract_A_Plus_Carry_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Tests instructions like inc b.
         /// </summary>
