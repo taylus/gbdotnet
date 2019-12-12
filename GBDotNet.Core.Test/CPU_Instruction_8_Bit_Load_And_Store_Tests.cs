@@ -143,12 +143,12 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x32_Should_Load_Address_Pointed_To_By_HL_With_A_Then_Decrement_HL()
         {
-            var memory = new Memory(0x32, 0xAA);
-            var cpu = new CPU(new Registers() { HL = 0x0001 }, memory);
+            var memory = new Memory(0x32);
+            var cpu = new CPU(new Registers() { A = 0xAA, HL = 0x0001 }, memory);
 
             cpu.Tick();
 
-            Assert.AreEqual(0xAA, cpu.Registers.A);
+            Assert.AreEqual(0xAA, memory[0x0001]);
             Assert.AreEqual(0x0000, cpu.Registers.HL);
         }
 
