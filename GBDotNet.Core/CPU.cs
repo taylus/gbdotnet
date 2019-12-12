@@ -83,7 +83,7 @@ namespace GBDotNet.Core
                 //0x30
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0x31_Load_SP_With_16_Bit_Immediate(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x32_Load_A_With_Address_Pointed_To_By_HL_Then_Decrement_HL(),
                 () => Instruction_0x33_Increment_SP(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -722,6 +722,17 @@ namespace GBDotNet.Core
         private void Instruction_0x31_Load_SP_With_16_Bit_Immediate()
         {
             Registers.SP = Common.ToLittleEndian(Fetch(), Fetch());
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_HL-_
+        /// </summary>
+        /// <remarks>
+        /// Also known as: ldd a, [hl]
+        /// </remarks>
+        private void Instruction_0x32_Load_A_With_Address_Pointed_To_By_HL_Then_Decrement_HL()
+        {
+            Registers.A = Memory[Registers.HL--];
         }
 
         /// <summary>
