@@ -87,7 +87,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x33_Increment_SP(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x36_Load_Address_Pointed_To_By_HL_With_8_Bit_Immediate(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0x39_Add_SP_To_HL(),
@@ -741,6 +741,14 @@ namespace GBDotNet.Core
         private void Instruction_0x33_Increment_SP()
         {
             Registers.SP++;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__HL_,n8
+        /// </summary>
+        private void Instruction_0x36_Load_Address_Pointed_To_By_HL_With_8_Bit_Immediate()
+        {
+            Memory[Registers.HL] = Fetch();
         }
 
         /// <summary>

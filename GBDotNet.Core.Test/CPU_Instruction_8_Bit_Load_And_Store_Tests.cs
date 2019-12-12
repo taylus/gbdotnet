@@ -155,7 +155,12 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x36_Should_Load_Address_Pointed_To_By_HL_With_8_Bit_Immediate()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x36, 0xFF);
+            var cpu = new CPU(new Registers() { HL = 0x1000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xFF, memory[0x1000]);
         }
 
         [TestMethod]
