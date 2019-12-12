@@ -493,6 +493,118 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        [TestMethod]
+        public void Instruction_0xB0_Should_Bitwise_Or_B_With_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xB1_Should_Bitwise_Or_C_With_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xB2_Should_Bitwise_Or_D_With_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xB3_Should_Bitwise_Or_E_With_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xB4_Should_Bitwise_Or_H_With_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xB5_Should_Bitwise_Or_L_With_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xB6_Should_Bitwise_Or_Address_Pointed_To_By_HL_With_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xB7_Should_Bitwise_Or_A_With_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xB8_Should_Compare_B_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xB9_Should_Compare_C_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xBA_Should_Compare_D_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xBB_Should_Compare_E_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xBC_Should_Compare_H_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xBD_Should_Compare_L_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xBE_Should_Compare_Address_Pointed_To_By_HL_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xBF_Should_Compare_A_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Tests instructions like inc b.
         /// </summary>
