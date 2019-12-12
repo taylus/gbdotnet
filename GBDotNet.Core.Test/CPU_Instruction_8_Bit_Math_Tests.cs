@@ -605,6 +605,62 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        [TestMethod]
+        public void Instruction_0xC6_Should_Add_8_Bit_Immediate_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,n8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCE_Should_Add_8_Bit_Immediate_Plus_Carry_To_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,n8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xD6_Should_Subtract_8_Bit_Immediate_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,n8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xDE_Should_Subtract_8_Bit_Immediate_Plus_Carry_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,n8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xE6_Should_Bitwise_And_8_Bit_Immediate_With_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#AND_A,n8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xEE_Should_Bitwise_Exclusive_Or_8_Bit_Immediate_With_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#XOR_A,n8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xF6_Should_Bitwise_Or_8_Bit_Immediate_With_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,n8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xFE_Should_Compare_8_Bit_Immediate_With_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#CP_A,n8
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Tests instructions like inc b.
         /// </summary>
