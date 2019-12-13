@@ -98,10 +98,10 @@ namespace GBDotNet.Core
                 () => Instruction_0x3E_Load_A_With_8_Bit_Immediate(),
                 () => { throw new NotImplementedException(); },
                 //0x40
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => { },  //ld b, b => nop
+                () => Instruction_0x41_Load_B_From_C(),
+                () => Instruction_0x42_Load_B_From_D(),
+                () => Instruction_0x42_Load_B_From_E(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -818,6 +818,30 @@ namespace GBDotNet.Core
         private void Instruction_0x3E_Load_A_With_8_Bit_Immediate()
         {
             Registers.A = Fetch();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x41_Load_B_From_C()
+        {
+            Registers.B = Registers.C;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x42_Load_B_From_D()
+        {
+            Registers.B = Registers.D;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x42_Load_B_From_E()
+        {
+            Registers.B = Registers.E;
         }
 
         /// <summary>

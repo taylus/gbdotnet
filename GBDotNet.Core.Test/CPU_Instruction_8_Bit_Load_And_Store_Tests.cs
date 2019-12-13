@@ -184,27 +184,33 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
-        public void Instruction_0x40_Should_Load_B_From_B()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
         public void Instruction_0x41_Should_Load_B_From_C()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x41);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu, 
+                destinationRegisterGetter: () => cpu.Registers.B,
+                sourceRegisterSetter: (value) => cpu.Registers.C = value);
         }
 
         [TestMethod]
         public void Instruction_0x42_Should_Load_B_From_D()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x42);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.B,
+                sourceRegisterSetter: (value) => cpu.Registers.D = value);
         }
 
         [TestMethod]
         public void Instruction_0x43_Should_Load_B_From_E()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x43);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.B,
+                sourceRegisterSetter: (value) => cpu.Registers.E = value);
         }
 
         [TestMethod]
@@ -624,6 +630,23 @@ namespace GBDotNet.Core.Test
                 cpu.Tick();
                 Assert.AreEqual(i, registerUnderTest(), $"Expected register to be set to {i} after executing ld instruction w/ 8-bit immediate {i}.");
                 cpu.Registers.PC -= 2;  //rewind by the size of the instruction
+            }
+        }
+
+        /// <summary>
+        /// Tests instructions like ld b, c
+        /// </summary>
+        /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8"/>
+        private static void TestLoadRegisterFromRegister(CPU cpu, Func<byte> destinationRegisterGetter, Action<byte> sourceRegisterSetter)
+        {
+            //test setting the register to all possible byte values
+            //assumes a memory layout of address 0 = the instruction
+            for (int i = 0; i <= byte.MaxValue; i++)
+            {
+                sourceRegisterSetter((byte)i);
+                cpu.Tick();
+                Assert.AreEqual(i, destinationRegisterGetter(), $"Expected destination register to be set to {i} after executing ld instruction from source register w/ value {i}.");
+                cpu.Registers.PC--;  //rewind by the size of the instruction
             }
         }
     }
