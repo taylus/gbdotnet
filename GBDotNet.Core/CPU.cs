@@ -91,7 +91,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0x39_Add_SP_To_HL(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x3A_Load_A_With_Address_Pointed_To_By_HL_Then_Decrement_HL(),
                 () => Instruction_0x3B_Decrement_SP(),
                 () => Instruction_0x3C_Increment_A(),
                 () => Instruction_0x3D_Decrement_A(),
@@ -757,6 +757,17 @@ namespace GBDotNet.Core
         private void Instruction_0x39_Add_SP_To_HL()
         {
             AddToHLAndSetFlags(Registers.SP);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_HL-_
+        /// </summary>
+        /// <remarks>
+        /// Also known as: ldd a, [hl]
+        /// </remarks>
+        private void Instruction_0x3A_Load_A_With_Address_Pointed_To_By_HL_Then_Decrement_HL()
+        {
+            Registers.A = Memory[Registers.HL--];
         }
 
         /// <summary>
