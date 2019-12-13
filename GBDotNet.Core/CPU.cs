@@ -95,7 +95,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x3B_Decrement_SP(),
                 () => Instruction_0x3C_Increment_A(),
                 () => Instruction_0x3D_Decrement_A(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x3E_Load_A_With_8_Bit_Immediate(),
                 () => { throw new NotImplementedException(); },
                 //0x40
                 () => { throw new NotImplementedException(); },
@@ -391,6 +391,9 @@ namespace GBDotNet.Core
             Registers.B = Decrement8BitRegisterAndSetFlags(Registers.B);
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,n8
+        /// </summary>
         private void Instruction_0x06_Load_B_With_8_Bit_Immediate()
         {
             Registers.B = Fetch();
@@ -471,6 +474,9 @@ namespace GBDotNet.Core
             Registers.C = Decrement8BitRegisterAndSetFlags(Registers.C);
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,n8
+        /// </summary>
         private void Instruction_0x0E_Load_C_With_8_Bit_Immediate()
         {
             Registers.C = Fetch();
@@ -539,6 +545,9 @@ namespace GBDotNet.Core
             Registers.D = Decrement8BitRegisterAndSetFlags(Registers.D);
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,n8
+        /// </summary>
         private void Instruction_0x16_Load_D_With_8_Bit_Immediate()
         {
             Registers.D = Fetch();
@@ -604,6 +613,9 @@ namespace GBDotNet.Core
             Registers.E = Decrement8BitRegisterAndSetFlags(Registers.E);
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,n8
+        /// </summary>
         private void Instruction_0x1E_Load_E_With_8_Bit_Immediate()
         {
             Registers.E = Fetch();
@@ -663,6 +675,9 @@ namespace GBDotNet.Core
             Registers.H = Decrement8BitRegisterAndSetFlags(Registers.H);
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,n8
+        /// </summary>
         private void Instruction_0x26_Load_H_With_8_Bit_Immediate()
         {
             Registers.H = Fetch();
@@ -711,6 +726,9 @@ namespace GBDotNet.Core
             Registers.L = Decrement8BitRegisterAndSetFlags(Registers.L);
         }
 
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,n8
+        /// </summary>
         private void Instruction_0x2E_Load_L_With_8_Bit_Immediate()
         {
             Registers.L = Fetch();
@@ -794,7 +812,13 @@ namespace GBDotNet.Core
             Registers.A = Decrement8BitRegisterAndSetFlags(Registers.A);
         }
 
-        //...
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,n8
+        /// </summary>
+        private void Instruction_0x3E_Load_A_With_8_Bit_Immediate()
+        {
+            Registers.A = Fetch();
+        }
 
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#HALT
