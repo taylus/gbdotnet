@@ -111,7 +111,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x4A_Load_C_From_D(),
                 () => Instruction_0x4B_Load_C_From_E(),
                 () => Instruction_0x4C_Load_C_From_H(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x4D_Load_C_From_L(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 //0x50
@@ -906,6 +906,14 @@ namespace GBDotNet.Core
         private void Instruction_0x4C_Load_C_From_H()
         {
             Registers.C = Registers.H;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x4D_Load_C_From_L()
+        {
+            Registers.C = Registers.L;
         }
 
         /// <summary>
