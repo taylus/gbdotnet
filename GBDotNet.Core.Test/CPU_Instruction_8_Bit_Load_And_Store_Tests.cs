@@ -307,7 +307,12 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x4E_Should_Load_C_From_Address_Pointed_To_By_HL()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x4E, 0xCC);
+            var cpu = new CPU(new Registers() { HL = 0x0001 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xCC, cpu.Registers.C);
         }
 
         [TestMethod]
