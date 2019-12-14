@@ -328,7 +328,11 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x50_Should_Load_D_From_B()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x50);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.D,
+                sourceRegisterSetter: (value) => cpu.Registers.B = value);
         }
 
         [TestMethod]
