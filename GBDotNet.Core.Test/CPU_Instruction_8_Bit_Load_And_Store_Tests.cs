@@ -236,7 +236,12 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x46_Should_Load_B_From_Address_Pointed_To_By_HL()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x46, 0xBB);
+            var cpu = new CPU(new Registers() { HL = 0x0001 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xBB, cpu.Registers.B);
         }
 
         [TestMethod]
