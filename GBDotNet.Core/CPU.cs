@@ -156,14 +156,14 @@ namespace GBDotNet.Core
                 () => Instruction_0x74_Load_Address_Pointed_To_By_HL_With_H(),
                 () => Instruction_0x75_Load_Address_Pointed_To_By_HL_With_L(),
                 () => Instruction_0x76_Halt(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x77_Load_Address_Pointed_To_By_HL_With_A(),
+                () => Instruction_0x78_Load_A_From_B(),
+                () => Instruction_0x79_Load_A_From_C(),
+                () => Instruction_0x7A_Load_A_From_D(),
+                () => Instruction_0x7B_Load_A_From_E(),
+                () => Instruction_0x7C_Load_A_From_H(),
+                () => Instruction_0x7D_Load_A_From_L(),
+                () => Instruction_0x7E_Load_A_From_Address_Pointed_To_By_HL(),
                 () => { },  //ld a, a => nop (https://stackoverflow.com/questions/50187678/whats-the-purpose-of-instructions-for-loading-a-register-to-itself)
                 //0x80
                 () => { throw new NotImplementedException(); },
@@ -1210,6 +1210,70 @@ namespace GBDotNet.Core
         private void Instruction_0x76_Halt()
         {
             IsHalted = true;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__HL_,r8
+        /// </summary>
+        private void Instruction_0x77_Load_Address_Pointed_To_By_HL_With_A()
+        {
+            Memory[Registers.HL] = Registers.A;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x78_Load_A_From_B()
+        {
+            Registers.A = Registers.B;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x79_Load_A_From_C()
+        {
+            Registers.A = Registers.C;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x7A_Load_A_From_D()
+        {
+            Registers.A = Registers.D;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x7B_Load_A_From_E()
+        {
+            Registers.A = Registers.E;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x7C_Load_A_From_H()
+        {
+            Registers.A = Registers.H;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x7D_Load_A_From_L()
+        {
+            Registers.A = Registers.L;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,_HL_
+        /// </summary>
+        private void Instruction_0x7E_Load_A_From_Address_Pointed_To_By_HL()
+        {
+            Registers.A = Memory[Registers.HL];
         }
 
         /// <summary>
