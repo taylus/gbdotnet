@@ -117,37 +117,37 @@ namespace GBDotNet.Core
                 //0x50
                 () => Instruction_0x50_Load_D_From_B(),
                 () => Instruction_0x51_Load_D_From_C(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => { },  //ld d, d => nop
+                () => Instruction_0x53_Load_D_From_E(),
+                () => Instruction_0x54_Load_D_From_H(),
+                () => Instruction_0x55_Load_D_From_L(),
+                () => Instruction_0x56_Load_D_From_Address_Pointed_To_By_HL(),
+                () => Instruction_0x57_Load_D_From_A(),
+                () => Instruction_0x58_Load_E_From_B(),
+                () => Instruction_0x59_Load_E_From_C(),
+                () => Instruction_0x5A_Load_E_From_D(),
+                () => { },  //ld e, e => nop
+                () => Instruction_0x5C_Load_E_From_H(),
+                () => Instruction_0x5D_Load_E_From_L(),
+                () => Instruction_0x5E_Load_E_From_Address_Pointed_To_By_HL(),
+                () => Instruction_0x5F_Load_E_From_A(),
                 //0x60
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x60_Load_H_From_B(),
+                () => Instruction_0x61_Load_H_From_C(),
+                () => Instruction_0x62_Load_H_From_D(),
+                () => Instruction_0x63_Load_H_From_E(),
+                () => { },  //ld h, h => nop
+                () => Instruction_0x65_Load_H_From_L(),
+                () => Instruction_0x66_Load_H_From_Address_Pointed_To_By_HL(),
+                () => Instruction_0x67_Load_H_From_A(),
+                () => Instruction_0x68_Load_L_From_B(),
+                () => Instruction_0x69_Load_L_From_C(),
+                () => Instruction_0x6A_Load_L_From_D(),
+                () => Instruction_0x6B_Load_L_From_E(),
+                () => Instruction_0x6C_Load_L_From_H(),
+                () => { },  //ld l, l => nop
+                () => Instruction_0x6C_Load_L_From_Address_Pointed_To_By_HL(),
+                () => Instruction_0x6F_Load_L_From_A(),
                 //0x70
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -925,7 +925,7 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,_HL_
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
         /// </summary>
         private void Instruction_0x4F_Load_C_From_A()
         {
@@ -933,7 +933,7 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,_HL_
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
         /// </summary>
         private void Instruction_0x50_Load_D_From_B()
         {
@@ -941,11 +941,219 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,_HL_
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
         /// </summary>
         private void Instruction_0x51_Load_D_From_C()
         {
             Registers.D = Registers.C;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x53_Load_D_From_E()
+        {
+            Registers.D = Registers.E;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x54_Load_D_From_H()
+        {
+            Registers.D = Registers.H;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x55_Load_D_From_L()
+        {
+            Registers.D = Registers.L;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,_HL_
+        /// </summary>
+        private void Instruction_0x56_Load_D_From_Address_Pointed_To_By_HL()
+        {
+            Registers.D = Memory[Registers.HL];
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x57_Load_D_From_A()
+        {
+            Registers.D = Registers.A;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x58_Load_E_From_B()
+        {
+            Registers.E = Registers.B;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x59_Load_E_From_C()
+        {
+            Registers.E = Registers.C;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x5A_Load_E_From_D()
+        {
+            Registers.E = Registers.D;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x5C_Load_E_From_H()
+        {
+            Registers.E = Registers.H;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x5D_Load_E_From_L()
+        {
+            Registers.E = Registers.L;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,_HL_
+        /// </summary>
+        private void Instruction_0x5E_Load_E_From_Address_Pointed_To_By_HL()
+        {
+            Registers.E = Memory[Registers.HL];
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x5F_Load_E_From_A()
+        {
+            Registers.E = Registers.A;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x60_Load_H_From_B()
+        {
+            Registers.H = Registers.B;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x61_Load_H_From_C()
+        {
+            Registers.H = Registers.C;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x62_Load_H_From_D()
+        {
+            Registers.H = Registers.D;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x63_Load_H_From_E()
+        {
+            Registers.H = Registers.E;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x65_Load_H_From_L()
+        {
+            Registers.H = Registers.L;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,_HL_
+        /// </summary>
+        private void Instruction_0x66_Load_H_From_Address_Pointed_To_By_HL()
+        {
+            Registers.H = Memory[Registers.HL];
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x67_Load_H_From_A()
+        {
+            Registers.H = Registers.A;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x68_Load_L_From_B()
+        {
+            Registers.L = Registers.B;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x69_Load_L_From_C()
+        {
+            Registers.L = Registers.C;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x6A_Load_L_From_D()
+        {
+            Registers.L = Registers.D;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x6B_Load_L_From_E()
+        {
+            Registers.L = Registers.E;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x6C_Load_L_From_H()
+        {
+            Registers.L = Registers.H;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,_HL_
+        /// </summary>
+        private void Instruction_0x6C_Load_L_From_Address_Pointed_To_By_HL()
+        {
+            Registers.L = Memory[Registers.HL];
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,r8
+        /// </summary>
+        private void Instruction_0x6F_Load_L_From_A()
+        {
+            Registers.L = Registers.A;
         }
 
         /// <summary>

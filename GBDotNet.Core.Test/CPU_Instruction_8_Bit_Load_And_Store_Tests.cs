@@ -348,175 +348,265 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x53_Should_Load_D_From_E()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x53);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.D,
+                sourceRegisterSetter: (value) => cpu.Registers.E = value);
         }
 
         [TestMethod]
         public void Instruction_0x54_Should_Load_D_From_H()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x54);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.D,
+                sourceRegisterSetter: (value) => cpu.Registers.H = value);
         }
 
         [TestMethod]
         public void Instruction_0x55_Should_Load_D_From_L()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x55);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.D,
+                sourceRegisterSetter: (value) => cpu.Registers.L = value);
         }
 
         [TestMethod]
         public void Instruction_0x56_Should_Load_D_From_Address_Pointed_To_By_HL()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x56, 0xDD);
+            var cpu = new CPU(new Registers() { HL = 0x0001 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xDD, cpu.Registers.D);
         }
 
         [TestMethod]
         public void Instruction_0x57_Should_Load_D_From_A()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x57);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.D,
+                sourceRegisterSetter: (value) => cpu.Registers.A = value);
         }
 
         [TestMethod]
         public void Instruction_0x58_Should_Load_E_From_B()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x58);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.E,
+                sourceRegisterSetter: (value) => cpu.Registers.B = value);
         }
 
         [TestMethod]
         public void Instruction_0x59_Should_Load_E_From_C()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x59);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.E,
+                sourceRegisterSetter: (value) => cpu.Registers.C = value);
         }
 
         [TestMethod]
         public void Instruction_0x5A_Should_Load_E_From_D()
         {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        public void Instruction_0x5B_Should_Load_E_From_E()
-        {
-            throw new NotImplementedException();
+            var memory = new Memory(0x5A);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.E,
+                sourceRegisterSetter: (value) => cpu.Registers.D = value);
         }
 
         [TestMethod]
         public void Instruction_0x5C_Should_Load_E_From_H()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x5C);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.E,
+                sourceRegisterSetter: (value) => cpu.Registers.H = value);
         }
 
         [TestMethod]
         public void Instruction_0x5D_Should_Load_E_From_L()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x5D);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.E,
+                sourceRegisterSetter: (value) => cpu.Registers.L = value);
         }
 
         [TestMethod]
         public void Instruction_0x5E_Should_Load_E_From_Address_Pointed_To_By_HL()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x5E, 0xEE);
+            var cpu = new CPU(new Registers() { HL = 0x0001 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xEE, cpu.Registers.E);
         }
 
         [TestMethod]
         public void Instruction_0x5F_Should_Load_E_From_A()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x5F);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.E,
+                sourceRegisterSetter: (value) => cpu.Registers.A = value);
         }
 
         [TestMethod]
         public void Instruction_0x60_Should_Load_H_From_B()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x60);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.H,
+                sourceRegisterSetter: (value) => cpu.Registers.B = value);
         }
 
         [TestMethod]
         public void Instruction_0x61_Should_Load_H_From_C()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x61);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.H,
+                sourceRegisterSetter: (value) => cpu.Registers.C = value);
         }
 
         [TestMethod]
         public void Instruction_0x62_Should_Load_H_From_D()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x62);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.H,
+                sourceRegisterSetter: (value) => cpu.Registers.D = value);
         }
 
         [TestMethod]
         public void Instruction_0x63_Should_Load_H_From_E()
         {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        public void Instruction_0x64_Should_Load_H_From_H()
-        {
-            throw new NotImplementedException();
+            var memory = new Memory(0x63);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.H,
+                sourceRegisterSetter: (value) => cpu.Registers.E = value);
         }
 
         [TestMethod]
         public void Instruction_0x65_Should_Load_H_From_L()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x65);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.H,
+                sourceRegisterSetter: (value) => cpu.Registers.L = value);
         }
 
         [TestMethod]
         public void Instruction_0x66_Should_Load_H_From_Address_Pointed_To_By_HL()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x66, 0xFF);
+            var cpu = new CPU(new Registers() { HL = 0x0001 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xFF, cpu.Registers.H);
         }
 
         [TestMethod]
         public void Instruction_0x67_Should_Load_H_From_A()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x67);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.H,
+                sourceRegisterSetter: (value) => cpu.Registers.A = value);
         }
 
         [TestMethod]
         public void Instruction_0x68_Should_Load_L_From_B()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x68);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.L,
+                sourceRegisterSetter: (value) => cpu.Registers.B = value);
         }
 
         [TestMethod]
         public void Instruction_0x69_Should_Load_L_From_C()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x69);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.L,
+                sourceRegisterSetter: (value) => cpu.Registers.C = value);
         }
 
         [TestMethod]
         public void Instruction_0x6A_Should_Load_L_From_D()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x6A);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.L,
+                sourceRegisterSetter: (value) => cpu.Registers.D = value);
         }
 
         [TestMethod]
         public void Instruction_0x6B_Should_Load_L_From_E()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x6B);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.L,
+                sourceRegisterSetter: (value) => cpu.Registers.E = value);
         }
 
         [TestMethod]
         public void Instruction_0x6C_Should_Load_L_From_H()
         {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        public void Instruction_0x6D_Should_Load_L_From_L()
-        {
-            throw new NotImplementedException();
+            var memory = new Memory(0x6C);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.L,
+                sourceRegisterSetter: (value) => cpu.Registers.H = value);
         }
 
         [TestMethod]
         public void Instruction_0x6E_Should_Load_L_From_Address_Pointed_To_By_HL()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x6E, 0xBA);
+            var cpu = new CPU(new Registers() { HL = 0x0001 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xBA, cpu.Registers.L);
         }
 
         [TestMethod]
         public void Instruction_0x6F_Should_Load_L_From_A()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x6F);
+            var cpu = new CPU(new Registers(), memory);
+            TestLoadRegisterFromRegister(cpu,
+                destinationRegisterGetter: () => cpu.Registers.L,
+                sourceRegisterSetter: (value) => cpu.Registers.A = value);
         }
 
         [TestMethod]
