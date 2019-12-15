@@ -268,9 +268,9 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 //0xE0
-                () => { throw new NotImplementedException(); },
-                () => Instruction_0xD1_Pop_Stack_Into_HL(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xE0_Load_A_Into_High_Memory_Address_Offset_By_Unsigned_8_Bit_Immediate(),
+                () => Instruction_0xE1_Pop_Stack_Into_HL(),
+                () => Instruction_0xE2_Load_A_Into_High_Memory_Address_Offset_By_C(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xE5_Push_HL_Onto_Stack(),
@@ -278,16 +278,16 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xEA_Load_Immediate_Memory_Location_From_A(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 //0xF0
-                () => { throw new NotImplementedException(); },
-                () => Instruction_0xD1_Pop_Stack_Into_AF(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xF0_Load_A_From_High_Memory_Address_Offset_By_8_Bit_Immediate(),
+                () => Instruction_0xF1_Pop_Stack_Into_AF(),
+                () => Instruction_0xF2_Load_A_From_High_Memory_Address_Offset_By_C(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xF5_Push_AF_Onto_Stack(),
@@ -295,7 +295,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xF8_Add_8_Bit_Signed_Immediate_To_Stack_Pointer_And_Store_Result_In_HL(),
                 () => Instruction_0xF9_Load_Stack_Pointer_From_HL(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xFA_Load_A_From_Immediate_Memory_Location(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -348,7 +348,7 @@ namespace GBDotNet.Core
         {
             byte low = Memory[Registers.SP++];
             byte high = Memory[Registers.SP++];
-            return Common.ToLittleEndian(low, high);
+            return Common.FromLittleEndian(low, high);
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x01_Load_BC_With_16_Bit_Immediate()
         {
-            Registers.BC = Common.ToLittleEndian(Fetch(), Fetch());
+            Registers.BC = Common.FromLittleEndian(Fetch(), Fetch());
         }
 
         /// <summary>
@@ -428,7 +428,7 @@ namespace GBDotNet.Core
         {
             byte addressLow = Fetch();
             byte addressHigh = Fetch();
-            ushort address = Common.ToLittleEndian(addressLow, addressHigh);
+            ushort address = Common.FromLittleEndian(addressLow, addressHigh);
 
             Memory[address] = (byte)(Registers.SP & 0xFF);
             Memory[address + 1] = (byte)(Registers.SP >> 8);
@@ -510,7 +510,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x11_Load_DE_With_16_Bit_Immediate()
         {
-            Registers.DE = Common.ToLittleEndian(Fetch(), Fetch());
+            Registers.DE = Common.FromLittleEndian(Fetch(), Fetch());
         }
 
         /// <summary>
@@ -637,7 +637,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x21_Load_HL_With_16_Bit_Immediate()
         {
-            Registers.HL = Common.ToLittleEndian(Fetch(), Fetch());
+            Registers.HL = Common.FromLittleEndian(Fetch(), Fetch());
         }
 
         /// <summary>
@@ -739,7 +739,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x31_Load_SP_With_16_Bit_Immediate()
         {
-            Registers.SP = Common.ToLittleEndian(Fetch(), Fetch());
+            Registers.SP = Common.FromLittleEndian(Fetch(), Fetch());
         }
 
         /// <summary>
@@ -1309,11 +1309,27 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__$FF00+n8_,A
+        /// </summary>
+        private void Instruction_0xE0_Load_A_Into_High_Memory_Address_Offset_By_Unsigned_8_Bit_Immediate()
+        {
+            Memory[0xFF00 + Fetch()] = Registers.A;
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#POP_r16
         /// </summary>
-        private void Instruction_0xD1_Pop_Stack_Into_HL()
+        private void Instruction_0xE1_Pop_Stack_Into_HL()
         {
             Registers.HL = PopStack();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__$FF00+C_,A
+        /// </summary>
+        private void Instruction_0xE2_Load_A_Into_High_Memory_Address_Offset_By_C()
+        {
+            Memory[0xFF00 + Registers.C] = Registers.A;
         }
 
         /// <summary>
@@ -1325,11 +1341,36 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__n16_,A
+        /// </summary>
+        private void Instruction_0xEA_Load_Immediate_Memory_Location_From_A()
+        {
+            var address = Common.FromLittleEndian(Fetch(), Fetch());
+            Memory[address] = Registers.A;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_$FF00+n8_
+        /// </summary>
+        private void Instruction_0xF0_Load_A_From_High_Memory_Address_Offset_By_8_Bit_Immediate()
+        {
+            Registers.A = Memory[0xFF00 + Fetch()];
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#POP_AF
         /// </summary>
-        private void Instruction_0xD1_Pop_Stack_Into_AF()
+        private void Instruction_0xF1_Pop_Stack_Into_AF()
         {
             Registers.AF = PopStack();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_$FF00+C_
+        /// </summary>
+        private void Instruction_0xF2_Load_A_From_High_Memory_Address_Offset_By_C()
+        {
+            Registers.A = Memory[0xFF00 + Registers.C];
         }
 
         /// <summary>
@@ -1354,6 +1395,15 @@ namespace GBDotNet.Core
         private void Instruction_0xF9_Load_Stack_Pointer_From_HL()
         {
             Registers.SP = Registers.HL;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_n16_
+        /// </summary>
+        private void Instruction_0xFA_Load_A_From_Immediate_Memory_Location()
+        {
+            var address = Common.FromLittleEndian(Fetch(), Fetch());
+            Registers.A = Memory[address];
         }
 
         //...

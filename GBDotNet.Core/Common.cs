@@ -13,11 +13,11 @@
         }
 
         /// <summary>
-        /// Turns the given two bytes into a little-endian 16-bit number.
-        /// (The second byte makes up the most significant bits of the new number)
+        /// Swaps the given bytes to turn it from a little-endian (low byte first)
+        /// into a big-endian number (high byte first).
         /// E.g. $cd, $ab => $abcd
         /// </summary>
-        public static ushort ToLittleEndian(byte byte1, byte byte2)
+        public static ushort FromLittleEndian(byte byte1, byte byte2)
         {
             return ToBigEndian(byte2, byte1);
         }

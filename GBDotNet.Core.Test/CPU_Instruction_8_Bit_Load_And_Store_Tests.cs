@@ -769,46 +769,71 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
-        public void Instruction_0xE0_Should_Load_A_Into_High_Memory_Address_Offset_By_8_Bit_Immediate()
+        public void Instruction_0xE0_Should_Load_A_Into_High_Memory_Address_Offset_By_Unsigned_8_Bit_Immediate()
         {
-            //notes for later: immediate is unsigned
-            //see https://rednex.github.io/rgbds/gbz80.7.html#LD__$FF00+n8_,A
-            throw new NotImplementedException();
+            var memory = new Memory(0xE0, 0x80);
+            var cpu = new CPU(new Registers() { A = 0xAA }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xAA, memory[0xFF80]);
         }
 
         [TestMethod]
         public void Instruction_0xE2_Should_Load_A_Into_High_Memory_Address_Offset_By_C()
         {
-            //see https://rednex.github.io/rgbds/gbz80.7.html#LD__$FF00+C_,A
-            throw new NotImplementedException();
+            var memory = new Memory(0xE2);
+            var cpu = new CPU(new Registers() { A = 0xAA, C = 0x80 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xAA, memory[0xFF80]);
         }
 
         [TestMethod]
         public void Instruction_0xEA_Should_Load_Immediate_Memory_Location_From_A()
         {
-            //see https://rednex.github.io/rgbds/gbz80.7.html#LD__n16_,A
-            throw new NotImplementedException();
+            var memory = new Memory(0xEA, 0x00, 0x80);
+            var cpu = new CPU(new Registers() { A = 0xAA }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xAA, memory[0x8000]);
         }
 
         [TestMethod]
         public void Instruction_0xF0_Should_Load_A_From_High_Memory_Address_Offset_By_8_Bit_Immediate()
         {
-            //see https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_$FF00+n8_
-            throw new NotImplementedException();
+            var memory = new Memory(0xF0, 0x88);
+            memory[0xFF88] = 0xAA;
+            var cpu = new CPU(new Registers(), memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xAA, cpu.Registers.A);
         }
 
         [TestMethod]
         public void Instruction_0xF2_Should_Load_A_From_High_Memory_Address_Offset_By_C()
         {
-            //see https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_$FF00+C_
-            throw new NotImplementedException();
+            var memory = new Memory(0xF2);
+            memory[0xFFCC] = 0xAA;
+            var cpu = new CPU(new Registers() { C = 0xCC }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xAA, cpu.Registers.A);
         }
 
         [TestMethod]
         public void Instruction_0xFA_Should_Load_A_From_Immediate_Memory_Location()
         {
-            //see https://rednex.github.io/rgbds/gbz80.7.html#LD_A,_n16_
-            throw new NotImplementedException();
+            var memory = new Memory(0xFA, 0x03, 0x00, 0xAA);
+            var cpu = new CPU(new Registers(), memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xAA, cpu.Registers.A);
         }
 
         /// <summary>
