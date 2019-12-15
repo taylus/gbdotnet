@@ -149,12 +149,12 @@ namespace GBDotNet.Core
                 () => Instruction_0x6C_Load_L_From_Address_Pointed_To_By_HL(),
                 () => Instruction_0x6F_Load_L_From_A(),
                 //0x70
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x70_Load_Address_Pointed_To_By_HL_With_B(),
+                () => Instruction_0x71_Load_Address_Pointed_To_By_HL_With_C(),
+                () => Instruction_0x72_Load_Address_Pointed_To_By_HL_With_D(),
+                () => Instruction_0x73_Load_Address_Pointed_To_By_HL_With_E(),
+                () => Instruction_0x74_Load_Address_Pointed_To_By_HL_With_H(),
+                () => Instruction_0x75_Load_Address_Pointed_To_By_HL_With_L(),
                 () => Instruction_0x76_Halt(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1154,6 +1154,54 @@ namespace GBDotNet.Core
         private void Instruction_0x6F_Load_L_From_A()
         {
             Registers.L = Registers.A;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__HL_,r8
+        /// </summary>
+        private void Instruction_0x70_Load_Address_Pointed_To_By_HL_With_B()
+        {
+            Memory[Registers.HL] = Registers.B;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__HL_,r8
+        /// </summary>
+        private void Instruction_0x71_Load_Address_Pointed_To_By_HL_With_C()
+        {
+            Memory[Registers.HL] = Registers.C;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__HL_,r8
+        /// </summary>
+        private void Instruction_0x72_Load_Address_Pointed_To_By_HL_With_D()
+        {
+            Memory[Registers.HL] = Registers.D;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__HL_,r8
+        /// </summary>
+        private void Instruction_0x73_Load_Address_Pointed_To_By_HL_With_E()
+        {
+            Memory[Registers.HL] = Registers.E;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__HL_,r8
+        /// </summary>
+        private void Instruction_0x74_Load_Address_Pointed_To_By_HL_With_H()
+        {
+            Memory[Registers.HL] = Registers.H;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#LD__HL_,r8
+        /// </summary>
+        private void Instruction_0x75_Load_Address_Pointed_To_By_HL_With_L()
+        {
+            Memory[Registers.HL] = Registers.L;
         }
 
         /// <summary>

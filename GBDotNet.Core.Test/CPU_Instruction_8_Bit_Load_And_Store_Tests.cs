@@ -612,37 +612,67 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x70_Should_Load_Address_Pointed_To_By_HL_With_B()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x70);
+            var cpu = new CPU(new Registers() { B = 0xBB, HL = 0x8000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xBB, memory[0x8000]);
         }
 
         [TestMethod]
         public void Instruction_0x71_Should_Load_Address_Pointed_To_By_HL_With_C()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x71);
+            var cpu = new CPU(new Registers() { C = 0xCC, HL = 0x8000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xCC, memory[0x8000]);
         }
 
         [TestMethod]
         public void Instruction_0x72_Should_Load_Address_Pointed_To_By_HL_With_D()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x72);
+            var cpu = new CPU(new Registers() { D = 0xDD, HL = 0x8000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xDD, memory[0x8000]);
         }
 
         [TestMethod]
         public void Instruction_0x73_Should_Load_Address_Pointed_To_By_HL_With_E()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x73);
+            var cpu = new CPU(new Registers() { E = 0xEE, HL = 0x8000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xEE, memory[0x8000]);
         }
 
         [TestMethod]
         public void Instruction_0x74_Should_Load_Address_Pointed_To_By_HL_With_H()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x74);
+            var cpu = new CPU(new Registers() { HL = 0x8800 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x88, memory[0x8800]);
         }
 
         [TestMethod]
         public void Instruction_0x75_Should_Load_Address_Pointed_To_By_HL_With_L()
         {
-            throw new NotImplementedException();
+            var memory = new Memory(0x75);
+            var cpu = new CPU(new Registers() { HL = 0x90FF }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xFF, memory[0x90FF]);
         }
 
         [TestMethod]
