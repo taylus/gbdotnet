@@ -154,6 +154,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0xF8, 0x00);
             var cpu = new CPU(new Registers() { SP = initialStackPointer }, memory);
+            cpu.Registers.SetFlag(Flags.AddSubtract | Flags.Zero);
 
             //test adding all possible offsets in range [-128, 127] to SP
             for(int i = sbyte.MinValue; i <= sbyte.MaxValue; i++)
@@ -162,6 +163,24 @@ namespace GBDotNet.Core.Test
                 cpu.Tick();
                 var expected = (ushort)(cpu.Registers.SP + i);
                 Assert.AreEqual(expected, cpu.Registers.HL);
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "ld hl, sp + e8 instruction should clear N flag.");
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "ld hl, sp + e8 instruction should clear Z flag.");
+                if ((cpu.Registers.SP & 0xF) + (i & 0xF) > 0xF) // this matches the CPU code, but I couldn't think of a better way to express the half carry logic...
+                {
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"For SP = {cpu.Registers.SP}, e8 = {i}, expected half carry flag to be set when SP + e8 overflows from bit 3.");
+                }
+                else
+                {
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"For SP = {cpu.Registers.SP}, e8 = {i}, expected half carry flag to be cleared when SP + e8 does not overflow from bit 3.");
+                }
+                if ((cpu.Registers.SP & 0xFF) + i > 0xFF)   // this matches in the CPU code, but I couldn't think of a better way to express the carry logic...
+                {
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), $"For SP = {cpu.Registers.SP}, e8 = {i}, expected carry flag to be set when SP + e8 overflows from bit 7.");
+                }
+                else
+                {
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), $"For SP = {cpu.Registers.SP}, e8 = {i}, expected carry flag to be cleared when SP + e8 does not overflow from bit 7.");
+                }
                 cpu.Registers.PC -= 2;
             }
         }

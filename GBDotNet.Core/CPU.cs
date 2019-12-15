@@ -1386,7 +1386,11 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xF8_Add_8_Bit_Signed_Immediate_To_Stack_Pointer_And_Store_Result_In_HL()
         {
-            Registers.HL = (ushort)(Registers.SP + (sbyte)Fetch());
+            var immediate = (sbyte)Fetch();
+            Registers.HL = (ushort)(Registers.SP + immediate);
+            Registers.ClearFlag(Flags.AddSubtract | Flags.Zero);
+            Registers.SetFlagTo(Flags.HalfCarry, ((Registers.SP & 0xF) + (immediate & 0xF) > 0xF));
+            Registers.SetFlagTo(Flags.Carry, ((Registers.SP & 0xFF) + immediate > 0xFF));
         }
 
         /// <summary>
