@@ -159,8 +159,39 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x80_Should_Add_B_To_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x80);
+            var cpu = new CPU(new Registers() { A = 0x00, B = 0x00 }, memory);
+            cpu.Registers.SetFlag(Flags.AddSubtract);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0, cpu.Registers.A);
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), "Z flag should be set.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "N flag should be cleared.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "H flag should be cleared.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "C flag should be cleared.");
+
+            cpu.Registers.PC--;
+            cpu.Registers.A = 0xFF;
+            cpu.Registers.B = 0x01;
+            cpu.Tick();
+
+            Assert.AreEqual(0, cpu.Registers.A);
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), "Z flag should be set.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "N flag should be cleared.");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "H flag should be set.");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "C flag should be set.");
+
+            cpu.Registers.PC--;
+            cpu.Registers.A = 0xA0;
+            cpu.Registers.B = 0x10;
+            cpu.Tick();
+
+            Assert.AreEqual(0xB0, cpu.Registers.A);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Z flag should be cleared.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "N flag should be cleared.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "H flag should be cleared.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "C flag should be cleared.");
         }
 
         [TestMethod]

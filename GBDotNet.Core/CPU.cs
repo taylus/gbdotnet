@@ -166,7 +166,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x7E_Load_A_From_Address_Pointed_To_By_HL(),
                 () => { },  //ld a, a => nop (https://stackoverflow.com/questions/50187678/whats-the-purpose-of-instructions-for-loading-a-register-to-itself)
                 //0x80
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x80_Add_B_To_A(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1274,6 +1274,18 @@ namespace GBDotNet.Core
         private void Instruction_0x7E_Load_A_From_Address_Pointed_To_By_HL()
         {
             Registers.A = Memory[Registers.HL];
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+        /// </summary>
+        private void Instruction_0x80_Add_B_To_A()
+        {
+            Registers.SetFlagTo(Flags.HalfCarry, (Registers.A & 0xF) + (Registers.B & 0xF) > 0xF);
+            Registers.SetFlagTo(Flags.Carry, Registers.A + Registers.B > byte.MaxValue);
+            Registers.A += Registers.B;
+            Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
+            Registers.ClearFlag(Flags.AddSubtract);
         }
 
         /// <summary>
