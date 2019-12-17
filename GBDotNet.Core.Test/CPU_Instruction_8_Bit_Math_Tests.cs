@@ -271,8 +271,22 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x88_Should_Add_B_Plus_Carry_To_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x88);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0x01, registerValue: 0x01, carryBit: true,
+                registerSetter: (value) => cpu.Registers.B = value,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: false);
+
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0xFF, registerValue: 0x00, carryBit: true,
+                registerSetter: (value) => cpu.Registers.B = value,
+                expectedZero: true,
+                expectedCarry: true,
+                expectedHalfCarry: true);
         }
 
         [TestMethod]
@@ -720,16 +734,18 @@ namespace GBDotNet.Core.Test
         /// <summary>
         /// Tests instructions like add a, b.
         /// </summary>
-        private static void TestAdding8BitRegisterToAccumulator(CPU cpu, byte a, Action<byte> registerSetter, byte registerValue, bool expectedZero, bool expectedCarry, bool expectedHalfCarry)
+        private static void TestAdding8BitRegisterToAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null)
         {
             cpu.Registers.PC = 0;   //assume the add instruction is always at the beginning of memory
             cpu.Registers.SetFlag(Flags.AddSubtract);   //set the N flag (add instructions should always clear it)
             cpu.Registers.A = a;
             registerSetter(registerValue);
+            if (carryBit.HasValue) cpu.Registers.SetFlagTo(Flags.Carry, carryBit.Value);
 
             cpu.Tick();
 
-            Assert.AreEqual((byte)(a + registerValue), cpu.Registers.A);
+            var carry = carryBit.HasValue && carryBit.Value ? 1 : 0;
+            Assert.AreEqual((byte)(a + registerValue + carry), cpu.Registers.A);
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "add a, r8 instruction should always clear N flag.");
 
             if (expectedZero)

@@ -174,7 +174,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x85_Add_L_To_A(),
                 () => Instruction_0x86_Add_Address_Pointed_To_By_HL_To_A(),
                 () => Instruction_0x87_Add_A_To_A(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x88_Add_B_Plus_Carry_To_A(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1341,6 +1341,14 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+        /// </summary>
+        private void Instruction_0x88_Add_B_Plus_Carry_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.B, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#POP_r16
         /// </summary>
         private void Instruction_0xC1_Pop_Stack_Into_BC()
@@ -1477,13 +1485,16 @@ namespace GBDotNet.Core
         //...
 
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8 (add w/o carry)
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8 (add w/ carry)
         /// </summary>
-        private void AddToAccumulatorAndSetFlags(byte value)
+        private void AddToAccumulatorAndSetFlags(byte value, bool carryBit = false)
         {
-            Registers.SetFlagTo(Flags.HalfCarry, (Registers.A & 0xF) + (value & 0xF) > 0xF);
-            Registers.SetFlagTo(Flags.Carry, Registers.A + value > byte.MaxValue);
+            var carry = (byte)(carryBit ? 1 : 0);
+            Registers.SetFlagTo(Flags.HalfCarry, (Registers.A & 0xF) + (value & 0xF) + carry > 0xF);
+            Registers.SetFlagTo(Flags.Carry, Registers.A + value + carry > byte.MaxValue);
             Registers.A += value;
+            Registers.A += carry;
             Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
             Registers.ClearFlag(Flags.AddSubtract);
         }
