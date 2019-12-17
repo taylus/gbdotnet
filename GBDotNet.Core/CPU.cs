@@ -175,13 +175,13 @@ namespace GBDotNet.Core
                 () => Instruction_0x86_Add_Address_Pointed_To_By_HL_To_A(),
                 () => Instruction_0x87_Add_A_To_A(),
                 () => Instruction_0x88_Add_B_Plus_Carry_To_A(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x89_Add_C_Plus_Carry_To_A(),
+                () => Instruction_0x8A_Add_D_Plus_Carry_To_A(),
+                () => Instruction_0x8B_Add_E_Plus_Carry_To_A(),
+                () => Instruction_0x8C_Add_H_Plus_Carry_To_A(),
+                () => Instruction_0x8D_Add_L_Plus_Carry_To_A(),
+                () => Instruction_0x8E_Add_Address_Pointed_To_By_HL_Plus_Carry_To_A(),
+                () => Instruction_0x8F_Add_A_Plus_Carry_To_A(),
                 //0x90
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1325,7 +1325,7 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,_HL_
         /// </summary>
         private void Instruction_0x86_Add_Address_Pointed_To_By_HL_To_A()
         {
@@ -1346,6 +1346,62 @@ namespace GBDotNet.Core
         private void Instruction_0x88_Add_B_Plus_Carry_To_A()
         {
             AddToAccumulatorAndSetFlags(Registers.B, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+        /// </summary>
+        private void Instruction_0x89_Add_C_Plus_Carry_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.C, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+        /// </summary>
+        private void Instruction_0x8A_Add_D_Plus_Carry_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.D, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+        /// </summary>
+        private void Instruction_0x8B_Add_E_Plus_Carry_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.E, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+        /// </summary>
+        private void Instruction_0x8C_Add_H_Plus_Carry_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.H, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+        /// </summary>
+        private void Instruction_0x8D_Add_L_Plus_Carry_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.L, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,_HL_
+        /// </summary>
+        private void Instruction_0x8E_Add_Address_Pointed_To_By_HL_Plus_Carry_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Memory[Registers.HL], carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,r8
+        /// </summary>
+        private void Instruction_0x8F_Add_A_Plus_Carry_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.A, carryBit: Registers.HasFlag(Flags.Carry));
         }
 
         /// <summary>
