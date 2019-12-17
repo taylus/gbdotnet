@@ -162,26 +162,10 @@ namespace GBDotNet.Core.Test
             var memory = new Memory(0x80);
             var cpu = new CPU(new Registers(), memory);
 
-            Action<byte> setB = (value) => cpu.Registers.B = value;
-
             TestAdding8BitRegisterToAccumulator(cpu,
                 a: 0x00, registerValue: 0x00,
-                registerSetter: setB,
+                registerSetter: (value) => cpu.Registers.B = value,
                 expectedZero: true,
-                expectedCarry: false,
-                expectedHalfCarry: false);
-
-            TestAdding8BitRegisterToAccumulator(cpu,
-                a: 0xFF, registerValue: 0x01,
-                registerSetter: setB,
-                expectedZero: true,
-                expectedCarry: true,
-                expectedHalfCarry: true);
-
-            TestAdding8BitRegisterToAccumulator(cpu,
-                a: 0xA0, registerValue: 0x10,
-                registerSetter: setB,
-                expectedZero: false,
                 expectedCarry: false,
                 expectedHalfCarry: false);
         }
@@ -189,50 +173,99 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x81_Should_Add_C_To_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x81);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0xFF, registerValue: 0x01,
+                registerSetter: (value) => cpu.Registers.C = value,
+                expectedZero: true,
+                expectedCarry: true,
+                expectedHalfCarry: true);
         }
 
         [TestMethod]
         public void Instruction_0x82_Should_Add_D_To_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x82);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0xA0, registerValue: 0x10,
+                registerSetter: (value) => cpu.Registers.D = value,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0x83_Should_Add_E_To_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x83);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0xA0, registerValue: 0x10,
+                registerSetter: (value) => cpu.Registers.E = value,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0x84_Should_Add_H_To_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x84);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0xA0, registerValue: 0x10,
+                registerSetter: (value) => cpu.Registers.H = value,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0x85_Should_Add_L_To_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x85);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0xA0, registerValue: 0x10,
+                registerSetter: (value) => cpu.Registers.L = value,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0x86_Should_Add_Address_Pointed_To_By_HL_To_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,_HL_
-            throw new NotImplementedException();
+            var memory = new Memory(0x86);
+            var cpu = new CPU(new Registers() { HL = 0x1000 }, memory);
+
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0xA0, registerValue: 0x10,
+                registerSetter: (value) => memory[cpu.Registers.HL] = value,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0x87_Should_Add_A_To_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x87);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0x01, registerValue: 0x01,
+                registerSetter: (value) => cpu.Registers.A = value,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]

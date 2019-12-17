@@ -167,13 +167,13 @@ namespace GBDotNet.Core
                 () => { },  //ld a, a => nop (https://stackoverflow.com/questions/50187678/whats-the-purpose-of-instructions-for-loading-a-register-to-itself)
                 //0x80
                 () => Instruction_0x80_Add_B_To_A(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x81_Add_C_To_A(),
+                () => Instruction_0x82_Add_D_To_A(),
+                () => Instruction_0x83_Add_E_To_A(),
+                () => Instruction_0x84_Add_H_To_A(),
+                () => Instruction_0x85_Add_L_To_A(),
+                () => Instruction_0x86_Add_Address_Pointed_To_By_HL_To_A(),
+                () => Instruction_0x87_Add_A_To_A(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1281,11 +1281,63 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x80_Add_B_To_A()
         {
-            Registers.SetFlagTo(Flags.HalfCarry, (Registers.A & 0xF) + (Registers.B & 0xF) > 0xF);
-            Registers.SetFlagTo(Flags.Carry, Registers.A + Registers.B > byte.MaxValue);
-            Registers.A += Registers.B;
-            Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
-            Registers.ClearFlag(Flags.AddSubtract);
+            AddToAccumulatorAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+        /// </summary>
+        private void Instruction_0x81_Add_C_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.C);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+        /// </summary>
+        private void Instruction_0x82_Add_D_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+        /// </summary>
+        private void Instruction_0x83_Add_E_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.E);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+        /// </summary>
+        private void Instruction_0x84_Add_H_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.H);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+        /// </summary>
+        private void Instruction_0x85_Add_L_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.L);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+        /// </summary>
+        private void Instruction_0x86_Add_Address_Pointed_To_By_HL_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Memory[Registers.HL]);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+        /// </summary>
+        private void Instruction_0x87_Add_A_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Registers.A);
         }
 
         /// <summary>
@@ -1423,6 +1475,18 @@ namespace GBDotNet.Core
         }
 
         //...
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8
+        /// </summary>
+        private void AddToAccumulatorAndSetFlags(byte value)
+        {
+            Registers.SetFlagTo(Flags.HalfCarry, (Registers.A & 0xF) + (value & 0xF) > 0xF);
+            Registers.SetFlagTo(Flags.Carry, Registers.A + value > byte.MaxValue);
+            Registers.A += value;
+            Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
+            Registers.ClearFlag(Flags.AddSubtract);
+        }
 
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_HL,r16
