@@ -384,6 +384,11 @@ namespace GBDotNet.Core.Test
         public void Instruction_0x90_Should_Subtract_B_From_A()
         {
             //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+            //re: half carry logic: https://github.com/rylev/DMG-01/blob/17c08f5103b52cf06b0a4606ece2f71b48567c0b/lib-dmg-01/src/cpu/mod.rs#L1287-L1291
+            //carry is set if (other register + optional carry) > A
+            //half carry is set if lower nibble of (other register + optional carry) > lower nibble of A
+            //why? because if the thing we're subtracting's lower nibble is > the thing we're subtracting from's lower nibble, then a borrow from the other byte occurs
+            //(replace w/ decimal numbers if that helps: if you subtract 25 - 18, because the 8 is > 5, a borrow from the tens column occurs)
             throw new NotImplementedException();
         }
 
