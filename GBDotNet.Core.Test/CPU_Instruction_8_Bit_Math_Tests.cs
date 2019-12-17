@@ -160,38 +160,30 @@ namespace GBDotNet.Core.Test
         public void Instruction_0x80_Should_Add_B_To_A()
         {
             var memory = new Memory(0x80);
-            var cpu = new CPU(new Registers() { A = 0x00, B = 0x00 }, memory);
-            cpu.Registers.SetFlag(Flags.AddSubtract);
+            var cpu = new CPU(new Registers(), memory);
 
-            cpu.Tick();
+            Action<byte> setB = (value) => cpu.Registers.B = value;
 
-            Assert.AreEqual(0, cpu.Registers.A);
-            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), "Z flag should be set.");
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "N flag should be cleared.");
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "H flag should be cleared.");
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "C flag should be cleared.");
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0x00, registerValue: 0x00,
+                registerSetter: setB,
+                expectedZero: true,
+                expectedCarry: false,
+                expectedHalfCarry: false);
 
-            cpu.Registers.PC--;
-            cpu.Registers.A = 0xFF;
-            cpu.Registers.B = 0x01;
-            cpu.Tick();
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0xFF, registerValue: 0x01,
+                registerSetter: setB,
+                expectedZero: true,
+                expectedCarry: true,
+                expectedHalfCarry: true);
 
-            Assert.AreEqual(0, cpu.Registers.A);
-            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), "Z flag should be set.");
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "N flag should be cleared.");
-            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "H flag should be set.");
-            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "C flag should be set.");
-
-            cpu.Registers.PC--;
-            cpu.Registers.A = 0xA0;
-            cpu.Registers.B = 0x10;
-            cpu.Tick();
-
-            Assert.AreEqual(0xB0, cpu.Registers.A);
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Z flag should be cleared.");
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "N flag should be cleared.");
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "H flag should be cleared.");
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "C flag should be cleared.");
+            TestAdding8BitRegisterToAccumulator(cpu,
+                a: 0xA0, registerValue: 0x10,
+                registerSetter: setB,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
@@ -690,6 +682,37 @@ namespace GBDotNet.Core.Test
         {
             //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#CP_A,n8
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Tests instructions like add a, b.
+        /// </summary>
+        private static void TestAdding8BitRegisterToAccumulator(CPU cpu, byte a, Action<byte> registerSetter, byte registerValue, bool expectedZero, bool expectedCarry, bool expectedHalfCarry)
+        {
+            cpu.Registers.PC = 0;   //assume the add instruction is always at the beginning of memory
+            cpu.Registers.SetFlag(Flags.AddSubtract);   //set the N flag (add instructions should always clear it)
+            cpu.Registers.A = a;
+            registerSetter(registerValue);
+
+            cpu.Tick();
+
+            Assert.AreEqual((byte)(a + registerValue), cpu.Registers.A);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "add a, r8 instruction should always clear N flag.");
+
+            if (expectedZero)
+                Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), $"Zero flag should be set when adding {registerValue} to accumulator {a}.");
+            else
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), $"Zero flag should not be set when adding {registerValue} to accumulator {a}.");
+
+            if (expectedCarry)
+                Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), $"Carry flag should be set when adding {registerValue} to accumulator {a}.");
+            else
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), $"Carry flag should not be set when adding {registerValue} to accumulator {a}.");
+
+            if (expectedHalfCarry)
+                Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should be set when adding {registerValue} to accumulator {a}.");
+            else
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should not be set when adding {registerValue} to accumulator {a}.");
         }
 
         /// <summary>
