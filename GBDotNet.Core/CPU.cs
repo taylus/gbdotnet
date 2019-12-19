@@ -183,14 +183,14 @@ namespace GBDotNet.Core
                 () => Instruction_0x8E_Add_Address_Pointed_To_By_HL_Plus_Carry_To_A(),
                 () => Instruction_0x8F_Add_A_Plus_Carry_To_A(),
                 //0x90
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x90_Subtract_B_From_A(),
+                () => Instruction_0x91_Subtract_C_From_A(),
+                () => Instruction_0x92_Subtract_D_From_A(),
+                () => Instruction_0x93_Subtract_E_From_A(),
+                () => Instruction_0x94_Subtract_H_From_A(),
+                () => Instruction_0x95_Subtract_L_From_A(),
+                () => Instruction_0x96_Subtract_Address_Pointed_To_By_HL_From_A(),
+                () => Instruction_0x97_Subtract_A_From_A(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1405,6 +1405,70 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+        /// </summary>
+        private void Instruction_0x90_Subtract_B_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+        /// </summary>
+        private void Instruction_0x91_Subtract_C_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.C);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+        /// </summary>
+        private void Instruction_0x92_Subtract_D_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+        /// </summary>
+        private void Instruction_0x93_Subtract_E_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.E);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+        /// </summary>
+        private void Instruction_0x94_Subtract_H_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.H);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+        /// </summary>
+        private void Instruction_0x95_Subtract_L_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.L);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,_HL_
+        /// </summary>
+        private void Instruction_0x96_Subtract_Address_Pointed_To_By_HL_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Memory[Registers.HL]);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8
+        /// </summary>
+        private void Instruction_0x97_Subtract_A_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.A);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#POP_r16
         /// </summary>
         private void Instruction_0xC1_Pop_Stack_Into_BC()
@@ -1547,12 +1611,29 @@ namespace GBDotNet.Core
         private void AddToAccumulatorAndSetFlags(byte value, bool carryBit = false)
         {
             var carry = (byte)(carryBit ? 1 : 0);
+            //half carry (carry into upper nibble) occurs if the sum of the lower nibbles is > 1111
             Registers.SetFlagTo(Flags.HalfCarry, (Registers.A & 0xF) + (value & 0xF) + carry > 0xF);
             Registers.SetFlagTo(Flags.Carry, Registers.A + value + carry > byte.MaxValue);
             Registers.A += value;
             Registers.A += carry;
             Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
             Registers.ClearFlag(Flags.AddSubtract);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8 (subtract w/o carry)
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8 (subtract w/ carry)
+        /// </summary>
+        private void SubtractFromAccumulatorAndSetFlags(byte value, bool carryBit = false)
+        {
+            var carry = (byte)(carryBit ? 1 : 0);
+            //half carry (borrow from upper nibble) occurs if the lower nibble of the value being subtracted is > A's
+            Registers.SetFlagTo(Flags.HalfCarry, ((value + carry) & 0xF) > (Registers.A & 0xF));
+            Registers.SetFlagTo(Flags.Carry, (value + carry) > Registers.A);
+            Registers.A -= value;
+            Registers.A -= carry;
+            Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
+            Registers.SetFlag(Flags.AddSubtract);
         }
 
         /// <summary>
