@@ -495,57 +495,113 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x98_Should_Subtract_B_Plus_Carry_From_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x98);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestSubtracting8BitRegisterFromAccumulator(cpu,
+                a: 0x05, registerValue: 0x05, carryBit: true,
+                registerSetter: (value) => cpu.Registers.B = value,
+                expectedZero: false,
+                expectedCarry: true,
+                expectedHalfCarry: true);
         }
 
         [TestMethod]
         public void Instruction_0x99_Should_Subtract_C_Plus_Carry_From_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x99);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestSubtracting8BitRegisterFromAccumulator(cpu,
+                a: 0x05, registerValue: 0x04, carryBit: true,
+                registerSetter: (value) => cpu.Registers.C = value,
+                expectedZero: true,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0x9A_Should_Subtract_D_Plus_Carry_From_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x9A);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestSubtracting8BitRegisterFromAccumulator(cpu,
+                a: 0x04, registerValue: 0x05, carryBit: true,
+                registerSetter: (value) => cpu.Registers.D = value,
+                expectedZero: false,
+                expectedCarry: true,
+                expectedHalfCarry: true);
         }
 
         [TestMethod]
         public void Instruction_0x9B_Should_Subtract_E_Plus_Carry_From_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x9B);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestSubtracting8BitRegisterFromAccumulator(cpu,
+                a: 0x00, registerValue: 0x00, carryBit: true,
+                registerSetter: (value) => cpu.Registers.E = value,
+                expectedZero: false,
+                expectedCarry: true,
+                expectedHalfCarry: true);
         }
 
         [TestMethod]
         public void Instruction_0x9C_Should_Subtract_H_Plus_Carry_From_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x9C);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestSubtracting8BitRegisterFromAccumulator(cpu,
+                a: 0x01, registerValue: 0x00, carryBit: true,
+                registerSetter: (value) => cpu.Registers.H = value,
+                expectedZero: true,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0x9D_Should_Subtract_L_Plus_Carry_From_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x9D);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestSubtracting8BitRegisterFromAccumulator(cpu,
+                a: 0xFF, registerValue: 0x99, carryBit: true,
+                registerSetter: (value) => cpu.Registers.L = value,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0x9E_Should_Subtract_Address_Pointed_To_By_HL_Plus_Carry_From_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,_HL_
-            throw new NotImplementedException();
+            var memory = new Memory(0x9E);
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
+
+            TestSubtracting8BitRegisterFromAccumulator(cpu,
+                a: 0xBE, registerValue: 0xAE, carryBit: true,
+                registerSetter: (value) => memory[cpu.Registers.HL] = value,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: true);
         }
 
         [TestMethod]
         public void Instruction_0x9F_Should_Subtract_A_Plus_Carry_From_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0x9F);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestSubtracting8BitRegisterFromAccumulator(cpu,
+                a: 0x00, registerValue: 0x00, carryBit: false,
+                registerSetter: (value) => cpu.Registers.E = value,
+                expectedZero: true,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]

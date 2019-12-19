@@ -191,14 +191,14 @@ namespace GBDotNet.Core
                 () => Instruction_0x95_Subtract_L_From_A(),
                 () => Instruction_0x96_Subtract_Address_Pointed_To_By_HL_From_A(),
                 () => Instruction_0x97_Subtract_A_From_A(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x98_Subtract_B_Plus_Carry_From_A(),
+                () => Instruction_0x99_Subtract_C_Plus_Carry_From_A(),
+                () => Instruction_0x9A_Subtract_D_Plus_Carry_From_A(),
+                () => Instruction_0x9B_Subtract_E_Plus_Carry_From_A(),
+                () => Instruction_0x9C_Subtract_H_Plus_Carry_From_A(),
+                () => Instruction_0x9D_Subtract_L_Plus_Carry_From_A(),
+                () => Instruction_0x9E_Subtract_Address_Pointed_To_By_HL_Plus_Carry_From_A(),
+                () => Instruction_0x9F_Subtract_A_Plus_Carry_From_A(),
                 //0xA0
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1466,6 +1466,70 @@ namespace GBDotNet.Core
         private void Instruction_0x97_Subtract_A_From_A()
         {
             SubtractFromAccumulatorAndSetFlags(Registers.A);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+        /// </summary>
+        private void Instruction_0x98_Subtract_B_Plus_Carry_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.B, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+        /// </summary>
+        private void Instruction_0x99_Subtract_C_Plus_Carry_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.C, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+        /// </summary>
+        private void Instruction_0x9A_Subtract_D_Plus_Carry_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.D, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+        /// </summary>
+        private void Instruction_0x9B_Subtract_E_Plus_Carry_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.E, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+        /// </summary>
+        private void Instruction_0x9C_Subtract_H_Plus_Carry_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.H, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+        /// </summary>
+        private void Instruction_0x9D_Subtract_L_Plus_Carry_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.L, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,_HL_
+        /// </summary>
+        private void Instruction_0x9E_Subtract_Address_Pointed_To_By_HL_Plus_Carry_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Memory[Registers.HL], carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8
+        /// </summary>
+        private void Instruction_0x9F_Subtract_A_Plus_Carry_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Registers.A, carryBit: Registers.HasFlag(Flags.Carry));
         }
 
         /// <summary>
