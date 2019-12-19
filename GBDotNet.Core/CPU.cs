@@ -200,7 +200,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x9E_Subtract_Address_Pointed_To_By_HL_Plus_Carry_From_A(),
                 () => Instruction_0x9F_Subtract_A_Plus_Carry_From_A(),
                 //0xA0
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xA0_Bitwise_And_B_With_A(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1530,6 +1530,17 @@ namespace GBDotNet.Core
         private void Instruction_0x9F_Subtract_A_Plus_Carry_From_A()
         {
             SubtractFromAccumulatorAndSetFlags(Registers.A, carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
+        /// </summary>
+        private void Instruction_0xA0_Bitwise_And_B_With_A()
+        {
+            Registers.A &= Registers.B;
+            Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
+            Registers.ClearFlag(Flags.AddSubtract | Flags.Carry);
+            Registers.SetFlag(Flags.HalfCarry);
         }
 
         /// <summary>

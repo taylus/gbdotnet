@@ -607,8 +607,16 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xA0_Should_Bitwise_And_B_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xA0);
+            var cpu = new CPU(new Registers() { A = 0xFF, B = 0xF0 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xF0, cpu.Registers.A);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "AND instructions should always clear the N flag.");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "AND instructions should always set the H flag.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "AND instructions should always clear the C flag.");
         }
 
         [TestMethod]
