@@ -608,64 +608,96 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xA0_Should_Bitwise_And_B_With_A()
         {
             var memory = new Memory(0xA0);
-            var cpu = new CPU(new Registers() { A = 0xFF, B = 0xF0 }, memory);
+            var cpu = new CPU(new Registers(), memory);
 
-            cpu.Tick();
-
-            Assert.AreEqual(0xF0, cpu.Registers.A);
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "AND instructions should always clear the N flag.");
-            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "AND instructions should always set the H flag.");
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "AND instructions should always clear the C flag.");
+            TestAnding8BitRegisterWithAccumulator(cpu,
+                a: 0xFF, registerValue: 0xF0,
+                registerSetter: (value) => cpu.Registers.B = value,
+                expectedZero: false);
         }
 
         [TestMethod]
         public void Instruction_0xA1_Should_Bitwise_And_C_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xA1);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAnding8BitRegisterWithAccumulator(cpu,
+                a: 0xFF, registerValue: 0x00,
+                registerSetter: (value) => cpu.Registers.C = value,
+                expectedZero: true);
         }
 
         [TestMethod]
         public void Instruction_0xA2_Should_Bitwise_And_D_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xA2);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAnding8BitRegisterWithAccumulator(cpu,
+                a: 0x0F, registerValue: 0x0F,
+                registerSetter: (value) => cpu.Registers.D = value,
+                expectedZero: false);
         }
 
         [TestMethod]
         public void Instruction_0xA3_Should_Bitwise_And_E_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xA3);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAnding8BitRegisterWithAccumulator(cpu,
+                a: 0xAA, registerValue: 0xFF,
+                registerSetter: (value) => cpu.Registers.E = value,
+                expectedZero: false);
         }
 
         [TestMethod]
         public void Instruction_0xA4_Should_Bitwise_And_H_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xA4);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAnding8BitRegisterWithAccumulator(cpu,
+                a: 0x12, registerValue: 0x34,
+                registerSetter: (value) => cpu.Registers.H = value,
+                expectedZero: false);
         }
 
         [TestMethod]
         public void Instruction_0xA5_Should_Bitwise_And_L_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xA5);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAnding8BitRegisterWithAccumulator(cpu,
+                a: 0xF0, registerValue: 0x0F,
+                registerSetter: (value) => cpu.Registers.L = value,
+                expectedZero: true);
         }
 
         [TestMethod]
         public void Instruction_0xA6_Should_Bitwise_And_Address_Pointed_To_By_HL_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#AND_A,_HL_
-            throw new NotImplementedException();
+            var memory = new Memory(0xA6);
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
+
+            TestAnding8BitRegisterWithAccumulator(cpu,
+                a: 0xF0, registerValue: 0x0F,
+                registerSetter: (value) => memory[cpu.Registers.HL] = value,
+                expectedZero: true);
         }
 
         [TestMethod]
         public void Instruction_0xA7_Should_Bitwise_And_A_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xA7);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestAnding8BitRegisterWithAccumulator(cpu,
+                a: 0x05, registerValue: 0x05,
+                registerSetter: (value) => cpu.Registers.A = value,
+                expectedZero: false);
         }
 
         [TestMethod]
@@ -894,7 +926,7 @@ namespace GBDotNet.Core.Test
         }
 
         /// <summary>
-        /// Tests instructions like add a, b.
+        /// Tests instructions like add a, b or adc a, b
         /// </summary>
         private static void TestAdding8BitRegisterToAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null)
         {
@@ -926,6 +958,9 @@ namespace GBDotNet.Core.Test
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should not be set when adding {registerValue} to accumulator {a}.");
         }
 
+        /// <summary>
+        /// Tests instructions like sub a, b or sbc a, b.
+        /// </summary>
         private static void TestSubtracting8BitRegisterFromAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null)
         {
             cpu.Registers.PC = 0;   //assume the add instruction is always at the beginning of memory
@@ -954,6 +989,32 @@ namespace GBDotNet.Core.Test
                 Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should be set when subtracting {registerValue} from accumulator {a}.");
             else
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should not be set when subtracting {registerValue} from accumulator {a}.");
+        }
+
+        /// <summary>
+        /// Tests instructions like and a, b.
+        /// </summary>
+        private static void TestAnding8BitRegisterWithAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero)
+        {
+            cpu.Registers.PC = 0;   //assume the and instruction is always at the beginning of memory
+            cpu.Registers.SetFlag(Flags.AddSubtract);   //set the N flag (and instructions should always clear it)
+            cpu.Registers.ClearFlag(Flags.HalfCarry);   //clear the H flag (and instructions should always set it)
+            cpu.Registers.SetFlag(Flags.Carry);   //set the C flag (and instructions should always clear it)
+            cpu.Registers.A = a;
+            registerSetter(registerValue);
+
+            cpu.Tick();
+
+            Assert.AreEqual((byte)(a & registerValue), cpu.Registers.A);
+
+            if (expectedZero)
+                Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), $"Zero flag should be set when ANDing {registerValue} with accumulator {a}.");
+            else
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), $"Zero flag should not be set when ANDing {registerValue} with accumulator {a}.");
+
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "AND instructions should always clear the N flag.");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "AND instructions should always set the H flag.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "AND instructions should always clear the C flag.");
         }
 
         /// <summary>

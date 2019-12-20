@@ -201,13 +201,13 @@ namespace GBDotNet.Core
                 () => Instruction_0x9F_Subtract_A_Plus_Carry_From_A(),
                 //0xA0
                 () => Instruction_0xA0_Bitwise_And_B_With_A(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xA1_Bitwise_And_C_With_A(),
+                () => Instruction_0xA2_Bitwise_And_D_With_A(),
+                () => Instruction_0xA3_Bitwise_And_E_With_A(),
+                () => Instruction_0xA4_Bitwise_And_H_With_A(),
+                () => Instruction_0xA5_Bitwise_And_L_With_A(),
+                () => Instruction_0xA6_Bitwise_And_Address_Pointed_To_By_HL_With_A(),
+                () => Instruction_0xA7_Bitwise_And_A_With_A(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1537,10 +1537,63 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xA0_Bitwise_And_B_With_A()
         {
-            Registers.A &= Registers.B;
-            Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
-            Registers.ClearFlag(Flags.AddSubtract | Flags.Carry);
-            Registers.SetFlag(Flags.HalfCarry);
+            AndWithAccumulatorAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
+        /// </summary>
+        private void Instruction_0xA1_Bitwise_And_C_With_A()
+        {
+            AndWithAccumulatorAndSetFlags(Registers.C);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
+        /// </summary>
+        private void Instruction_0xA2_Bitwise_And_D_With_A()
+        {
+            AndWithAccumulatorAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
+        /// </summary>
+        private void Instruction_0xA3_Bitwise_And_E_With_A()
+        {
+            AndWithAccumulatorAndSetFlags(Registers.E);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
+        /// </summary>
+        private void Instruction_0xA4_Bitwise_And_H_With_A()
+        {
+            AndWithAccumulatorAndSetFlags(Registers.H);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
+        /// </summary>
+        private void Instruction_0xA5_Bitwise_And_L_With_A()
+        {
+            AndWithAccumulatorAndSetFlags(Registers.L);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#AND_A,_HL_
+        /// </summary>
+        private void Instruction_0xA6_Bitwise_And_Address_Pointed_To_By_HL_With_A()
+        {
+            AndWithAccumulatorAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
+        /// </summary>
+        private void Instruction_0xA7_Bitwise_And_A_With_A()
+        {
+            AndWithAccumulatorAndSetFlags(Registers.A);
         }
 
         /// <summary>
@@ -1709,6 +1762,17 @@ namespace GBDotNet.Core
             Registers.A -= carry;
             Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
             Registers.SetFlag(Flags.AddSubtract);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#AND_A,r8
+        /// </summary>
+        private void AndWithAccumulatorAndSetFlags(byte value)
+        {
+            Registers.A &= value;
+            Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
+            Registers.ClearFlag(Flags.AddSubtract | Flags.Carry);
+            Registers.SetFlag(Flags.HalfCarry);
         }
 
         /// <summary>
