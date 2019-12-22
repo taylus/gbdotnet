@@ -799,57 +799,97 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xB0_Should_Bitwise_Or_B_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xB0);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestOring8BitRegisterWithAccumulator(cpu,
+                a: 0xFF, registerValue: 0x00,
+                registerSetter: (value) => cpu.Registers.B = value,
+                expectedZero: false);
         }
 
         [TestMethod]
         public void Instruction_0xB1_Should_Bitwise_Or_C_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xB1);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestOring8BitRegisterWithAccumulator(cpu,
+                a: 0xFF, registerValue: 0xA0,
+                registerSetter: (value) => cpu.Registers.C = value,
+                expectedZero: false);
         }
 
         [TestMethod]
         public void Instruction_0xB2_Should_Bitwise_Or_D_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xB2);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestOring8BitRegisterWithAccumulator(cpu,
+                a: 0x00, registerValue: 0x00,
+                registerSetter: (value) => cpu.Registers.D = value,
+                expectedZero: true);
         }
 
         [TestMethod]
         public void Instruction_0xB3_Should_Bitwise_Or_E_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xB3);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestOring8BitRegisterWithAccumulator(cpu,
+                a: 0x12, registerValue: 0x34,
+                registerSetter: (value) => cpu.Registers.E = value,
+                expectedZero: false);
         }
 
         [TestMethod]
         public void Instruction_0xB4_Should_Bitwise_Or_H_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xB4);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestOring8BitRegisterWithAccumulator(cpu,
+                a: 0xAB, registerValue: 0xCD,
+                registerSetter: (value) => cpu.Registers.H = value,
+                expectedZero: false);
         }
 
         [TestMethod]
         public void Instruction_0xB5_Should_Bitwise_Or_L_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xB5);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestOring8BitRegisterWithAccumulator(cpu,
+                a: 0xFF, registerValue: 0xFF,
+                registerSetter: (value) => cpu.Registers.L = value,
+                expectedZero: false);
         }
 
         [TestMethod]
         public void Instruction_0xB6_Should_Bitwise_Or_Address_Pointed_To_By_HL_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,_HL_
-            throw new NotImplementedException();
+            var memory = new Memory(0xB6);
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
+
+            TestOring8BitRegisterWithAccumulator(cpu,
+                a: 0xAB, registerValue: 0xCD,
+                registerSetter: (value) => memory[cpu.Registers.HL] = value,
+                expectedZero: false);
         }
 
         [TestMethod]
         public void Instruction_0xB7_Should_Bitwise_Or_A_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xB7);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestOring8BitRegisterWithAccumulator(cpu,
+                a: 0xAA, registerValue: 0xAA,
+                registerSetter: (value) => cpu.Registers.A = value,
+                expectedZero: false);
         }
 
         [TestMethod]
@@ -1078,6 +1118,30 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "XOR instructions should always clear the N flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "XOR instructions should always clear the H flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "XOR instructions should always clear the C flag.");
+        }
+
+        /// <summary>
+        /// Tests instructions like or a, b.
+        /// </summary>
+        private static void TestOring8BitRegisterWithAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero)
+        {
+            cpu.Registers.PC = 0;   //assume the and instruction is always at the beginning of memory
+            cpu.Registers.SetFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry);   //set these flags (or instructions always clear them)
+            cpu.Registers.A = a;
+            registerSetter(registerValue);
+
+            cpu.Tick();
+
+            Assert.AreEqual((byte)(a | registerValue), cpu.Registers.A);
+
+            if (expectedZero)
+                Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), $"Zero flag should be set when ORing {registerValue} with accumulator {a}.");
+            else
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), $"Zero flag should not be set when ORing {registerValue} with accumulator {a}.");
+
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "OR instructions should always clear the N flag.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "OR instructions should always clear the H flag.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "OR instructions should always clear the C flag.");
         }
 
         /// <summary>

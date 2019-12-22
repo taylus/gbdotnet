@@ -217,14 +217,14 @@ namespace GBDotNet.Core
                 () => Instruction_0xAE_Bitwise_Exclusive_Or_Address_Pointed_To_By_HL_With_A(),
                 () => Instruction_0xAF_Bitwise_Exclusive_Or_A_With_A(),
                 //0xB0
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xB0_Bitwise_Or_B_With_A(),
+                () => Instruction_0xB1_Bitwise_Or_C_With_A(),
+                () => Instruction_0xB2_Bitwise_Or_D_With_A(),
+                () => Instruction_0xB3_Bitwise_Or_E_With_A(),
+                () => Instruction_0xB4_Bitwise_Or_H_With_A(),
+                () => Instruction_0xB5_Bitwise_Or_L_With_A(),
+                () => Instruction_0xB6_Bitwise_Or_Address_Pointed_To_By_HL_With_A(),
+                () => Instruction_0xB7_Bitwise_Or_A_With_A(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1664,6 +1664,70 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+        /// </summary>
+        private void Instruction_0xB0_Bitwise_Or_B_With_A()
+        {
+            OrWithAccumulatorAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+        /// </summary>
+        private void Instruction_0xB1_Bitwise_Or_C_With_A()
+        {
+            OrWithAccumulatorAndSetFlags(Registers.C);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+        /// </summary>
+        private void Instruction_0xB2_Bitwise_Or_D_With_A()
+        {
+            OrWithAccumulatorAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+        /// </summary>
+        private void Instruction_0xB3_Bitwise_Or_E_With_A()
+        {
+            OrWithAccumulatorAndSetFlags(Registers.E);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+        /// </summary>
+        private void Instruction_0xB4_Bitwise_Or_H_With_A()
+        {
+            OrWithAccumulatorAndSetFlags(Registers.H);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+        /// </summary>
+        private void Instruction_0xB5_Bitwise_Or_L_With_A()
+        {
+            OrWithAccumulatorAndSetFlags(Registers.L);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#OR_A,_HL_
+        /// </summary>
+        private void Instruction_0xB6_Bitwise_Or_Address_Pointed_To_By_HL_With_A()
+        {
+            OrWithAccumulatorAndSetFlags(Memory[Registers.HL]);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+        /// </summary>
+        private void Instruction_0xB7_Bitwise_Or_A_With_A()
+        {
+            OrWithAccumulatorAndSetFlags(Registers.A);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#POP_r16
         /// </summary>
         private void Instruction_0xC1_Pop_Stack_Into_BC()
@@ -1848,6 +1912,16 @@ namespace GBDotNet.Core
         private void XorWithAccumulatorAndSetFlags(byte value)
         {
             Registers.A ^= value;
+            Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
+            Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#OR_A,r8
+        /// </summary>
+        private void OrWithAccumulatorAndSetFlags(byte value)
+        {
+            Registers.A |= value;
             Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
             Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry);
         }
