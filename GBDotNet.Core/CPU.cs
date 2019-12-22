@@ -208,14 +208,14 @@ namespace GBDotNet.Core
                 () => Instruction_0xA5_Bitwise_And_L_With_A(),
                 () => Instruction_0xA6_Bitwise_And_Address_Pointed_To_By_HL_With_A(),
                 () => Instruction_0xA7_Bitwise_And_A_With_A(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xA8_Bitwise_Exclusive_Or_B_With_A(),
+                () => Instruction_0xA9_Bitwise_Exclusive_Or_C_With_A(),
+                () => Instruction_0xAA_Bitwise_Exclusive_Or_D_With_A(),
+                () => Instruction_0xAB_Bitwise_Exclusive_Or_E_With_A(),
+                () => Instruction_0xAC_Bitwise_Exclusive_Or_H_With_A(),
+                () => Instruction_0xAD_Bitwise_Exclusive_Or_L_With_A(),
+                () => Instruction_0xAE_Bitwise_Exclusive_Or_Address_Pointed_To_By_HL_With_A(),
+                () => Instruction_0xAF_Bitwise_Exclusive_Or_A_With_A(),
                 //0xB0
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1597,6 +1597,73 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#XOR_A,r8
+        /// </summary>
+        private void Instruction_0xA8_Bitwise_Exclusive_Or_B_With_A()
+        {
+            XorWithAccumulatorAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#XOR_A,r8
+        /// </summary>
+        private void Instruction_0xA9_Bitwise_Exclusive_Or_C_With_A()
+        {
+            XorWithAccumulatorAndSetFlags(Registers.C);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#XOR_A,r8
+        /// </summary>
+        private void Instruction_0xAA_Bitwise_Exclusive_Or_D_With_A()
+        {
+            XorWithAccumulatorAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#XOR_A,r8
+        /// </summary>
+        private void Instruction_0xAB_Bitwise_Exclusive_Or_E_With_A()
+        {
+            XorWithAccumulatorAndSetFlags(Registers.E);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#XOR_A,r8
+        /// </summary>
+        private void Instruction_0xAC_Bitwise_Exclusive_Or_H_With_A()
+        {
+            XorWithAccumulatorAndSetFlags(Registers.H);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#XOR_A,r8
+        /// </summary>
+        private void Instruction_0xAD_Bitwise_Exclusive_Or_L_With_A()
+        {
+            XorWithAccumulatorAndSetFlags(Registers.L);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#XOR_A,_HL_
+        /// </summary>
+        private void Instruction_0xAE_Bitwise_Exclusive_Or_Address_Pointed_To_By_HL_With_A()
+        {
+            XorWithAccumulatorAndSetFlags(Memory[Registers.HL]);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#XOR_A,r8
+        /// </summary>
+        /// <remarks>
+        /// Conventionally used to zero out the accumulator (takes 1 less cycle than ld a, 0)
+        /// </remarks>
+        private void Instruction_0xAF_Bitwise_Exclusive_Or_A_With_A()
+        {
+            XorWithAccumulatorAndSetFlags(Registers.A);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#POP_r16
         /// </summary>
         private void Instruction_0xC1_Pop_Stack_Into_BC()
@@ -1773,6 +1840,16 @@ namespace GBDotNet.Core
             Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
             Registers.ClearFlag(Flags.AddSubtract | Flags.Carry);
             Registers.SetFlag(Flags.HalfCarry);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#XOR_A,r8
+        /// </summary>
+        private void XorWithAccumulatorAndSetFlags(byte value)
+        {
+            Registers.A ^= value;
+            Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
+            Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry);
         }
 
         /// <summary>
