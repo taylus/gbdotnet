@@ -1007,8 +1007,13 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xC6_Should_Add_8_Bit_Immediate_To_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,n8
-            throw new NotImplementedException();
+            var memory = new Memory(0xC6, 0xAA);
+            var cpu = new CPU(new Registers() { A = 1 }, memory);
+
+            var expected = (byte)(cpu.Registers.A + memory[1]);
+            cpu.Tick();
+
+            Assert.AreEqual(expected, cpu.Registers.A);
         }
 
         [TestMethod]

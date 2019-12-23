@@ -240,7 +240,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xC5_Push_BC_Onto_Stack(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xC6_Add_8_Bit_Immediate_To_A(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1805,6 +1805,14 @@ namespace GBDotNet.Core
         private void Instruction_0xC5_Push_BC_Onto_Stack()
         {
             PushOntoStack(Registers.B, Registers.C);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,n8
+        /// </summary>
+        private void Instruction_0xC6_Add_8_Bit_Immediate_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Fetch());
         }
 
         /// <summary>
