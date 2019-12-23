@@ -895,57 +895,113 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xB8_Should_Compare_B_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xB8);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestComparing8BitRegisterToAccumulator(cpu,
+                a: 0xBE, registerValue: 0xAF,
+                registerSetter: (value) => cpu.Registers.B = value,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: true);
         }
 
         [TestMethod]
         public void Instruction_0xB9_Should_Compare_C_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xB9);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestComparing8BitRegisterToAccumulator(cpu,
+                a: 0x00, registerValue: 0x00,
+                registerSetter: (value) => cpu.Registers.C = value,
+                expectedZero: true,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0xBA_Should_Compare_D_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xBA);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestComparing8BitRegisterToAccumulator(cpu,
+                a: 0x00, registerValue: 0x01,
+                registerSetter: (value) => cpu.Registers.D = value,
+                expectedZero: false,
+                expectedCarry: true,
+                expectedHalfCarry: true);
         }
 
         [TestMethod]
         public void Instruction_0xBB_Should_Compare_E_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xBB);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestComparing8BitRegisterToAccumulator(cpu,
+                a: 0x01, registerValue: 0x01,
+                registerSetter: (value) => cpu.Registers.E = value,
+                expectedZero: true,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0xBC_Should_Compare_H_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xBC);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestComparing8BitRegisterToAccumulator(cpu,
+                a: 0x01, registerValue: 0x00,
+                registerSetter: (value) => cpu.Registers.H = value,
+                expectedZero: false,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0xBD_Should_Compare_L_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xBD);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestComparing8BitRegisterToAccumulator(cpu,
+                a: 0x01, registerValue: 0xFF,
+                registerSetter: (value) => cpu.Registers.L = value,
+                expectedZero: false,
+                expectedCarry: true,
+                expectedHalfCarry: true);
         }
 
         [TestMethod]
         public void Instruction_0xBE_Should_Compare_Address_Pointed_To_By_HL_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,_HL_
-            throw new NotImplementedException();
+            var memory = new Memory(0xBE);
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
+
+            TestComparing8BitRegisterToAccumulator(cpu,
+                a: 0xAA, registerValue: 0xB1,
+                registerSetter: (value) => memory[cpu.Registers.HL] = value,
+                expectedZero: false,
+                expectedCarry: true,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
         public void Instruction_0xBF_Should_Compare_A_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xBF);
+            var cpu = new CPU(new Registers(), memory);
+
+            TestComparing8BitRegisterToAccumulator(cpu,
+                a: 0xAA, registerValue: 0xAA,
+                registerSetter: (value) => cpu.Registers.A = value,
+                expectedZero: true,
+                expectedCarry: false,
+                expectedHalfCarry: false);
         }
 
         [TestMethod]
@@ -1039,8 +1095,10 @@ namespace GBDotNet.Core.Test
 
         /// <summary>
         /// Tests instructions like sub a, b or sbc a, b.
+        /// If <paramref name="performSubtraction"/> is false, tests instructions like cp a, b.
         /// </summary>
-        private static void TestSubtracting8BitRegisterFromAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null)
+        private static void TestSubtracting8BitRegisterFromAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter,
+            bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null, bool performSubtraction = true)
         {
             cpu.Registers.PC = 0;   //assume the add instruction is always at the beginning of memory
             cpu.Registers.ClearFlag(Flags.AddSubtract);   //clear the N flag (subtract instructions should always set it)
@@ -1051,23 +1109,32 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             var carry = carryBit.HasValue && carryBit.Value ? 1 : 0;
-            Assert.AreEqual((byte)(a - (registerValue + carry)), cpu.Registers.A);
-            Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract), "Subtract instructions should always set the N flag.");
+            var expected = performSubtraction ? (byte)(a - (registerValue + carry)) : a;    //compare instructions shouldn't store the result
+            Assert.AreEqual(expected, cpu.Registers.A);
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract), "Subtract/compare instructions should always set the N flag.");
 
             if (expectedZero)
-                Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), $"Zero flag should be set when subtracting {registerValue} from accumulator {a}.");
+                Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), $"Zero flag should be set when subtracting from or comparing {registerValue} w/ accumulator {a}.");
             else
-                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), $"Zero flag should not be set when subtracting {registerValue} from accumulator {a}.");
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), $"Zero flag should not be set when subtracting from or comparing {registerValue} w/ accumulator {a}.");
 
             if (expectedCarry)
-                Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), $"Carry flag should be set when subtracting {registerValue} from accumulator {a}.");
+                Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), $"Carry flag should be set when subtracting from or comparing {registerValue} w/ accumulator {a}.");
             else
-                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), $"Carry flag should not be set when subtracting {registerValue} from accumulator {a}.");
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), $"Carry flag should not be set when subtracting from or comparing {registerValue} w/ accumulator {a}.");
 
             if (expectedHalfCarry)
-                Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should be set when subtracting {registerValue} from accumulator {a}.");
+                Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should be set when subtracting from or comparing {registerValue} w/ accumulator {a}.");
             else
-                Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should not be set when subtracting {registerValue} from accumulator {a}.");
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should not be set when subtracting from or comparing {registerValue} w/ accumulator {a}.");
+        }
+
+        /// <summary>
+        /// Tests instructions like cp a, b. These instructions behave just like subtraction (set the same flags) but don't store the result in the accumulator.
+        /// </summary>
+        private static void TestComparing8BitRegisterToAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry)
+        {
+            TestSubtracting8BitRegisterFromAccumulator(cpu, a, registerValue, registerSetter, expectedZero, expectedCarry, expectedHalfCarry, null, performSubtraction: false);
         }
 
         /// <summary>

@@ -225,14 +225,14 @@ namespace GBDotNet.Core
                 () => Instruction_0xB5_Bitwise_Or_L_With_A(),
                 () => Instruction_0xB6_Bitwise_Or_Address_Pointed_To_By_HL_With_A(),
                 () => Instruction_0xB7_Bitwise_Or_A_With_A(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xB8_Compare_B_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
+                () => Instruction_0xB9_Compare_C_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
+                () => Instruction_0xBA_Compare_D_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
+                () => Instruction_0xBB_Compare_E_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
+                () => Instruction_0xBC_Compare_H_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
+                () => Instruction_0xBD_Compare_L_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
+                () => Instruction_0xBE_Compare_Address_Pointed_To_By_HL_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
+                () => Instruction_0xBF_Compare_A_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
                 //0xC0
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xC1_Pop_Stack_Into_BC(),
@@ -1728,6 +1728,70 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+        /// </summary>
+        private void Instruction_0xB8_Compare_B_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            CompareToAccumulatorAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+        /// </summary>
+        private void Instruction_0xB9_Compare_C_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            CompareToAccumulatorAndSetFlags(Registers.C);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+        /// </summary>
+        private void Instruction_0xBA_Compare_D_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            CompareToAccumulatorAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+        /// </summary>
+        private void Instruction_0xBB_Compare_E_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            CompareToAccumulatorAndSetFlags(Registers.E);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+        /// </summary>
+        private void Instruction_0xBC_Compare_H_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            CompareToAccumulatorAndSetFlags(Registers.H);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+        /// </summary>
+        private void Instruction_0xBD_Compare_L_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            CompareToAccumulatorAndSetFlags(Registers.L);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+        /// </summary>
+        private void Instruction_0xBE_Compare_Address_Pointed_To_By_HL_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            CompareToAccumulatorAndSetFlags(Memory[Registers.HL]);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+        /// </summary>
+        private void Instruction_0xBF_Compare_A_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            CompareToAccumulatorAndSetFlags(Registers.A);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#POP_r16
         /// </summary>
         private void Instruction_0xC1_Pop_Stack_Into_BC()
@@ -1882,17 +1946,38 @@ namespace GBDotNet.Core
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,r8 (subtract w/o carry)
         /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,r8 (subtract w/ carry)
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8  (compare - subtract but don't store result)
         /// </summary>
-        private void SubtractFromAccumulatorAndSetFlags(byte value, bool carryBit = false)
+        private void SubtractFromAccumulatorAndSetFlags(byte value, bool carryBit = false, bool storeResult = true)
         {
             var carry = (byte)(carryBit ? 1 : 0);
             //half carry (borrow from upper nibble) occurs if the lower nibble of the value being subtracted is > A's
             Registers.SetFlagTo(Flags.HalfCarry, ((value + carry) & 0xF) > (Registers.A & 0xF));
             Registers.SetFlagTo(Flags.Carry, (value + carry) > Registers.A);
-            Registers.A -= value;
-            Registers.A -= carry;
-            Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
             Registers.SetFlag(Flags.AddSubtract);
+
+            if (storeResult)
+            {
+                Registers.A -= value;
+                Registers.A -= carry;
+                Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
+            }
+            else
+            {
+                var temp = Registers.A;
+                temp -= value;
+                temp -= carry;
+                Registers.SetFlagTo(Flags.Zero, temp == 0);
+            }
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CP_A,r8
+        /// </summary>
+        /// <param name="value"></param>
+        private void CompareToAccumulatorAndSetFlags(byte value)
+        {
+            SubtractFromAccumulatorAndSetFlags(value, carryBit: false, storeResult: false);
         }
 
         /// <summary>
