@@ -1081,8 +1081,13 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xF6_Should_Bitwise_Or_8_Bit_Immediate_With_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#OR_A,n8
-            throw new NotImplementedException();
+            var memory = new Memory(0xF6, 0xAA);
+            var cpu = new CPU(new Registers() { A = 0xBB }, memory);
+
+            var expected = (byte)(cpu.Registers.A | memory[1]);
+            cpu.Tick();
+
+            Assert.AreEqual(expected, cpu.Registers.A);
         }
 
         [TestMethod]
