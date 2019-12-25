@@ -1032,8 +1032,13 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xD6_Should_Subtract_8_Bit_Immediate_From_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SUB_A,n8
-            throw new NotImplementedException();
+            var memory = new Memory(0xD6, 0xAA);
+            var cpu = new CPU(new Registers() { A = 0xBB }, memory);
+
+            var expected = (byte)(cpu.Registers.A - memory[1]);
+            cpu.Tick();
+
+            Assert.AreEqual(expected, cpu.Registers.A);
         }
 
         [TestMethod]
