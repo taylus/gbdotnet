@@ -282,7 +282,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xEE_Bitwise_Exclusive_Or_8_Bit_Immediate_With_A(),
                 () => { throw new NotImplementedException(); },
                 //0xF0
                 () => Instruction_0xF0_Load_A_From_High_Memory_Address_Offset_By_8_Bit_Immediate(),
@@ -1902,6 +1902,14 @@ namespace GBDotNet.Core
         {
             var address = Common.FromLittleEndian(Fetch(), Fetch());
             Memory[address] = Registers.A;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#XOR_A,n8
+        /// </summary>
+        private void Instruction_0xEE_Bitwise_Exclusive_Or_8_Bit_Immediate_With_A()
+        {
+            XorWithAccumulatorAndSetFlags(Fetch());
         }
 
         /// <summary>
