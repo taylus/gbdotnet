@@ -1044,8 +1044,14 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xDE_Should_Subtract_8_Bit_Immediate_Plus_Carry_From_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,n8
-            throw new NotImplementedException();
+            var memory = new Memory(0xDE, 0xAA);
+            var cpu = new CPU(new Registers() { A = 0xBB }, memory);
+            cpu.Registers.SetFlag(Flags.Carry);
+
+            var expected = (byte)(cpu.Registers.A - memory[1] - 1);
+            cpu.Tick();
+
+            Assert.AreEqual(expected, cpu.Registers.A);
         }
 
         [TestMethod]

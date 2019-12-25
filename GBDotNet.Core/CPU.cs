@@ -265,7 +265,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xDE_Subtract_8_Bit_Immediate_Plus_Carry_From_A(),
                 () => { throw new NotImplementedException(); },
                 //0xE0
                 () => Instruction_0xE0_Load_A_Into_High_Memory_Address_Offset_By_Unsigned_8_Bit_Immediate(),
@@ -1845,6 +1845,14 @@ namespace GBDotNet.Core
         private void Instruction_0xD6_Subtract_8_Bit_Immediate_From_A()
         {
             SubtractFromAccumulatorAndSetFlags(Fetch());
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,n8
+        /// </summary>
+        private void Instruction_0xDE_Subtract_8_Bit_Immediate_Plus_Carry_From_A()
+        {
+            SubtractFromAccumulatorAndSetFlags(Fetch(), carryBit: Registers.HasFlag(Flags.Carry));
         }
 
         /// <summary>
