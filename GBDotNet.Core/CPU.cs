@@ -299,7 +299,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xFE_Compare_8_Bit_Immediate_With_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
                 () => { throw new NotImplementedException(); },
             };
         }
@@ -1979,6 +1979,14 @@ namespace GBDotNet.Core
         {
             var address = Common.FromLittleEndian(Fetch(), Fetch());
             Registers.A = Memory[address];
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CP_A,n8
+        /// </summary>
+        private void Instruction_0xFE_Compare_8_Bit_Immediate_With_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
+        {
+            CompareToAccumulatorAndSetFlags(Fetch());
         }
 
         //...

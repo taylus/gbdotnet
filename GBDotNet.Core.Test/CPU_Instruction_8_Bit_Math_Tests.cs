@@ -1093,8 +1093,17 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xFE_Should_Compare_8_Bit_Immediate_With_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#CP_A,n8
-            throw new NotImplementedException();
+            var memory = new Memory(0xFE, 0xBB);
+            var cpu = new CPU(new Registers() { A = 0xAA, F = 0x00 }, memory);
+
+            var expected = cpu.Registers.A;
+            cpu.Tick();
+
+            Assert.AreEqual(expected, cpu.Registers.A, "Compare instruction should not alter register A");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract));
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
         }
 
         /// <summary>
