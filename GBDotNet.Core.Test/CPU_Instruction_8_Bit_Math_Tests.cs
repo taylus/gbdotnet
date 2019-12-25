@@ -1019,8 +1019,14 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCE_Should_Add_8_Bit_Immediate_Plus_Carry_To_A()
         {
-            //sets flags, see https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,n8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCE, 0xAA);
+            var cpu = new CPU(new Registers() { A = 1 }, memory);
+            cpu.Registers.SetFlag(Flags.Carry);
+
+            var expected = (byte)(cpu.Registers.A + memory[1] + 1);
+            cpu.Tick();
+
+            Assert.AreEqual(expected, cpu.Registers.A);
         }
 
         [TestMethod]

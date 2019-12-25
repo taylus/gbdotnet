@@ -248,7 +248,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); }, //CB prefix instructions
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCE_Add_8_Bit_Immediate_Plus_Carry_To_A(),
                 () => { throw new NotImplementedException(); },
                 //0xD0
                 () => { throw new NotImplementedException(); },
@@ -1813,6 +1813,14 @@ namespace GBDotNet.Core
         private void Instruction_0xC6_Add_8_Bit_Immediate_To_A()
         {
             AddToAccumulatorAndSetFlags(Fetch());
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADC_A,n8
+        /// </summary>
+        private void Instruction_0xCE_Add_8_Bit_Immediate_Plus_Carry_To_A()
+        {
+            AddToAccumulatorAndSetFlags(Fetch(), carryBit: Registers.HasFlag(Flags.Carry));
         }
 
         /// <summary>
