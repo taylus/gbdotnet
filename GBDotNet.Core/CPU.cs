@@ -570,7 +570,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x18_Relative_Jump_By_8_Bit_Signed_Immediate()
         {
-            throw new NotImplementedException();
+            Registers.PC += (ushort)(sbyte)(Fetch() + 1);
         }
 
         /// <summary>
