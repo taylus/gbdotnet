@@ -258,7 +258,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xD5_Push_DE_Onto_Stack(),
                 () => Instruction_0xD6_Subtract_8_Bit_Immediate_From_A(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xD7_Call_Reset_Vector_Ten(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -266,7 +266,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xDE_Subtract_8_Bit_Immediate_Plus_Carry_From_A(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xDF_Call_Reset_Vector_Eighteen(),
                 //0xE0
                 () => Instruction_0xE0_Load_A_Into_High_Memory_Address_Offset_By_Unsigned_8_Bit_Immediate(),
                 () => Instruction_0xE1_Pop_Stack_Into_HL(),
@@ -275,7 +275,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xE5_Push_HL_Onto_Stack(),
                 () => Instruction_0xE6_Bitwise_And_8_Bit_Immediate_With_A(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xE7_Call_Reset_Vector_Twenty(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xEA_Load_Immediate_Memory_Location_From_A(),
@@ -283,7 +283,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xEE_Bitwise_Exclusive_Or_8_Bit_Immediate_With_A(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xEF_Call_Reset_Vector_Twenty_Eight(),
                 //0xF0
                 () => Instruction_0xF0_Load_A_From_High_Memory_Address_Offset_By_8_Bit_Immediate(),
                 () => Instruction_0xF1_Pop_Stack_Into_AF(),
@@ -292,7 +292,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xF5_Push_AF_Onto_Stack(),
                 () => Instruction_0xF6_Bitwise_Or_8_Bit_Immediate_With_A(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xF7_Call_Reset_Vector_Thirty(),
                 () => Instruction_0xF8_Add_8_Bit_Signed_Immediate_To_Stack_Pointer_And_Store_Result_In_HL(),
                 () => Instruction_0xF9_Load_Stack_Pointer_From_HL(),
                 () => Instruction_0xFA_Load_A_From_Immediate_Memory_Location(),
@@ -300,7 +300,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xFE_Compare_8_Bit_Immediate_With_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xFF_Call_Reset_Vector_Thirty_Eight()
             };
         }
 
@@ -1888,11 +1888,27 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
+        /// </summary>
+        private void Instruction_0xD7_Call_Reset_Vector_Ten()
+        {
+            Call(0x0010, returnAddress: Registers.PC);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SBC_A,n8
         /// </summary>
         private void Instruction_0xDE_Subtract_8_Bit_Immediate_Plus_Carry_From_A()
         {
             SubtractFromAccumulatorAndSetFlags(Fetch(), carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
+        /// </summary>
+        private void Instruction_0xDF_Call_Reset_Vector_Eighteen()
+        {
+            Call(0x0018, returnAddress: Registers.PC);
         }
 
         /// <summary>
@@ -1936,6 +1952,14 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
+        /// </summary>
+        private void Instruction_0xE7_Call_Reset_Vector_Twenty()
+        {
+            Call(0x0020, returnAddress: Registers.PC);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#LD__n16_,A
         /// </summary>
         private void Instruction_0xEA_Load_Immediate_Memory_Location_From_A()
@@ -1950,6 +1974,14 @@ namespace GBDotNet.Core
         private void Instruction_0xEE_Bitwise_Exclusive_Or_8_Bit_Immediate_With_A()
         {
             XorWithAccumulatorAndSetFlags(Fetch());
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
+        /// </summary>
+        private void Instruction_0xEF_Call_Reset_Vector_Twenty_Eight()
+        {
+            Call(0x0028, returnAddress: Registers.PC);
         }
 
         /// <summary>
@@ -1993,6 +2025,14 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
+        /// </summary>
+        private void Instruction_0xF7_Call_Reset_Vector_Thirty()
+        {
+            Call(0x0030, returnAddress: Registers.PC);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#LD_HL,SP+e8
         /// </summary>
         private void Instruction_0xF8_Add_8_Bit_Signed_Immediate_To_Stack_Pointer_And_Store_Result_In_HL()
@@ -2029,7 +2069,13 @@ namespace GBDotNet.Core
             CompareToAccumulatorAndSetFlags(Fetch());
         }
 
-        //...
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
+        /// </summary>
+        private void Instruction_0xFF_Call_Reset_Vector_Thirty_Eight()
+        {
+            Call(0x0038, returnAddress: Registers.PC);
+        }
 
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_A,r8 (add w/o carry)

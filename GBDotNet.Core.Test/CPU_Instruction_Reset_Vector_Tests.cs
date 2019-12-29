@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test
 {
@@ -9,76 +8,64 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xC7_Should_Call_Reset_Vector_Zero()
         {
-            var memory = new Memory(0xC7);
-            var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
-            var oldProgramCounter = cpu.Registers.PC;
-
-            cpu.Tick();
-
-            Assert.AreEqual(0x0000, cpu.Registers.PC, "Expected rst 00 instruction to set program counter to address 0000.");
-
-            var expectedReturnAddress = oldProgramCounter + 1;  //rst instructions are 1 byte long
-            var pushedReturnAddress = Common.FromLittleEndian(memory[cpu.Registers.SP], memory[cpu.Registers.SP + 1]);
-            Assert.AreEqual(expectedReturnAddress, pushedReturnAddress, "Expected rst 00 instruction to push return address onto stack.");
+            TestResetVector(opcode: 0xC7, expectedAddress: 0x0000);
         }
 
         [TestMethod]
         public void Instruction_0xCF_Should_Call_Reset_Vector_Eight()
         {
-            var memory = new Memory();
-            var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
-            var oldProgramCounter = cpu.Registers.PC = 0x4000;  //execute from a higher address to better exercise return address pushing
-            memory[cpu.Registers.PC] = 0xCF;
-
-            cpu.Tick();
-
-            Assert.AreEqual(0x0008, cpu.Registers.PC, "Expected rst 08 instruction to set program counter to address 0008.");
-
-            var expectedReturnAddress = oldProgramCounter + 1;  //rst instructions are 1 byte long
-            var pushedReturnAddress = Common.FromLittleEndian(memory[cpu.Registers.SP], memory[cpu.Registers.SP + 1]);
-            Assert.AreEqual(expectedReturnAddress, pushedReturnAddress, "Expected rst 08 instruction to push return address onto stack.");
+            TestResetVector(opcode: 0xCF, expectedAddress: 0x0008);
         }
 
         [TestMethod]
         public void Instruction_0xD7_Should_Call_Reset_Vector_Ten()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
-            throw new NotImplementedException();
+            TestResetVector(opcode: 0xD7, expectedAddress: 0x0010);
         }
 
         [TestMethod]
         public void Instruction_0xDF_Should_Call_Reset_Vector_Eighteen()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
-            throw new NotImplementedException();
+            TestResetVector(opcode: 0xDF, expectedAddress: 0x0018);
         }
 
         [TestMethod]
         public void Instruction_0xE7_Should_Call_Reset_Vector_Twenty()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
-            throw new NotImplementedException();
+            TestResetVector(opcode: 0xE7, expectedAddress: 0x0020);
         }
 
         [TestMethod]
         public void Instruction_0xEF_Should_Call_Reset_Vector_Twenty_Eight()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
-            throw new NotImplementedException();
+            TestResetVector(opcode: 0xEF, expectedAddress: 0x0028);
         }
 
         [TestMethod]
         public void Instruction_0xF7_Should_Call_Reset_Vector_Thirty()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
-            throw new NotImplementedException();
+            TestResetVector(opcode: 0xF7, expectedAddress: 0x0030);
         }
 
         [TestMethod]
         public void Instruction_0xFF_Should_Call_Reset_Vector_Thirty_Eight()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
-            throw new NotImplementedException();
+            TestResetVector(opcode: 0xFF, expectedAddress: 0x0038);
+        }
+
+        private static void TestResetVector(byte opcode, ushort expectedAddress, ushort initialStackPointer = 0xFFFE)
+        {
+            var memory = new Memory(opcode);
+            var cpu = new CPU(new Registers() { SP = initialStackPointer }, memory);
+            var initialProgramCounter = cpu.Registers.PC;
+
+            cpu.Tick();
+
+            Assert.AreEqual(expectedAddress, cpu.Registers.PC, $"Expected rst instruction to set program counter to address {expectedAddress:x4}.");
+
+            var expectedReturnAddress = initialProgramCounter + 1;  //rst instructions are 1 byte long
+            var pushedReturnAddress = Common.FromLittleEndian(memory[cpu.Registers.SP], memory[cpu.Registers.SP + 1]);
+            Assert.AreEqual(expectedReturnAddress, pushedReturnAddress, "Expected rst instruction to push correct return address onto stack.");
         }
     }
 }
