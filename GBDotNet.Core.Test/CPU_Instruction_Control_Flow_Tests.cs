@@ -33,15 +33,44 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x20_Should_Relative_Jump_By_Signed_Immediate_If_Zero_Flag_Not_Set()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#JR_cc,e8
-            throw new NotImplementedException();
+            //zero flag not set => should jump
+            var memory = new Memory(0x20, 0x01);
+            var cpu = new CPU(new Registers(), memory);
+            var addressOfJump = cpu.Registers.PC;
+
+            cpu.Tick();
+
+            Assert.AreEqual(addressOfJump + 3, cpu.Registers.PC, "Expected jr nz instruction to jump when zero flag is not set.");
+
+            //set zero flag and replay => should not jump
+            cpu.Registers.PC = 0;
+            cpu.Registers.SetFlag(Flags.Zero);
+
+            cpu.Tick();
+
+            Assert.AreEqual(addressOfJump + 1, cpu.Registers.PC, "Expected jr nz instruction to *not* jump when zero flag is set.");
         }
 
         [TestMethod]
         public void Instruction_0x28_Should_Relative_Jump_By_Signed_Immediate_If_Zero_Flag_Set()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#JR_cc,e8
-            throw new NotImplementedException();
+            //zero flag set => should jump
+            var memory = new Memory(0x28, 0x01);
+            var cpu = new CPU(new Registers(), memory);
+            cpu.Registers.SetFlag(Flags.Zero);
+            var addressOfJump = cpu.Registers.PC;
+
+            cpu.Tick();
+
+            Assert.AreEqual(addressOfJump + 3, cpu.Registers.PC, "Expected jr z instruction to jump when zero flag is set.");
+
+            //clear zero flag and replay => should not jump
+            cpu.Registers.PC = 0;
+            cpu.Registers.ClearFlag(Flags.Zero);
+
+            cpu.Tick();
+
+            Assert.AreEqual(addressOfJump + 1, cpu.Registers.PC, "Expected jr z instruction to *not* jump when zero flag is not set.");
         }
 
         [TestMethod]

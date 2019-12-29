@@ -64,7 +64,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x1E_Load_E_With_8_Bit_Immediate(),
                 () => Instruction_0x1F_Rotate_A_Right(),
                 //0x20
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x20_Relative_Jump_By_Signed_Immediate_If_Zero_Flag_Not_Set(),
                 () => Instruction_0x21_Load_HL_With_16_Bit_Immediate(),
                 () => Instruction_0x22_Load_Address_Pointed_To_By_HL_With_A_Then_Increment_HL(),
                 () => Instruction_0x23_Increment_HL(),
@@ -72,7 +72,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x25_Decrement_H(),
                 () => Instruction_0x26_Load_H_With_8_Bit_Immediate(),
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x28_Relative_Jump_By_Signed_Immediate_If_Zero_Flag_Set(),
                 () => Instruction_0x29_Add_HL_To_HL(),
                 () => Instruction_0x2A_Load_A_With_Address_Pointed_To_By_HL_Then_Increment_HL(),
                 () => Instruction_0x2B_Decrement_HL(),
@@ -359,7 +359,12 @@ namespace GBDotNet.Core
             return Common.FromLittleEndian(low, high);
         }
 
-        private void JumpTo(ushort address)
+        private void RelativeJump()
+        {
+            Registers.PC += (ushort)(sbyte)(Fetch() + 1);
+        }
+
+        private void AbsoluteJump(ushort address)
         {
             Registers.PC = address;
         }
@@ -367,12 +372,12 @@ namespace GBDotNet.Core
         private void Call(ushort destinationAddress, ushort returnAddress)
         {
             PushOntoStack(returnAddress);
-            JumpTo(destinationAddress);
+            AbsoluteJump(destinationAddress);
         }
 
         private void Return()
         {
-            JumpTo(PopStack());
+            AbsoluteJump(PopStack());
         }
 
         /// <summary>
@@ -594,7 +599,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x18_Relative_Jump_By_8_Bit_Signed_Immediate()
         {
-            Registers.PC += (ushort)(sbyte)(Fetch() + 1);
+            RelativeJump();
         }
 
         /// <summary>
@@ -657,6 +662,15 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#JR_cc,e8
+        /// </summary>
+        private void Instruction_0x20_Relative_Jump_By_Signed_Immediate_If_Zero_Flag_Not_Set()
+        {
+            if (Registers.HasFlag(Flags.Zero)) return;
+            RelativeJump();
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r16,n16
         /// </summary>
         private void Instruction_0x21_Load_HL_With_16_Bit_Immediate()
@@ -705,6 +719,15 @@ namespace GBDotNet.Core
         private void Instruction_0x26_Load_H_With_8_Bit_Immediate()
         {
             Registers.H = Fetch();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#JR_cc,e8
+        /// </summary>
+        private void Instruction_0x28_Relative_Jump_By_Signed_Immediate_If_Zero_Flag_Set()
+        {
+            if (!Registers.HasFlag(Flags.Zero)) return;
+            RelativeJump();
         }
 
         /// <summary>
