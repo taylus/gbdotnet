@@ -27,7 +27,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory();
             var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
-            var oldProgramCounter = cpu.Registers.PC = 0x4000;  //execute this test from a higher address
+            var oldProgramCounter = cpu.Registers.PC = 0x4000;  //execute from a higher address to better exercise return address pushing
             memory[cpu.Registers.PC] = 0xCF;
 
             cpu.Tick();
