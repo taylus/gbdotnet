@@ -249,7 +249,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xCE_Add_8_Bit_Immediate_Plus_Carry_To_A(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCF_Call_Reset_Vector_Eight(),
                 //0xD0
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xD1_Pop_Stack_Into_DE(),
@@ -1853,6 +1853,14 @@ namespace GBDotNet.Core
         private void Instruction_0xCE_Add_8_Bit_Immediate_Plus_Carry_To_A()
         {
             AddToAccumulatorAndSetFlags(Fetch(), carryBit: Registers.HasFlag(Flags.Carry));
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
+        /// </summary>
+        private void Instruction_0xCF_Call_Reset_Vector_Eight()
+        {
+            Call(0x0008, returnAddress: Registers.PC);
         }
 
         /// <summary>

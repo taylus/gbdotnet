@@ -25,8 +25,18 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCF_Should_Call_Reset_Vector_Eight()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
-            throw new NotImplementedException();
+            var memory = new Memory();
+            var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
+            var oldProgramCounter = cpu.Registers.PC = 0x4000;  //execute this test from a higher address
+            memory[cpu.Registers.PC] = 0xCF;
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x0008, cpu.Registers.PC, "Expected rst 08 instruction to set program counter to address 0008.");
+
+            var expectedReturnAddress = oldProgramCounter + 1;  //rst instructions are 1 byte long
+            var pushedReturnAddress = Common.FromLittleEndian(memory[cpu.Registers.SP], memory[cpu.Registers.SP + 1]);
+            Assert.AreEqual(expectedReturnAddress, pushedReturnAddress, "Expected rst 08 instruction to push return address onto stack.");
         }
 
         [TestMethod]
