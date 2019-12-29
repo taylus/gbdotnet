@@ -241,7 +241,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xC5_Push_BC_Onto_Stack(),
                 () => Instruction_0xC6_Add_8_Bit_Immediate_To_A(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xC7_Call_Reset_Vector_Zero(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -342,6 +342,14 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// Pushes the given 16-bit value onto the stack and decrements the stack pointer by 2.
+        /// </summary>
+        private void PushOntoStack(ushort value)
+        {
+            PushOntoStack((byte)(value >> 8), (byte)value);
+        }
+
+        /// <summary>
         /// Returns the 16-bit value at the top of the stack and increments the stack pointer by 2.
         /// </summary>
         private ushort PopStack()
@@ -349,6 +357,22 @@ namespace GBDotNet.Core
             byte low = Memory[Registers.SP++];
             byte high = Memory[Registers.SP++];
             return Common.FromLittleEndian(low, high);
+        }
+
+        private void JumpTo(ushort address)
+        {
+            Registers.PC = address;
+        }
+
+        private void Call(ushort destinationAddress, ushort returnAddress)
+        {
+            PushOntoStack(returnAddress);
+            JumpTo(destinationAddress);
+        }
+
+        private void Return()
+        {
+            JumpTo(PopStack());
         }
 
         /// <summary>
@@ -1813,6 +1837,14 @@ namespace GBDotNet.Core
         private void Instruction_0xC6_Add_8_Bit_Immediate_To_A()
         {
             AddToAccumulatorAndSetFlags(Fetch());
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RST_vec
+        /// </summary>
+        private void Instruction_0xC7_Call_Reset_Vector_Zero()
+        {
+            Call(0x0000, returnAddress: Registers.PC);
         }
 
         /// <summary>
