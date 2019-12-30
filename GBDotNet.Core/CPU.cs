@@ -247,7 +247,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); }, //CB prefix instructions
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCD_Call_Subroutine_At_Immediate_16_Bit_Address(),
                 () => Instruction_0xCE_Add_8_Bit_Immediate_Plus_Carry_To_A(),
                 () => Instruction_0xCF_Call_Reset_Vector_Eight(),
                 //0xD0
@@ -1894,6 +1894,15 @@ namespace GBDotNet.Core
         private void Instruction_0xC7_Call_Reset_Vector_Zero()
         {
             Call(0x0000, returnAddress: Registers.PC);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CALL_n16
+        /// </summary>
+        private void Instruction_0xCD_Call_Subroutine_At_Immediate_16_Bit_Address()
+        {
+            ushort address = Common.FromLittleEndian(Fetch(), Fetch());
+            Call(address, returnAddress: Registers.PC);
         }
 
         /// <summary>
