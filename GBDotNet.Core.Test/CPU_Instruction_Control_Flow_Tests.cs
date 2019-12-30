@@ -97,8 +97,23 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x38_Should_Relative_Jump_By_Signed_Immediate_If_Carry_Flag_Set()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#JR_cc,e8
-            throw new NotImplementedException();
+            //carry flag set => should jump
+            var memory = new Memory(0x38, 0x01);
+            var cpu = new CPU(new Registers(), memory);
+            cpu.Registers.SetFlag(Flags.Carry);
+            var addressOfJump = cpu.Registers.PC;
+
+            cpu.Tick();
+
+            Assert.AreEqual(addressOfJump + 3, cpu.Registers.PC, "Expected jr c instruction to jump when carry flag is set.");
+
+            //clear carry flag and replay => should not jump
+            cpu.Registers.PC = 0;
+            cpu.Registers.ClearFlag(Flags.Carry);
+
+            cpu.Tick();
+
+            Assert.AreEqual(addressOfJump + 1, cpu.Registers.PC, "Expected jr c instruction to *not* jump when carry flag is not set.");
         }
 
         [TestMethod]
