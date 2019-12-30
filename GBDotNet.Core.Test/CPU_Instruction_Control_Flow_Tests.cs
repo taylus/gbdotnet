@@ -119,8 +119,22 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xC0_Should_Return_From_Subroutine_If_Zero_Flag_Not_Set()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RET_cc
-            throw new NotImplementedException();
+            //zero flag set => should not return
+            var memory = new Memory(0xC0, 0x00, 0x40);
+            var cpu = new CPU(new Registers() { SP = 0x0001 }, memory);
+            cpu.Registers.SetFlag(Flags.Zero);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x0001, cpu.Registers.PC);
+
+            //clear zero flag and replay => should jump to pushed return address
+            cpu.Registers.PC = 0;
+            cpu.Registers.ClearFlag(Flags.Zero);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC);
         }
 
         [TestMethod]

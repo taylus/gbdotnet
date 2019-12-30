@@ -234,7 +234,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xBE_Compare_Address_Pointed_To_By_HL_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
                 () => Instruction_0xBF_Compare_A_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
                 //0xC0
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xC0_Return_From_Subroutine_If_Zero_Flag_Not_Set(),
                 () => Instruction_0xC1_Pop_Stack_Into_BC(),
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xC3_Jump_To_Immediate_16_Bit_Address(),
@@ -1854,6 +1854,14 @@ namespace GBDotNet.Core
         private void Instruction_0xBF_Compare_A_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
             CompareToAccumulatorAndSetFlags(Registers.A);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RET_cc
+        /// </summary>
+        private void Instruction_0xC0_Return_From_Subroutine_If_Zero_Flag_Not_Set()
+        {
+            if (!Registers.HasFlag(Flags.Zero)) Return();
         }
 
         /// <summary>
