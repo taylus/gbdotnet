@@ -81,7 +81,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x2E_Load_L_With_8_Bit_Immediate(),
                 () => { throw new NotImplementedException(); },
                 //0x30
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x30_Should_Relative_Jump_By_Signed_Immediate_If_Carry_Flag_Not_Set(),
                 () => Instruction_0x31_Load_SP_With_16_Bit_Immediate(),
                 () => Instruction_0x32_Load_Address_Pointed_To_By_HL_With_A_Then_Decrement_HL(),
                 () => Instruction_0x33_Increment_SP(),
@@ -779,6 +779,15 @@ namespace GBDotNet.Core
         private void Instruction_0x2E_Load_L_With_8_Bit_Immediate()
         {
             Registers.L = Fetch();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#JR_cc,e8
+        /// </summary>
+        private void Instruction_0x30_Should_Relative_Jump_By_Signed_Immediate_If_Carry_Flag_Not_Set()
+        {
+            if (Registers.HasFlag(Flags.Carry)) return;
+            RelativeJump();
         }
 
         /// <summary>
