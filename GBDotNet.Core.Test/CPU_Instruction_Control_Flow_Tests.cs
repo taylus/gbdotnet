@@ -133,8 +133,12 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xC3_Should_Jump_To_Immediate_16_Bit_Address()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#JP_n16
-            throw new NotImplementedException();
+            var memory = new Memory(0xC3, 0x00, 0x40);
+            var cpu = new CPU(new Registers(), memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC);
         }
 
         [TestMethod]

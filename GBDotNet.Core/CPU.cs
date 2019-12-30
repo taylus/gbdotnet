@@ -237,7 +237,7 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xC1_Pop_Stack_Into_BC(),
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xC3_Jump_To_Immediate_16_Bit_Address(),
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xC5_Push_BC_Onto_Stack(),
                 () => Instruction_0xC6_Add_8_Bit_Immediate_To_A(),
@@ -1862,6 +1862,14 @@ namespace GBDotNet.Core
         private void Instruction_0xC1_Pop_Stack_Into_BC()
         {
             Registers.BC = PopStack();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#JP_n16
+        /// </summary>
+        private void Instruction_0xC3_Jump_To_Immediate_16_Bit_Address()
+        {
+            AbsoluteJump(Common.FromLittleEndian(Fetch(), Fetch()));
         }
 
         /// <summary>
