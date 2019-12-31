@@ -128,6 +128,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0x27_Should_Decimal_Adjust_A_For_Correct_Result_After_Binary_Coded_Decimal_Arithmetic()
         {
             //see: https://rednex.github.io/rgbds/gbz80.7.html#DAA
+            throw new NotImplementedException();
         }
 
         [TestMethod]
@@ -150,24 +151,28 @@ namespace GBDotNet.Core.Test
         public void Instruction_0x2F_Should_Bitwise_Complement_A()
         {
             //see: https://rednex.github.io/rgbds/gbz80.7.html#CPL
+            throw new NotImplementedException();
         }
 
         [TestMethod]
         public void Instruction_0x34_Should_Increment_Value_Pointed_To_By_HL()
         {
             //see: https://rednex.github.io/rgbds/gbz80.7.html#INC__HL_
+            throw new NotImplementedException();
         }
 
         [TestMethod]
         public void Instruction_0x35_Should_Decrement_Value_Pointed_To_By_HL()
         {
             //see: https://rednex.github.io/rgbds/gbz80.7.html#DEC__HL_
+            throw new NotImplementedException();
         }
 
         [TestMethod]
         public void Instruction_0x37_Should_Set_Carry_Flag()
         {
             //see: https://rednex.github.io/rgbds/gbz80.7.html#SCF
+            throw new NotImplementedException();
         }
 
         [TestMethod]
@@ -190,6 +195,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0x3F_Should_Complement_Carry_Flag()
         {
             //see: https://rednex.github.io/rgbds/gbz80.7.html#CCF
+            throw new NotImplementedException();
         }
 
         [TestMethod]
