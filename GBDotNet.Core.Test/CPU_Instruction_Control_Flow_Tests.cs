@@ -140,8 +140,21 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xC2_Should_Jump_To_Immediate_16_Bit_Address_If_Zero_Flag_Not_Set()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#JP_cc,n16
-            throw new NotImplementedException();
+            //zero flag not set => should jump
+            var memory = new Memory(0xC2, 0x00, 0x40);
+            var cpu = new CPU(new Registers(), memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected jp nz instruction to jump when zero flag is not set.");
+
+            //set zero flag and replay => should not jump
+            cpu.Registers.PC = 0;
+            cpu.Registers.SetFlag(Flags.Zero);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x0003, cpu.Registers.PC, "Expected jp nz instruction to *not* jump when zero flag is set.");
         }
 
         [TestMethod]
