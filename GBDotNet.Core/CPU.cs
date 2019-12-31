@@ -242,7 +242,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xC5_Push_BC_Onto_Stack(),
                 () => Instruction_0xC6_Add_8_Bit_Immediate_To_A(),
                 () => Instruction_0xC7_Call_Reset_Vector_Zero(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xC8_Return_From_Subroutine_If_Zero_Flag_Set(),
                 () => Instruction_0xC9_Return_From_Subroutine(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); }, //CB prefix instructions
@@ -1920,6 +1920,14 @@ namespace GBDotNet.Core
         private void Instruction_0xC7_Call_Reset_Vector_Zero()
         {
             Call(0x0000, returnAddress: Registers.PC);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RET_cc
+        /// </summary>
+        private void Instruction_0xC8_Return_From_Subroutine_If_Zero_Flag_Set()
+        {
+            if (Registers.HasFlag(Flags.Zero)) Return();
         }
 
         /// <summary>

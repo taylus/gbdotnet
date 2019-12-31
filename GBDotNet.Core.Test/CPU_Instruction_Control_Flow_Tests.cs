@@ -196,8 +196,23 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xC8_Should_Return_From_Subroutine_If_Zero_Flag_Set()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RET_cc
-            throw new NotImplementedException();
+            //zero flag set => should return from subroutine (jump to return address on stack)
+            var memory = new Memory(0xC8);
+            var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
+            cpu.PushOntoStack(0x4000);  //manually push a return address onto the stack
+            cpu.Registers.SetFlag(Flags.Zero);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected ret z instruction to return from subroutine when zero flag is set.");
+
+            //clear zero flag and replay => should not return from subroutine
+            cpu.Registers.PC = 0;
+            cpu.Registers.ClearFlag(Flags.Zero);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x0001, cpu.Registers.PC, "Expected ret z instruction to *not* return from subroutine when zero flag is clear.");
         }
 
         [TestMethod]
