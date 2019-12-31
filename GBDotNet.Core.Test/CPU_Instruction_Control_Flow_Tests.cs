@@ -203,8 +203,13 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xC9_Should_Return_From_Subroutine()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RET
-            throw new NotImplementedException();
+            var memory = new Memory(0xC9);
+            var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
+            cpu.PushOntoStack(0x4000);  //manually push a return address onto the stack
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC);
         }
 
         [TestMethod]

@@ -243,7 +243,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xC6_Add_8_Bit_Immediate_To_A(),
                 () => Instruction_0xC7_Call_Reset_Vector_Zero(),
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xC9_Return_From_Subroutine(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); }, //CB prefix instructions
                 () => { throw new NotImplementedException(); },
@@ -333,7 +333,7 @@ namespace GBDotNet.Core
         /// <summary>
         /// Pushes the given register pair onto the stack and decrements the stack pointer by 2.
         /// </summary>
-        private void PushOntoStack(byte high, byte low)
+        internal void PushOntoStack(byte high, byte low)
         {
             Registers.SP--;
             Memory[Registers.SP] = high;
@@ -344,7 +344,7 @@ namespace GBDotNet.Core
         /// <summary>
         /// Pushes the given 16-bit value onto the stack and decrements the stack pointer by 2.
         /// </summary>
-        private void PushOntoStack(ushort value)
+        internal void PushOntoStack(ushort value)
         {
             PushOntoStack((byte)(value >> 8), (byte)value);
         }
@@ -1920,6 +1920,14 @@ namespace GBDotNet.Core
         private void Instruction_0xC7_Call_Reset_Vector_Zero()
         {
             Call(0x0000, returnAddress: Registers.PC);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RET
+        /// </summary>
+        private void Instruction_0xC9_Return_From_Subroutine()
+        {
+            Return();
         }
 
         /// <summary>
