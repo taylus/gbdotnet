@@ -251,8 +251,27 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCC_Should_Call_Subroutine_At_Immediate_16_Bit_Address_If_Zero_Flag_Set()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#CALL_cc,n16
-            throw new NotImplementedException();
+            //zero flag set => should call subroutine
+            var memory = new Memory(0xCC, 0x00, 0x40);
+            var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
+            cpu.Registers.SetFlag(Flags.Zero);
+            var initialProgramCounter = cpu.Registers.PC;
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected call z instruction to call subroutine at immediate address when zero flag is set.");
+
+            var expectedReturnAddress = initialProgramCounter + 3;  //call instructions are 3 bytes long
+            var pushedReturnAddress = Common.FromLittleEndian(memory[cpu.Registers.SP], memory[cpu.Registers.SP + 1]);
+            Assert.AreEqual(expectedReturnAddress, pushedReturnAddress, "Expected call z instruction to push correct return address onto stack.");
+
+            //clear zero flag and replay => should not call subroutine
+            cpu.Registers.PC = 0;
+            cpu.Registers.ClearFlag(Flags.Zero);
+
+            cpu.Tick();
+
+            Assert.AreEqual(expectedReturnAddress, cpu.Registers.PC, "Expected call z instruction to *not* call subroutine when zero flag is clear.");
         }
 
         [TestMethod]
