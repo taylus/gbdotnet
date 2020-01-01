@@ -381,8 +381,22 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xDA_Should_Jump_To_Immediate_16_Bit_Address_If_Carry_Flag_Set()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#JP_cc,n16
-            throw new NotImplementedException();
+            //carry flag set => should jump
+            var memory = new Memory(0xDA, 0x00, 0x40);
+            var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
+            cpu.Registers.SetFlag(Flags.Carry);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected jp c instruction to jump to immediate address when zero flag is set.");
+
+            //clear carry flag and replay => should not return from subroutine
+            cpu.Registers.PC = 0;
+            cpu.Registers.ClearFlag(Flags.Carry);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x0003, cpu.Registers.PC, "Expected jp c instruction to *not* jump when zero flag is clear.");
         }
 
         [TestMethod]
