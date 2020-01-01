@@ -125,10 +125,39 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
-        public void Instruction_0x27_Should_Decimal_Adjust_A_For_Correct_Result_After_Binary_Coded_Decimal_Arithmetic()
+        public void Instruction_0x27_Should_Decimal_Adjust_A_For_Binary_Coded_Decimal_Addition()
         {
-            //see: https://rednex.github.io/rgbds/gbz80.7.html#DAA
-            throw new NotImplementedException();
+            var memory = new Memory(0x27);
+            var cpu = new CPU(new Registers(), memory);
+            cpu.Registers.ClearFlag(Flags.AddSubtract); //N flag clear => addition was last performed
+            cpu.Registers.A = 0x60;
+            cpu.Registers.A += 0x55;
+            const byte expectedSum = 0x15; //60 + 55 = 115 => 15 w/ carry (since we only have room for 2 BCD digits)
+            //sum is normally B5 in hex, so the DAA instruction should turn B5 into 15 w/ carry
+
+            cpu.Tick();
+
+            Assert.AreEqual(expectedSum, cpu.Registers.A, "Expected daa instruction to adjust accumulator for binary coded decimal addition.");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Expected carry flag to be set when BCD adjustment is > 99.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected daa instruction to always clear half carry flag.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected daa instruction to set zero flag only when adjusted accumulator is zero.");
+        }
+
+        [TestMethod]
+        public void Instruction_0x27_Should_Decimal_Adjust_A_For_Binary_Coded_Decimal_Subtraction()
+        {
+            var memory = new Memory(0x27);
+            var cpu = new CPU(new Registers(), memory);
+            cpu.Registers.SetFlag(Flags.AddSubtract); //N flag set => subtraction was last performed
+            cpu.Registers.A = 0x99;
+            cpu.Registers.A -= 0x55;
+            const byte expectedDifference = 0x44;
+
+            cpu.Tick();
+
+            Assert.AreEqual(expectedDifference, cpu.Registers.A, "Expected daa instruction to adjust accumulator for binary coded decimal subtraction.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected daa instruction to always clear half carry flag.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected daa instruction to set zero flag only when adjusted accumulator is zero.");
         }
 
         [TestMethod]

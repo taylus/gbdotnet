@@ -71,7 +71,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x24_Increment_H(),
                 () => Instruction_0x25_Decrement_H(),
                 () => Instruction_0x26_Load_H_With_8_Bit_Immediate(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x27_Decimal_Adjust_A_For_Binary_Coded_Decimal_Arithmetic(),
                 () => Instruction_0x28_Relative_Jump_By_Signed_Immediate_If_Zero_Flag_Set(),
                 () => Instruction_0x29_Add_HL_To_HL(),
                 () => Instruction_0x2A_Load_A_With_Address_Pointed_To_By_HL_Then_Increment_HL(),
@@ -719,6 +719,45 @@ namespace GBDotNet.Core
         private void Instruction_0x26_Load_H_With_8_Bit_Immediate()
         {
             Registers.H = Fetch();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#DAA
+        /// https://forums.nesdev.com/viewtopic.php?f=20&t=15944
+        /// </summary>
+        private void Instruction_0x27_Decimal_Adjust_A_For_Binary_Coded_Decimal_Arithmetic()
+        {
+            const byte bcdTensDigitAdjust = 0x60;
+            const byte bcdOnesDigitAdjust = 0x06;
+
+            if (!Registers.HasFlag(Flags.AddSubtract))
+            {
+                //after addition, adjust if a carry occurred or result is out of bounds
+                if (Registers.HasFlag(Flags.Carry) || Registers.A > 0x99)
+                {
+                    Registers.A += bcdTensDigitAdjust;
+                    Registers.SetFlag(Flags.Carry);
+                }
+                if (Registers.HasFlag(Flags.HalfCarry) || (Registers.A & 0x0F) > 0x09)
+                {
+                    Registers.A += bcdOnesDigitAdjust;
+                }
+            }
+            else
+            {
+                //after subtraction, adjust if a carry occurred
+                if (Registers.HasFlag(Flags.Carry))
+                {
+                    Registers.A -= bcdTensDigitAdjust;
+                }
+                if (Registers.HasFlag(Flags.HalfCarry))
+                {
+                    Registers.A -= bcdOnesDigitAdjust;
+                }
+            }
+
+            Registers.ClearFlag(Flags.HalfCarry);
+            Registers.SetFlagTo(Flags.Zero, Registers.A == 0);
         }
 
         /// <summary>
