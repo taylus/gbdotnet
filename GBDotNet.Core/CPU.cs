@@ -255,7 +255,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xD1_Pop_Stack_Into_DE(),
                 () => Instruction_0xD2_Jump_To_Immediate_16_Bit_Address_If_Carry_Flag_Not_Set(),
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xD4_Call_Subroutine_At_Immediate_16_Bit_Address_If_Carry_Flag_Not_Set(),
                 () => Instruction_0xD5_Push_DE_Onto_Stack(),
                 () => Instruction_0xD6_Subtract_8_Bit_Immediate_From_A(),
                 () => Instruction_0xD7_Call_Reset_Vector_Ten(),
@@ -2004,6 +2004,15 @@ namespace GBDotNet.Core
         {
             ushort address = Common.FromLittleEndian(Fetch(), Fetch());
             if (!Registers.HasFlag(Flags.Carry)) AbsoluteJump(address);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CALL_cc,n16
+        /// </summary>
+        private void Instruction_0xD4_Call_Subroutine_At_Immediate_16_Bit_Address_If_Carry_Flag_Not_Set()
+        {
+            ushort address = Common.FromLittleEndian(Fetch(), Fetch());
+            if (!Registers.HasFlag(Flags.Carry)) Call(address, returnAddress: Registers.PC);
         }
 
         /// <summary>
