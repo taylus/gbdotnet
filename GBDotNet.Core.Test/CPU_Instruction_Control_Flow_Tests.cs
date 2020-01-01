@@ -388,7 +388,7 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
 
-            Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected jp c instruction to jump to immediate address when zero flag is set.");
+            Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected jp c instruction to jump to immediate address when carry flag is set.");
 
             //clear carry flag and replay => should not return from subroutine
             cpu.Registers.PC = 0;
@@ -396,7 +396,7 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
 
-            Assert.AreEqual(0x0003, cpu.Registers.PC, "Expected jp c instruction to *not* jump when zero flag is clear.");
+            Assert.AreEqual(0x0003, cpu.Registers.PC, "Expected jp c instruction to *not* jump when carry flag is clear.");
         }
 
         [TestMethod]
