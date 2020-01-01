@@ -402,8 +402,27 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xDC_Should_Call_Subroutine_At_Immediate_16_Bit_Address_If_Carry_Flag_Set()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#CALL_cc,n16
-            throw new NotImplementedException();
+            //carry flag set => should call subroutine
+            var memory = new Memory(0xDC, 0x00, 0x40);
+            var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
+            cpu.Registers.SetFlag(Flags.Carry);
+            var initialProgramCounter = cpu.Registers.PC;
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected call c instruction to call subroutine at immediate address when carry flag is set.");
+
+            var expectedReturnAddress = initialProgramCounter + 3;  //call instructions are 3 bytes long
+            var pushedReturnAddress = Common.FromLittleEndian(memory[cpu.Registers.SP], memory[cpu.Registers.SP + 1]);
+            Assert.AreEqual(expectedReturnAddress, pushedReturnAddress, "Expected call c instruction to push correct return address onto stack.");
+
+            //clear zero flag and replay => should not call subroutine
+            cpu.Registers.PC = 0;
+            cpu.Registers.ClearFlag(Flags.Carry);
+
+            cpu.Tick();
+
+            Assert.AreEqual(expectedReturnAddress, cpu.Registers.PC, "Expected call c instruction to *not* call subroutine when carry flag is clear.");
         }
 
         [TestMethod]
