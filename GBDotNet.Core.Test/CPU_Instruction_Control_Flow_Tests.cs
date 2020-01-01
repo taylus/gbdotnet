@@ -293,8 +293,22 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xD0_Should_Return_From_Subroutine_If_Carry_Flag_Not_Set()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RET_cc
-            throw new NotImplementedException();
+            //carry flag not set => should return from subroutine
+            var memory = new Memory(0xD0);
+            var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
+            cpu.PushOntoStack(0x4000);  //manually push a return address onto the stack
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC);
+
+            //set carry flag and replay => should not return from subroutine
+            cpu.Registers.PC = 0;
+            cpu.Registers.SetFlag(Flags.Carry);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x0001, cpu.Registers.PC, "Expected ret nc instruction to *not* return from subroutine when carry flag is set.");
         }
 
         [TestMethod]

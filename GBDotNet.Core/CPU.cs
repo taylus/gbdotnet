@@ -251,7 +251,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xCE_Add_8_Bit_Immediate_Plus_Carry_To_A(),
                 () => Instruction_0xCF_Call_Reset_Vector_Eight(),
                 //0xD0
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xD0_Return_From_Subroutine_If_Carry_Flag_Not_Set(),
                 () => Instruction_0xD1_Pop_Stack_Into_DE(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -1979,6 +1979,14 @@ namespace GBDotNet.Core
         private void Instruction_0xCF_Call_Reset_Vector_Eight()
         {
             Call(0x0008, returnAddress: Registers.PC);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RET_cc
+        /// </summary>
+        private void Instruction_0xD0_Return_From_Subroutine_If_Carry_Flag_Not_Set()
+        {
+            if (!Registers.HasFlag(Flags.Carry)) Return();
         }
 
         /// <summary>
