@@ -253,7 +253,7 @@ namespace GBDotNet.Core
                 //0xD0
                 () => Instruction_0xD0_Return_From_Subroutine_If_Carry_Flag_Not_Set(),
                 () => Instruction_0xD1_Pop_Stack_Into_DE(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xD2_Jump_To_Immediate_16_Bit_Address_If_Carry_Flag_Not_Set(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xD5_Push_DE_Onto_Stack(),
@@ -1995,6 +1995,15 @@ namespace GBDotNet.Core
         private void Instruction_0xD1_Pop_Stack_Into_DE()
         {
             Registers.DE = PopStack();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#JP_cc,n16
+        /// </summary>
+        private void Instruction_0xD2_Jump_To_Immediate_16_Bit_Address_If_Carry_Flag_Not_Set()
+        {
+            ushort address = Common.FromLittleEndian(Fetch(), Fetch());
+            if (!Registers.HasFlag(Flags.Carry)) AbsoluteJump(address);
         }
 
         /// <summary>

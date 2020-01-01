@@ -300,7 +300,7 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
 
-            Assert.AreEqual(0x4000, cpu.Registers.PC);
+            Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected ret nc instruction to return from subroutine when carry flag is not set.");
 
             //set carry flag and replay => should not return from subroutine
             cpu.Registers.PC = 0;
@@ -314,8 +314,21 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xD2_Should_Jump_To_Immediate_16_Bit_Address_If_Carry_Flag_Not_Set()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#JP_cc,n16
-            throw new NotImplementedException();
+            //carry flag not set => should jump to address
+            var memory = new Memory(0xD2, 0x00, 0x40);
+            var cpu = new CPU(new Registers(), memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected jp nc instruction to jump to address when carry flag is not set.");
+
+            //set carry flag and replay => should not jump to address
+            cpu.Registers.PC = 0;
+            cpu.Registers.SetFlag(Flags.Carry);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x0003, cpu.Registers.PC, "Expected jp nc instruction to *not* jump to address when carry flag is set.");
         }
 
         [TestMethod]
