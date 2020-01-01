@@ -362,8 +362,12 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xE9_Should_Jump_To_Address_Pointed_To_By_HL()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#JP_HL
-            throw new NotImplementedException();
+            var memory = new Memory(0xE9);
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC);
         }
     }
 }

@@ -277,7 +277,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xE6_Bitwise_And_8_Bit_Immediate_With_A(),
                 () => Instruction_0xE7_Call_Reset_Vector_Twenty(),
                 () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xE9_Jump_To_Address_Pointed_To_By_HL(),
                 () => Instruction_0xEA_Load_Immediate_Memory_Location_From_A(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -2092,6 +2092,14 @@ namespace GBDotNet.Core
         private void Instruction_0xE7_Call_Reset_Vector_Twenty()
         {
             Call(0x0020, returnAddress: Registers.PC);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#JP_HL
+        /// </summary>
+        private void Instruction_0xE9_Jump_To_Address_Pointed_To_By_HL()
+        {
+            AbsoluteJump(Registers.HL);
         }
 
         /// <summary>
