@@ -377,6 +377,22 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 //0x40
                 () => Instruction_0xCB_0x40_Test_Bit_0_Of_B_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x41_Test_Bit_0_Of_C_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x42_Test_Bit_0_Of_D_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x43_Test_Bit_0_Of_E_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x44_Test_Bit_0_Of_H_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x45_Test_Bit_0_Of_L_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x46_Test_Bit_0_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x47_Test_Bit_0_Of_A_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0x50
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -392,6 +408,177 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0x60
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0x70
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0x80
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0x90
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0xA0
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0xB0
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0xC0
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0xD0
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0xE0
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0xF0
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); }
             };
         }
 
@@ -2477,6 +2664,62 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x40_Test_Bit_0_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(Registers.B, bitToTest: 0);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x41_Test_Bit_0_Of_C_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.C, bitToTest: 0);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x42_Test_Bit_0_Of_D_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.D, bitToTest: 0);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x43_Test_Bit_0_Of_E_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.E, bitToTest: 0);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x44_Test_Bit_0_Of_H_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.H, bitToTest: 0);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x45_Test_Bit_0_Of_L_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.L, bitToTest: 0);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x46_Test_Bit_0_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 0);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x47_Test_Bit_0_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.A, bitToTest: 0);
         }
 
         /// <summary>

@@ -552,74 +552,57 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0x40_Should_Test_Bit_0_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //bit under test is zero => bit instruction should set zero flag
-            var memory = new Memory(0xCB, 0x40);
-            var cpu = new CPU(new Registers(), memory);
-
-            cpu.Tick();
-
-            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), "Expected bit instruction to set zero flag when specified bit in specified register is zero.");
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "Expected bit instruction to always clear N flag.");
-            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected bit instruction to always set H flag.");
-
-            //bit under test is one => bit instruction should clear zero flag
-            cpu.Registers.B = 0b0000_0001;
-            cpu.Registers.PC = 0;
-
-            cpu.Tick();
-
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected bit instruction to clear zero flag when specified bit in specified register is one.");
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "Expected bit instruction to always clear N flag.");
-            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected bit instruction to always set H flag.");
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x40));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.B = value, bitToTest: 0);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x41_Should_Test_Bit_0_Of_C_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x41));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.C = value, bitToTest: 0);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x42_Should_Test_Bit_0_Of_D_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x42));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.D = value, bitToTest: 0);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x43_Should_Test_Bit_0_Of_E_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x43));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.E = value, bitToTest: 0);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x44_Should_Test_Bit_0_Of_H_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x44));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.H = value, bitToTest: 0);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x45_Should_Test_Bit_0_Of_L_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x45));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.L = value, bitToTest: 0);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x46_Should_Test_Bit_0_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,_HL_
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x46));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 0);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x47_Should_Test_Bit_0_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x47));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.A = value, bitToTest: 0);
         }
 
         [TestMethod]
@@ -1910,11 +1893,35 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Tests instructions like bit 0, b
+        /// </summary>
+        private static void TestBitInstruction(CPU cpu, Action<byte> setValueUnderTest, int bitToTest)
+        {
+            //start with bit under test set to zero => bit instruction should set zero flag
+            setValueUnderTest(0);
+            cpu.Tick();
+
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), "Expected bit instruction to set zero flag when specified bit in specified register is zero.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "Expected bit instruction to always clear N flag.");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected bit instruction to always set H flag.");
+
+            //set bit under test to 1 => bit instruction should clear zero flag
+            setValueUnderTest((byte)(1 >> bitToTest));
+            cpu.Registers.PC = 0;
+
+            cpu.Tick();
+
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected bit instruction to clear zero flag when specified bit in specified register is one.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "Expected bit instruction to always clear N flag.");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected bit instruction to always set H flag.");
+        }
+
         private static void AssertFlagsAreCleared(CPU cpu, Flags flags)
         {
             if (flags.HasFlag(Flags.Zero)) Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected instruction to clear Z flag.");
-            if (flags.HasFlag(Flags.AddSubtract))  Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "Expected instruction to clear N flag.");
-            if (flags.HasFlag(Flags.HalfCarry))  Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected instruction to clear H flag.");
+            if (flags.HasFlag(Flags.AddSubtract)) Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "Expected instruction to clear N flag.");
+            if (flags.HasFlag(Flags.HalfCarry)) Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected instruction to clear H flag.");
             if (flags.HasFlag(Flags.Carry)) Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Expected instruction to clear C flag.");
         }
     }
