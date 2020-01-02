@@ -11,7 +11,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x04);
             var cpu = new CPU(new Registers(), memory);
-            TestIncrement8BitRegister(cpu, () => cpu.Registers.B);
+            TestIncrement8BitValue(cpu, () => cpu.Registers.B);
         }
 
         [TestMethod]
@@ -65,7 +65,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x0C);
             var cpu = new CPU(new Registers(), memory);
-            TestIncrement8BitRegister(cpu, () => cpu.Registers.C);
+            TestIncrement8BitValue(cpu, () => cpu.Registers.C);
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x14);
             var cpu = new CPU(new Registers(), memory);
-            TestIncrement8BitRegister(cpu, () => cpu.Registers.D);
+            TestIncrement8BitValue(cpu, () => cpu.Registers.D);
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x1C);
             var cpu = new CPU(new Registers(), memory);
-            TestIncrement8BitRegister(cpu, () => cpu.Registers.E);
+            TestIncrement8BitValue(cpu, () => cpu.Registers.E);
         }
 
         [TestMethod]
@@ -113,7 +113,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x24);
             var cpu = new CPU(new Registers(), memory);
-            TestIncrement8BitRegister(cpu, () => cpu.Registers.H);
+            TestIncrement8BitValue(cpu, () => cpu.Registers.H);
         }
 
         [TestMethod]
@@ -165,7 +165,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x2C);
             var cpu = new CPU(new Registers(), memory);
-            TestIncrement8BitRegister(cpu, () => cpu.Registers.L);
+            TestIncrement8BitValue(cpu, () => cpu.Registers.L);
         }
 
         [TestMethod]
@@ -181,8 +181,8 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x2F);
             var cpu = new CPU(new Registers(), memory);
-            
-            for(int i = 0; i <= byte.MaxValue; i++)
+
+            for (int i = 0; i <= byte.MaxValue; i++)
             {
                 cpu.Registers.A = (byte)i;
                 cpu.Registers.PC = 0;
@@ -196,8 +196,9 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x34_Should_Increment_Value_Pointed_To_By_HL()
         {
-            //see: https://rednex.github.io/rgbds/gbz80.7.html#INC__HL_
-            throw new NotImplementedException();
+            var memory = new Memory(0x34);
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
+            TestIncrement8BitValue(cpu, () => memory[cpu.Registers.HL]);
         }
 
         [TestMethod]
@@ -219,7 +220,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x3C);
             var cpu = new CPU(new Registers(), memory);
-            TestIncrement8BitRegister(cpu, () => cpu.Registers.A);
+            TestIncrement8BitValue(cpu, () => cpu.Registers.A);
         }
 
         [TestMethod]
@@ -944,7 +945,7 @@ namespace GBDotNet.Core.Test
         /// Tests instructions like inc b.
         /// </summary>
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#INC_r8"/>
-        private static void TestIncrement8BitRegister(CPU cpu, Func<byte> registerUnderTest)
+        private static void TestIncrement8BitValue(CPU cpu, Func<byte> getterForValueBeingIncremented)
         {
             //loop up since we're incrementing (making sure to cover wraparound)
             for (int i = 0; i <= byte.MaxValue; i++)
@@ -952,28 +953,28 @@ namespace GBDotNet.Core.Test
                 cpu.Tick();
 
                 var expected = (byte)(i + 1);
-                Assert.AreEqual(expected, registerUnderTest(), "Expected 8-bit register to increment after executing inc instruction.");
+                Assert.AreEqual(expected, getterForValueBeingIncremented(), "Expected 8-bit value to increment after executing inc instruction.");
 
-                if (registerUnderTest() == 0)
+                if (getterForValueBeingIncremented() == 0)
                 {
-                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), $"Expected zero flag to be set when 8-bit register is {registerUnderTest()}.");
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), $"Expected zero flag to be set when 8-bit value is incremented to {getterForValueBeingIncremented()}.");
                 }
                 else
                 {
-                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), $"Expected zero flag to be cleared when 8-bit register is {registerUnderTest()}.");
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), $"Expected zero flag to be cleared when 8-bit register is incremented {getterForValueBeingIncremented()}.");
                 }
 
-                if (registerUnderTest() % 16 == 0)
+                if (getterForValueBeingIncremented() % 16 == 0)
                 {
                     //FF -> 0, F -> 10, 1F -> 20, etc should all set the half carry flag
-                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be set when 8-bit register is incremented to {registerUnderTest()}");
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be set when 8-bit value is incremented to {getterForValueBeingIncremented()}");
                 }
                 else
                 {
-                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be cleared when 8-bit register is incremented to {registerUnderTest()}");
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be cleared when 8-bit value is incremented to {getterForValueBeingIncremented()}");
                 }
 
-                Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be cleared whenever an 8-bit register is incremented.");
+                Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be cleared whenever an 8-bit value is incremented.");
 
                 cpu.Registers.PC--;
             }
