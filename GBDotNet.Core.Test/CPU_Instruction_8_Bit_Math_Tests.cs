@@ -213,7 +213,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0x37_Should_Set_Carry_Flag()
         {
             var memory = new Memory(0x37);
-            var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
+            var cpu = new CPU(new Registers(), memory);
             cpu.Registers.ClearFlag(Flags.Carry);
 
             cpu.Tick();
@@ -241,8 +241,20 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x3F_Should_Complement_Carry_Flag()
         {
-            //see: https://rednex.github.io/rgbds/gbz80.7.html#CCF
-            throw new NotImplementedException();
+            var memory = new Memory(0x3F);
+            var cpu = new CPU(new Registers(), memory);
+            cpu.Registers.ClearFlag(Flags.Carry);
+
+            cpu.Tick();
+
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Expected ccf instruction to toggle carry flag.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "Expected ccf instruction to clear N and H flags.");
+
+            cpu.Registers.PC--;
+            cpu.Tick();
+
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Expected ccf instruction to toggle carry flag.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "Expected ccf instruction to clear N and H flags.");
         }
 
         [TestMethod]

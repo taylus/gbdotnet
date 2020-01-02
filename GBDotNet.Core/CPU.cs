@@ -96,7 +96,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x3C_Increment_A(),
                 () => Instruction_0x3D_Decrement_A(),
                 () => Instruction_0x3E_Load_A_With_8_Bit_Immediate(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x3F_Complement_Carry_Flag(),
                 //0x40
                 () => { },  //ld b, b => nop
                 () => Instruction_0x41_Load_B_From_C(),
@@ -956,6 +956,15 @@ namespace GBDotNet.Core
         private void Instruction_0x3E_Load_A_With_8_Bit_Immediate()
         {
             Registers.A = Fetch();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CCF
+        /// </summary>
+        private void Instruction_0x3F_Complement_Carry_Flag()
+        {
+            Registers.SetFlagTo(Flags.Carry, !Registers.HasFlag(Flags.Carry));
+            Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry);
         }
 
         /// <summary>
