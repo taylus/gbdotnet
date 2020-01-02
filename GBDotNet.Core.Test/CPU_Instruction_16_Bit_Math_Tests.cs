@@ -76,7 +76,7 @@ namespace GBDotNet.Core.Test
             var memory = new Memory(0x09);
             var cpu = new CPU(new Registers(), memory);
             TestAdd16BitRegisterToHL(cpu,
-                registerPairGetter: () => cpu.Registers.BC, 
+                registerPairGetter: () => cpu.Registers.BC,
                 registerPairSetter: (value) => cpu.Registers.BC = value);
         }
 
@@ -108,6 +108,19 @@ namespace GBDotNet.Core.Test
             TestAdd16BitRegisterToHL(cpu,
                 registerPairGetter: () => cpu.Registers.SP,
                 registerPairSetter: (value) => cpu.Registers.SP = value);
+        }
+
+        [TestMethod]
+        public void Instruction_0xE8_Should_Add_8_Bit_Signed_Immediate_To_Stack_Pointer()
+        {
+            var memory = new Memory(0xE8, 0xFF);
+            var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0xFFFD, cpu.Registers.SP);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero | Flags.AddSubtract), "add sp, e8 instruction should always clear Z and N flags.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry | Flags.HalfCarry));
         }
 
         private static void TestIncrement16BitRegister(CPU cpu, Func<ushort> registerPairUnderTest)

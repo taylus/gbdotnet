@@ -277,7 +277,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xE5_Push_HL_Onto_Stack(),
                 () => Instruction_0xE6_Bitwise_And_8_Bit_Immediate_With_A(),
                 () => Instruction_0xE7_Call_Reset_Vector_Twenty(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xE8_Add_8_Bit_Signed_Immediate_To_Stack_Pointer(),
                 () => Instruction_0xE9_Jump_To_Address_Pointed_To_By_HL(),
                 () => Instruction_0xEA_Load_Immediate_Memory_Location_From_A(),
                 () => { throw new NotImplementedException(); },
@@ -2219,6 +2219,18 @@ namespace GBDotNet.Core
         private void Instruction_0xE7_Call_Reset_Vector_Twenty()
         {
             Call(0x0020, returnAddress: Registers.PC);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#ADD_SP,e8
+        /// </summary>
+        private void Instruction_0xE8_Add_8_Bit_Signed_Immediate_To_Stack_Pointer()
+        {
+            var immediate = (sbyte)Fetch();
+            Registers.SP = (ushort)(Registers.SP + immediate);
+            Registers.ClearFlag(Flags.AddSubtract | Flags.Zero);
+            Registers.SetFlagTo(Flags.HalfCarry, ((Registers.SP & 0xF) + (immediate & 0xF) > 0xF));
+            Registers.SetFlagTo(Flags.Carry, ((Registers.SP & 0xFF) + immediate > 0xFF));
         }
 
         /// <summary>
