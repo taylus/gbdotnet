@@ -212,6 +212,118 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        [TestMethod]
+        public void Instruction_0xCB_0x10_Should_Rotate_B_Left()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x11_Should_Rotate_C_Left()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x12_Should_Rotate_D_Left()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x13_Should_Rotate_E_Left()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x14_Should_Rotate_H_Left()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x15_Should_Rotate_L_Left()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x16_Should_Rotate_Address_Pointed_To_By_HL_Left()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RL__HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x17_Should_Rotate_A_Left()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x18_Should_Rotate_B_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x19_Should_Rotate_C_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x1A_Should_Rotate_D_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x1B_Should_Rotate_E_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x1C_Should_Rotate_H_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x1D_Should_Rotate_L_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x1E_Should_Rotate_Address_Pointed_To_By_HL_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RR__HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x1F_Should_Rotate_A_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+            throw new NotImplementedException();
+        }
+
         private static void AssertFlagsAreCleared(CPU cpu, Flags flags)
         {
             if (flags.HasFlag(Flags.Zero)) Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected instruction to clear Z flag.");
