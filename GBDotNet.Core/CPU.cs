@@ -86,7 +86,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x32_Load_Address_Pointed_To_By_HL_With_A_Then_Decrement_HL(),
                 () => Instruction_0x33_Increment_SP(),
                 () => Instruction_0x34_Increment_Value_Pointed_To_By_HL(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x35_Decrement_Value_Pointed_To_By_HL(),
                 () => Instruction_0x36_Load_Address_Pointed_To_By_HL_With_8_Bit_Immediate(),
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0x38_Relative_Jump_By_Signed_Immediate_If_Carry_Flag_Set(),
@@ -417,7 +417,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x05_Decrement_B()
         {
-            Registers.B = Decrement8BitRegisterAndSetFlags(Registers.B);
+            Registers.B = Decrement8BitValueAndSetFlags(Registers.B);
         }
 
         /// <summary>
@@ -500,7 +500,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x0D_Decrement_C()
         {
-            Registers.C = Decrement8BitRegisterAndSetFlags(Registers.C);
+            Registers.C = Decrement8BitValueAndSetFlags(Registers.C);
         }
 
         /// <summary>
@@ -571,7 +571,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x15_Decrement_D()
         {
-            Registers.D = Decrement8BitRegisterAndSetFlags(Registers.D);
+            Registers.D = Decrement8BitValueAndSetFlags(Registers.D);
         }
 
         /// <summary>
@@ -639,7 +639,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x1D_Decrement_E()
         {
-            Registers.E = Decrement8BitRegisterAndSetFlags(Registers.E);
+            Registers.E = Decrement8BitValueAndSetFlags(Registers.E);
         }
 
         /// <summary>
@@ -710,7 +710,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x25_Decrement_H()
         {
-            Registers.H = Decrement8BitRegisterAndSetFlags(Registers.H);
+            Registers.H = Decrement8BitValueAndSetFlags(Registers.H);
         }
 
         /// <summary>
@@ -809,7 +809,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x2D_Decrement_L()
         {
-            Registers.L = Decrement8BitRegisterAndSetFlags(Registers.L);
+            Registers.L = Decrement8BitValueAndSetFlags(Registers.L);
         }
 
         /// <summary>
@@ -874,6 +874,14 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#DEC__HL_
+        /// </summary>
+        private void Instruction_0x35_Decrement_Value_Pointed_To_By_HL()
+        {
+            Memory[Registers.HL] = Decrement8BitValueAndSetFlags(Memory[Registers.HL]);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#LD__HL_,n8
         /// </summary>
         private void Instruction_0x36_Load_Address_Pointed_To_By_HL_With_8_Bit_Immediate()
@@ -930,7 +938,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x3D_Decrement_A()
         {
-            Registers.A = Decrement8BitRegisterAndSetFlags(Registers.A);
+            Registers.A = Decrement8BitValueAndSetFlags(Registers.A);
         }
 
         /// <summary>
@@ -2425,7 +2433,7 @@ namespace GBDotNet.Core
 
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#DEC_r8"/>
         /// <see cref="https://github.com/TASVideos/BizHawk/blob/6d0973ca7ea3907abdcf482e6ce8f2767ae6f297/BizHawk.Emulation.Cores/CPUs/Z80A/Operations.cs#L491"/>
-        private byte Decrement8BitRegisterAndSetFlags(byte oldValue)
+        private byte Decrement8BitValueAndSetFlags(byte oldValue)
         {
             var newValue = (byte)(oldValue - 1);
 

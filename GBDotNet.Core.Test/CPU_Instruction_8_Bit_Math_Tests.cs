@@ -38,7 +38,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x05);
             var cpu = new CPU(new Registers(), memory);
-            TestDecrement8BitRegister(cpu, () => cpu.Registers.B);
+            TestDecrement8BitValue(cpu, () => cpu.Registers.B);
         }
 
         [TestMethod]
@@ -73,7 +73,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x0D);
             var cpu = new CPU(new Registers(), memory);
-            TestDecrement8BitRegister(cpu, () => cpu.Registers.C);
+            TestDecrement8BitValue(cpu, () => cpu.Registers.C);
         }
 
         [TestMethod]
@@ -89,7 +89,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x15);
             var cpu = new CPU(new Registers(), memory);
-            TestDecrement8BitRegister(cpu, () => cpu.Registers.D);
+            TestDecrement8BitValue(cpu, () => cpu.Registers.D);
         }
 
         [TestMethod]
@@ -105,7 +105,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x1D);
             var cpu = new CPU(new Registers(), memory);
-            TestDecrement8BitRegister(cpu, () => cpu.Registers.E);
+            TestDecrement8BitValue(cpu, () => cpu.Registers.E);
         }
 
         [TestMethod]
@@ -121,7 +121,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x25);
             var cpu = new CPU(new Registers(), memory);
-            TestDecrement8BitRegister(cpu, () => cpu.Registers.H);
+            TestDecrement8BitValue(cpu, () => cpu.Registers.H);
         }
 
         [TestMethod]
@@ -173,7 +173,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x2D);
             var cpu = new CPU(new Registers(), memory);
-            TestDecrement8BitRegister(cpu, () => cpu.Registers.L);
+            TestDecrement8BitValue(cpu, () => cpu.Registers.L);
         }
 
         [TestMethod]
@@ -204,8 +204,9 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x35_Should_Decrement_Value_Pointed_To_By_HL()
         {
-            //see: https://rednex.github.io/rgbds/gbz80.7.html#DEC__HL_
-            throw new NotImplementedException();
+            var memory = new Memory(0x35);
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
+            TestDecrement8BitValue(cpu, () => memory[cpu.Registers.HL]);
         }
 
         [TestMethod]
@@ -228,7 +229,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x3D);
             var cpu = new CPU(new Registers(), memory);
-            TestDecrement8BitRegister(cpu, () => cpu.Registers.A);
+            TestDecrement8BitValue(cpu, () => cpu.Registers.A);
         }
 
         [TestMethod]
@@ -984,35 +985,35 @@ namespace GBDotNet.Core.Test
         /// Tests instructions like dec b.
         /// </summary>
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#DEC_r8"/>
-        private static void TestDecrement8BitRegister(CPU cpu, Func<byte> registerUnderTest)
+        private static void TestDecrement8BitValue(CPU cpu, Func<byte> getterForValueBeingDecremented)
         {
             //loop down since we're decrementing (making sure to cover wraparound)
             for (int i = byte.MaxValue; i >= 0; i--)
             {
                 cpu.Tick();
 
-                Assert.AreEqual(i, registerUnderTest(), "Expected 8-bit register to decrement after executing dec instruction.");
+                Assert.AreEqual(i, getterForValueBeingDecremented(), "Expected 8-bit value to decrement after executing dec instruction.");
 
-                if (registerUnderTest() == 0)
+                if (getterForValueBeingDecremented() == 0)
                 {
-                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), $"Expected zero flag to be set when 8-bit register is {registerUnderTest()}.");
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), $"Expected zero flag to be set when 8-bit value is decremented to {getterForValueBeingDecremented()}.");
                 }
                 else
                 {
-                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), $"Expected zero flag to be cleared when 8-bit register is {registerUnderTest()}.");
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), $"Expected zero flag to be cleared when 8-bit value is decremented to {getterForValueBeingDecremented()}.");
                 }
 
-                if ((registerUnderTest() + 1) % 16 == 0)
+                if ((getterForValueBeingDecremented() + 1) % 16 == 0)
                 {
                     //0 -> FF, F0 -> EF, E0 -> DF, etc should all set the half carry flag
-                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be set when 8-bit register is decremented to {registerUnderTest()}");
+                    Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be set when 8-bit value is decremented to {getterForValueBeingDecremented()}");
                 }
                 else
                 {
-                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be cleared when 8-bit register is decremented to {registerUnderTest()}");
+                    Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Expected half carry flag to be cleared when 8-bit value is decremented to {getterForValueBeingDecremented()}");
                 }
 
-                Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be set whenever an 8-bit register is decremented.");
+                Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be set whenever an 8-bit value is decremented.");
 
                 cpu.Registers.PC--;
             }
