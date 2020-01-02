@@ -664,113 +664,113 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0x50_Should_Test_Bit_2_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x50));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.B = value, bitToTest: 2);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x51_Should_Test_Bit_2_Of_C_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x51));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.C = value, bitToTest: 2);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x52_Should_Test_Bit_2_Of_D_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x52));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.D = value, bitToTest: 2);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x53_Should_Test_Bit_2_Of_E_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x53));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.E = value, bitToTest: 2);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x54_Should_Test_Bit_2_Of_H_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x54));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.H = value, bitToTest: 2);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x55_Should_Test_Bit_2_Of_L_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x55));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.L = value, bitToTest: 2);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x56_Should_Test_Bit_2_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,_HL_
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x56));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 2);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x57_Should_Test_Bit_2_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x57));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.A = value, bitToTest: 2);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x58_Should_Test_Bit_3_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x58));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.B = value, bitToTest: 3);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x59_Should_Test_Bit_3_Of_C_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x59));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.C = value, bitToTest: 3);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x5A_Should_Test_Bit_3_Of_D_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x5A));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.D = value, bitToTest: 3);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x5B_Should_Test_Bit_3_Of_E_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x5B));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.E = value, bitToTest: 3);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x5C_Should_Test_Bit_3_Of_H_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x5C));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.H = value, bitToTest: 3);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x5D_Should_Test_Bit_3_Of_L_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x5D));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.L = value, bitToTest: 3);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x5E_Should_Test_Bit_3_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,_HL_
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x5E));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 3);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x5F_Should_Test_Bit_3_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x5F));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.A = value, bitToTest: 3);
         }
 
         [TestMethod]
