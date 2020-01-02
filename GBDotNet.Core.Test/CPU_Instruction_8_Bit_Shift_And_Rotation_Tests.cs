@@ -997,6 +997,118 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        [TestMethod]
+        public void Instruction_0xCB_0x80_Should_Reset_Bit_0_Of_B()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x81_Should_Reset_Bit_0_Of_C()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x82_Should_Reset_Bit_0_Of_D()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x83_Should_Reset_Bit_0_Of_E()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x84_Should_Reset_Bit_0_Of_H()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x85_Should_Reset_Bit_0_Of_L()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x86_Should_Reset_Bit_0_Of_Address_Pointed_To_By_HL()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x87_Should_Reset_Bit_0_Of_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x88_Should_Reset_Bit_1_Of_B()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x89_Should_Reset_Bit_1_Of_C()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x8A_Should_Reset_Bit_1_Of_D()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x8B_Should_Reset_Bit_1_Of_E()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x8C_Should_Reset_Bit_1_Of_H()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x8D_Should_Reset_Bit_1_Of_L()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x8E_Should_Reset_Bit_1_Of_Address_Pointed_To_By_HL()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x8F_Should_Reset_Bit_1_Of_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+            throw new NotImplementedException();
+        }
+
         private static void AssertFlagsAreCleared(CPU cpu, Flags flags)
         {
             if (flags.HasFlag(Flags.Zero)) Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected instruction to clear Z flag.");
