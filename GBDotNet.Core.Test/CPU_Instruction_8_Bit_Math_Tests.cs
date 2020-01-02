@@ -179,8 +179,18 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x2F_Should_Bitwise_Complement_A()
         {
-            //see: https://rednex.github.io/rgbds/gbz80.7.html#CPL
-            throw new NotImplementedException();
+            var memory = new Memory(0x2F);
+            var cpu = new CPU(new Registers(), memory);
+            
+            for(int i = 0; i <= byte.MaxValue; i++)
+            {
+                cpu.Registers.A = (byte)i;
+                cpu.Registers.PC = 0;
+                cpu.Tick();
+
+                Assert.AreEqual((byte)~i, cpu.Registers.A);
+                Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "cpl instruction should always set N and H flags.");
+            }
         }
 
         [TestMethod]

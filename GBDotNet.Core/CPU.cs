@@ -79,7 +79,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x2C_Increment_L(),
                 () => Instruction_0x2D_Decrement_L(),
                 () => Instruction_0x2E_Load_L_With_8_Bit_Immediate(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x2F_Bitwise_Complement_A(),
                 //0x30
                 () => Instruction_0x30_Relative_Jump_By_Signed_Immediate_If_Carry_Flag_Not_Set(),
                 () => Instruction_0x31_Load_SP_With_16_Bit_Immediate(),
@@ -818,6 +818,15 @@ namespace GBDotNet.Core
         private void Instruction_0x2E_Load_L_With_8_Bit_Immediate()
         {
             Registers.L = Fetch();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#CPL
+        /// </summary>
+        private void Instruction_0x2F_Bitwise_Complement_A()
+        {
+            Registers.A = (byte)~Registers.A;
+            Registers.SetFlag(Flags.AddSubtract | Flags.HalfCarry);
         }
 
         /// <summary>
