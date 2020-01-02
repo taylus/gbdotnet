@@ -381,58 +381,171 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
-        public void Instruction_0xCB_0x28_Should_Shift_B_Right()
+        public void Instruction_0xCB_0x28_Should_Arithmetic_Shift_B_Right()
+        {
+            //arithmetic shifts preserve the sign bit: https://stackoverflow.com/a/6269641
+            //https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x29_Should_Arithmetic_Shift_C_Right()
         {
             //https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void Instruction_0xCB_0x29_Should_Shift_C_Right()
+        public void Instruction_0xCB_0x2A_Should_Arithmetic_Shift_D_Right()
         {
             //https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void Instruction_0xCB_0x2A_Should_Shift_D_Right()
+        public void Instruction_0xCB_0x2B_Should_Arithmetic_Shift_E_Right()
         {
             //https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void Instruction_0xCB_0x2B_Should_Shift_E_Right()
+        public void Instruction_0xCB_0x2C_Should_Arithmetic_Shift_H_Right()
         {
             //https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void Instruction_0xCB_0x2C_Should_Shift_H_Right()
+        public void Instruction_0xCB_0x2D_Should_Arithmetic_Shift_L_Right()
         {
             //https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void Instruction_0xCB_0x2D_Should_Shift_L_Right()
-        {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        public void Instruction_0xCB_0x2E_Should_Shift_Address_Pointed_To_By_HL_Right()
+        public void Instruction_0xCB_0x2E_Should_Arithmetic_Shift_Address_Pointed_To_By_HL_Right()
         {
             //https://rednex.github.io/rgbds/gbz80.7.html#SRA__HL_
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void Instruction_0xCB_0x2F_Should_Shift_A_Right()
+        public void Instruction_0xCB_0x2F_Should_Arithmetic_Shift_A_Right()
         {
             //https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x30_Should_Swap_Nibbles_In_B()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x31_Should_Swap_Nibbles_In_C()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x32_Should_Swap_Nibbles_In_D()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x33_Should_Swap_Nibbles_In_E()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x34_Should_Swap_Nibbles_In_H()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x35_Should_Swap_Nibbles_In_L()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x36_Should_Swap_Nibbles_In_Address_Pointed_To_By_HL()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP__HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x37_Should_Swap_Nibbles_In_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x38_Should_Shift_B_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x39_Should_Shift_C_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x3A_Should_Shift_D_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x3B_Should_Shift_E_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x3C_Should_Shift_H_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x3D_Should_Shift_L_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x3E_Should_Shift_Address_Pointed_To_By_HL_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SRL__HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x3F_Should_Shift_A_Right()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
             throw new NotImplementedException();
         }
 
