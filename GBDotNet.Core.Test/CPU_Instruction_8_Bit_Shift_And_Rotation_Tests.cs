@@ -1557,6 +1557,118 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        [TestMethod]
+        public void Instruction_0xCB_0xD0_Should_Set_Bit_2_Of_B()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xD1_Should_Set_Bit_2_Of_C()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xD2_Should_Set_Bit_2_Of_D()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xD3_Should_Set_Bit_2_Of_E()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xD4_Should_Set_Bit_2_Of_H()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xD5_Should_Set_Bit_2_Of_L()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xD6_Should_Set_Bit_2_Of_Address_Pointed_To_By_HL()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xD7_Should_Set_Bit_2_Of_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xD8_Should_Set_Bit_3_Of_B()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xD9_Should_Set_Bit_3_Of_C()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xDA_Should_Set_Bit_3_Of_D()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xDB_Should_Set_Bit_3_Of_E()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xDC_Should_Set_Bit_3_Of_H()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xDD_Should_Set_Bit_3_Of_L()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xDE_Should_Set_Bit_3_Of_Address_Pointed_To_By_HL()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xDF_Should_Set_Bit_3_Of_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
         private static void AssertFlagsAreCleared(CPU cpu, Flags flags)
         {
             if (flags.HasFlag(Flags.Zero)) Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected instruction to clear Z flag.");
