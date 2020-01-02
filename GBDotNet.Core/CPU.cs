@@ -289,7 +289,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xF0_Load_A_From_High_Memory_Address_Offset_By_8_Bit_Immediate(),
                 () => Instruction_0xF1_Pop_Stack_Into_AF(),
                 () => Instruction_0xF2_Load_A_From_High_Memory_Address_Offset_By_C(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xF3_Disable_Interrupts(),
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xF5_Push_AF_Onto_Stack(),
                 () => Instruction_0xF6_Bitwise_Or_8_Bit_Immediate_With_A(),
@@ -297,7 +297,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xF8_Add_8_Bit_Signed_Immediate_To_Stack_Pointer_And_Store_Result_In_HL(),
                 () => Instruction_0xF9_Load_Stack_Pointer_From_HL(),
                 () => Instruction_0xFA_Load_A_From_Immediate_Memory_Location(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xFB_Enable_Interrupts(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xFE_Compare_8_Bit_Immediate_With_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
@@ -2291,6 +2291,14 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#DI
+        /// </summary>
+        private void Instruction_0xF3_Disable_Interrupts()
+        {
+            InterruptsEnabled = false;
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#PUSH_r16
         /// </summary>
         private void Instruction_0xF5_Push_AF_Onto_Stack()
@@ -2341,6 +2349,14 @@ namespace GBDotNet.Core
         {
             var address = Common.FromLittleEndian(Fetch(), Fetch());
             Registers.A = Memory[address];
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#EI
+        /// </summary>
+        private void Instruction_0xFB_Enable_Interrupts()
+        {
+            InterruptsEnabled = true;
         }
 
         /// <summary>

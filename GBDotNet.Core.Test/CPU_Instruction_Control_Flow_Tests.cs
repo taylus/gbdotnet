@@ -448,5 +448,27 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0x4000, cpu.Registers.PC);
         }
+
+        [TestMethod]
+        public void Instruction_0xF3_Should_Disable_Interrupts()
+        {
+            var memory = new Memory(0xF3);
+            var cpu = new CPU(new Registers(), memory);
+
+            cpu.Tick();
+
+            Assert.IsFalse(cpu.InterruptsEnabled);
+        }
+
+        [TestMethod]
+        public void Instruction_0xFB_Should_Enable_Interrupts()
+        {
+            var memory = new Memory(0xFB);
+            var cpu = new CPU(new Registers(), memory);
+
+            cpu.Tick();
+
+            Assert.IsTrue(cpu.InterruptsEnabled);
+        }
     }
 }
