@@ -212,8 +212,14 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0x37_Should_Set_Carry_Flag()
         {
-            //see: https://rednex.github.io/rgbds/gbz80.7.html#SCF
-            throw new NotImplementedException();
+            var memory = new Memory(0x37);
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
+            cpu.Registers.ClearFlag(Flags.Carry);
+
+            cpu.Tick();
+
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Expected scf instruction to set carry flag.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "Expected scf instruction to clear N and H flags.");
         }
 
         [TestMethod]

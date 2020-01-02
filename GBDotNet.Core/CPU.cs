@@ -88,7 +88,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x34_Increment_Value_Pointed_To_By_HL(),
                 () => Instruction_0x35_Decrement_Value_Pointed_To_By_HL(),
                 () => Instruction_0x36_Load_Address_Pointed_To_By_HL_With_8_Bit_Immediate(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0x37_Set_Carry_Flag(),
                 () => Instruction_0x38_Relative_Jump_By_Signed_Immediate_If_Carry_Flag_Set(),
                 () => Instruction_0x39_Add_SP_To_HL(),
                 () => Instruction_0x3A_Load_A_With_Address_Pointed_To_By_HL_Then_Decrement_HL(),
@@ -887,6 +887,15 @@ namespace GBDotNet.Core
         private void Instruction_0x36_Load_Address_Pointed_To_By_HL_With_8_Bit_Immediate()
         {
             Memory[Registers.HL] = Fetch();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SCF
+        /// </summary>
+        private void Instruction_0x37_Set_Carry_Flag()
+        {
+            Registers.SetFlag(Flags.Carry);
+            Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry);
         }
 
         /// <summary>
