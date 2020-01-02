@@ -1,4 +1,6 @@
-﻿namespace GBDotNet.Core
+﻿using System;
+
+namespace GBDotNet.Core
 {
     public static class Common
     {
@@ -36,6 +38,18 @@
         public static bool AreBitsSet(this byte value, Flags flags)
         {
             return AreBitsSet(value, (byte)flags);
+        }
+
+        /// <summary>
+        /// Returns true if the bit at the given position in the given value is 1.
+        /// </summary>
+        /// <param name="value">The value whose bits to test</param>
+        /// <param name="position">A bit numbered 0 to 7 where 0 is the least significant bit.</param>
+        public static bool IsBitSet(this byte value, int position)
+        {
+            if (position < 0 || position > 7) throw new ArgumentOutOfRangeException(nameof(position), 
+                "Bit position must be between 0 (least significant bit) and 7 (most significant bit).");
+            return (value & (1 << position)) == 1;
         }
     }
 }

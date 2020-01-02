@@ -324,6 +324,74 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
+                //0x10
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0x20
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0x30
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                //0x40
+                () => Instruction_0xCB_0x40_Test_Bit_0_Of_B_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
             };
         }
 
@@ -2401,6 +2469,24 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x00_Rotate_B_Left_With_Carry()
         {
             Registers.B = RotateLeftWithCarryAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x40_Test_Bit_0_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.B, bitToTest: 0);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void TestBitAndSetFlags(byte value, int bitToTest)
+        {
+            Registers.SetFlagTo(Flags.Zero, !value.IsBitSet(bitToTest));
+            Registers.ClearFlag(Flags.AddSubtract);
+            Registers.SetFlag(Flags.HalfCarry);
         }
 
         /// <summary>

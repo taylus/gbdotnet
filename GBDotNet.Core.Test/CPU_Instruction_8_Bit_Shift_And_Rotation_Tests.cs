@@ -552,8 +552,25 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0x40_Should_Test_Bit_0_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            //bit under test is zero => bit instruction should set zero flag
+            var memory = new Memory(0xCB, 0x40);
+            var cpu = new CPU(new Registers(), memory);
+
+            cpu.Tick();
+
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), "Expected bit instruction to set zero flag when specified bit in specified register is zero.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "Expected bit instruction to always clear N flag.");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected bit instruction to always set H flag.");
+
+            //bit under test is one => bit instruction should clear zero flag
+            cpu.Registers.B = 0b0000_0001;
+            cpu.Registers.PC = 0;
+
+            cpu.Tick();
+
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected bit instruction to clear zero flag when specified bit in specified register is one.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "Expected bit instruction to always clear N flag.");
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected bit instruction to always set H flag.");
         }
 
         [TestMethod]
