@@ -773,6 +773,118 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        [TestMethod]
+        public void Instruction_0xCB_0x60_Should_Test_Bit_4_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x61_Should_Test_Bit_4_Of_C_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x62_Should_Test_Bit_4_Of_D_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x63_Should_Test_Bit_4_Of_E_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x64_Should_Test_Bit_4_Of_H_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x65_Should_Test_Bit_4_Of_L_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x66_Should_Test_Bit_4_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x67_Should_Test_Bit_4_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x68_Should_Test_Bit_5_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x69_Should_Test_Bit_5_Of_C_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x6A_Should_Test_Bit_5_Of_D_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x6B_Should_Test_Bit_5_Of_E_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x6C_Should_Test_Bit_5_Of_H_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x6D_Should_Test_Bit_5_Of_L_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x6E_Should_Test_Bit_5_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x6F_Should_Test_Bit_5_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+            throw new NotImplementedException();
+        }
+
         private static void AssertFlagsAreCleared(CPU cpu, Flags flags)
         {
             if (flags.HasFlag(Flags.Zero)) Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected instruction to clear Z flag.");
