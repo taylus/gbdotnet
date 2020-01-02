@@ -608,57 +608,57 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0x48_Should_Test_Bit_1_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x48));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.B = value, bitToTest: 1);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x49_Should_Test_Bit_1_Of_C_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x49));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.C = value, bitToTest: 1);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x4A_Should_Test_Bit_1_Of_D_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x4A));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.D = value, bitToTest: 1);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x4B_Should_Test_Bit_1_Of_E_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x4B));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.E = value, bitToTest: 1);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x4C_Should_Test_Bit_1_Of_H_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x4C));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.H = value, bitToTest: 1);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x4D_Should_Test_Bit_1_Of_L_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x4D));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.L = value, bitToTest: 1);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x4E_Should_Test_Bit_1_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,_HL_
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x4E));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 1);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x4F_Should_Test_Bit_1_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0x4F));
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Registers.A = value, bitToTest: 1);
         }
 
         [TestMethod]
@@ -1907,7 +1907,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected bit instruction to always set H flag.");
 
             //set bit under test to 1 => bit instruction should clear zero flag
-            setValueUnderTest((byte)(1 >> bitToTest));
+            setValueUnderTest((byte)(1 << bitToTest));
             cpu.Registers.PC = 0;
 
             cpu.Tick();

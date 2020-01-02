@@ -384,14 +384,14 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0x45_Test_Bit_0_Of_L_And_Set_Zero_Flag_If_It_Was_Zero(),
                 () => Instruction_0xCB_0x46_Test_Bit_0_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero(),
                 () => Instruction_0xCB_0x47_Test_Bit_0_Of_A_And_Set_Zero_Flag_If_It_Was_Zero(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0x48_Test_Bit_1_Of_B_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x49_Test_Bit_1_Of_C_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x4A_Test_Bit_1_Of_D_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x4B_Test_Bit_1_Of_E_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x4C_Test_Bit_1_Of_H_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x4D_Test_Bit_1_Of_L_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x4E_Test_Bit_1_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x4F_Test_Bit_1_Of_A_And_Set_Zero_Flag_If_It_Was_Zero(),
                 //0x50
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -2720,6 +2720,70 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x47_Test_Bit_0_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(Registers.A, bitToTest: 0);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x48_Test_Bit_1_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.B, bitToTest: 1);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x49_Test_Bit_1_Of_C_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.C, bitToTest: 1);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x4A_Test_Bit_1_Of_D_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.D, bitToTest: 1);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x4B_Test_Bit_1_Of_E_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.E, bitToTest: 1);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x4C_Test_Bit_1_Of_H_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.H, bitToTest: 1);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x4D_Test_Bit_1_Of_L_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.L, bitToTest: 1);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x4E_Test_Bit_1_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 1);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x4F_Test_Bit_1_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.A, bitToTest: 1);
         }
 
         /// <summary>

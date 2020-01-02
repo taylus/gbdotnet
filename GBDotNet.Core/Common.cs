@@ -49,7 +49,7 @@ namespace GBDotNet.Core
         {
             if (position < 0 || position > 7) throw new ArgumentOutOfRangeException(nameof(position), 
                 "Bit position must be between 0 (least significant bit) and 7 (most significant bit).");
-            return (value & (1 << position)) == 1;
+            return (value & (1 << position)) != 0;
         }
     }
 }
