@@ -21,6 +21,7 @@ namespace GBDotNet.Core
         public bool InterruptsEnabled { get; private set; }
 
         private readonly Action[] instructionSet;
+        private readonly Action[] prefixCBInstructions;
 
         public CPU(Registers registers, Memory memory)
         {
@@ -38,7 +39,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x04_Increment_B(),
                 () => Instruction_0x05_Decrement_B(),
                 () => Instruction_0x06_Load_B_With_8_Bit_Immediate(),
-                () => Instruction_0x07_Rotate_A_Left_Circular(),
+                () => Instruction_0x07_Rotate_A_Left_With_Carry(),
                 () => Instruction_0x08_Load_Address_With_Stack_Pointer(),
                 () => Instruction_0x09_Add_BC_To_HL(),
                 () => Instruction_0x0A_Load_A_From_Address_Pointed_To_By_BC(),
@@ -246,7 +247,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xC8_Return_From_Subroutine_If_Zero_Flag_Set(),
                 () => Instruction_0xC9_Return_From_Subroutine(),
                 () => Instruction_0xCA_Jump_To_Immediate_16_Bit_Address_If_Zero_Flag_Set(),
-                () => { throw new NotImplementedException(); }, //CB prefix instructions
+                () => prefixCBInstructions[Fetch()](),
                 () => Instruction_0xCC_Call_Subroutine_At_Immediate_16_Bit_Address_If_Zero_Flag_Set(),
                 () => Instruction_0xCD_Call_Subroutine_At_Immediate_16_Bit_Address(),
                 () => Instruction_0xCE_Add_8_Bit_Immediate_Plus_Carry_To_A(),
@@ -302,6 +303,27 @@ namespace GBDotNet.Core
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xFE_Compare_8_Bit_Immediate_With_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A(),
                 () => Instruction_0xFF_Call_Reset_Vector_Thirty_Eight()
+            };
+
+            prefixCBInstructions = new Action[]
+            {
+                //0x00
+                () => Instruction_0xCB_0x00_Rotate_B_Left_With_Carry(),
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
+                () => { throw new NotImplementedException(); },
             };
         }
 
@@ -443,11 +465,9 @@ namespace GBDotNet.Core
         /// <see cref="https://ez80.readthedocs.io/en/latest/docs/bit-shifts/rla.html"/>
         /// <see cref="https://stackoverflow.com/questions/812022/c-sharp-bitwise-rotate-left-and-rotate-right"/>
         /// <see cref="https://github.com/sinamas/gambatte/blob/master/libgambatte/src/cpu.cpp#L561"/>
-        private void Instruction_0x07_Rotate_A_Left_Circular()
+        private void Instruction_0x07_Rotate_A_Left_With_Carry()
         {
-            Registers.A = (byte)((Registers.A << 1) | (Registers.A >> 7));
-            Registers.SetFlagTo(Flags.Carry, (Registers.A & 0b0000_0001) != 0); //set carry to LSB (original MSB)
-            Registers.ClearFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            Registers.A = RotateLeftWithCarryAndSetFlags(Registers.A);
         }
 
         /// <summary>
@@ -2373,6 +2393,26 @@ namespace GBDotNet.Core
         private void Instruction_0xFF_Call_Reset_Vector_Thirty_Eight()
         {
             Call(0x0038, returnAddress: Registers.PC);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
+        /// </summary>
+        private void Instruction_0xCB_0x00_Rotate_B_Left_With_Carry()
+        {
+            Registers.B = RotateLeftWithCarryAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RLCA
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RLC__HL_
+        /// </summary>
+        private byte RotateLeftWithCarryAndSetFlags(byte value)
+        {
+            Registers.SetFlagTo(Flags.Carry, (value & 0b1000_0000) != 0); //capture MSB in carry flag before rotating
+            Registers.ClearFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            return (byte)((value << 1) | (value >> 7));
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test
 {
@@ -6,7 +7,7 @@ namespace GBDotNet.Core.Test
     public class CPU_Instruction_8_Bit_Shift_And_Rotation_Tests
     {
         [TestMethod]
-        public void Instruction_0x07_Should_Rotate_A_Left_Circular()
+        public void Instruction_0x07_Should_Rotate_A_Left_With_Carry()
         {
             var memory = new Memory(0x07);
             var cpu = new CPU(new Registers() { A = 0b0100_0110 }, memory);
@@ -89,6 +90,22 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0, cpu.Registers.A, "Accumulator should be zero after a full right rotation.");
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set again after a full right rotation.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x00_Should_Rotate_B_Left_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
+            var memory = new Memory(0xCB, 0x00);
+            var cpu = new CPU(new Registers() { B = 0b_1010_1010 }, memory);
+            cpu.Registers.SetFlag(Flags.Carry);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0101_0101, cpu.Registers.B);
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc b instruction should always clear N and H flags.");
         }
 
         private static void AssertFlagsAreCleared(CPU cpu, Flags flags)
