@@ -1669,6 +1669,230 @@ namespace GBDotNet.Core.Test
             throw new NotImplementedException();
         }
 
+        [TestMethod]
+        public void Instruction_0xCB_0xE0_Should_Set_Bit_4_Of_B()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xE1_Should_Set_Bit_4_Of_C()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xE2_Should_Set_Bit_4_Of_D()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xE3_Should_Set_Bit_4_Of_E()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xE4_Should_Set_Bit_4_Of_H()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xE5_Should_Set_Bit_4_Of_L()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xE6_Should_Set_Bit_4_Of_Address_Pointed_To_By_HL()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xE7_Should_Set_Bit_4_Of_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xE8_Should_Set_Bit_5_Of_B()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xE9_Should_Set_Bit_5_Of_C()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xEA_Should_Set_Bit_5_Of_D()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xEB_Should_Set_Bit_5_Of_E()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xEC_Should_Set_Bit_5_Of_H()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xED_Should_Set_Bit_5_Of_L()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xEE_Should_Set_Bit_5_Of_Address_Pointed_To_By_HL()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xEF_Should_Set_Bit_5_Of_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xF0_Should_Set_Bit_6_Of_B()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xF1_Should_Set_Bit_6_Of_C()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xF2_Should_Set_Bit_6_Of_D()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xF3_Should_Set_Bit_6_Of_E()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xF4_Should_Set_Bit_6_Of_H()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xF5_Should_Set_Bit_6_Of_L()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xF6_Should_Set_Bit_6_Of_Address_Pointed_To_By_HL()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xF7_Should_Set_Bit_6_Of_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xF8_Should_Set_Bit_7_Of_B()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xF9_Should_Set_Bit_7_Of_C()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xFA_Should_Set_Bit_7_Of_D()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xFB_Should_Set_Bit_7_Of_E()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xFC_Should_Set_Bit_7_Of_H()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xFD_Should_Set_Bit_7_Of_L()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xFE_Should_Set_Bit_7_Of_Address_Pointed_To_By_HL()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0xFF_Should_Set_Bit_7_Of_A()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+            throw new NotImplementedException();
+        }
+
         private static void AssertFlagsAreCleared(CPU cpu, Flags flags)
         {
             if (flags.HasFlag(Flags.Zero)) Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected instruction to clear Z flag.");
