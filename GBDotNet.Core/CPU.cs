@@ -427,22 +427,22 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0x6E_Test_Bit_5_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero(),
                 () => Instruction_0xCB_0x6F_Test_Bit_5_Of_A_And_Set_Zero_Flag_If_It_Was_Zero(),
                 //0x70
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0x70_Test_Bit_6_Of_B_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x71_Test_Bit_6_Of_C_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x72_Test_Bit_6_Of_D_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x73_Test_Bit_6_Of_E_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x74_Test_Bit_6_Of_H_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x75_Test_Bit_6_Of_L_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x76_Test_Bit_6_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x77_Test_Bit_6_Of_A_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x78_Test_Bit_7_Of_B_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x79_Test_Bit_7_Of_C_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x7A_Test_Bit_7_Of_D_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x7B_Test_Bit_7_Of_E_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x7C_Test_Bit_7_Of_H_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x7D_Test_Bit_7_Of_L_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x7E_Test_Bit_7_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero(),
+                () => Instruction_0xCB_0x7F_Test_Bit_7_Of_A_And_Set_Zero_Flag_If_It_Was_Zero(),
                 //0x80
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -3040,6 +3040,134 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x6F_Test_Bit_5_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(Registers.A, bitToTest: 5);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x70_Test_Bit_6_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.B, bitToTest: 6);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x71_Test_Bit_6_Of_C_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.C, bitToTest: 6);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x72_Test_Bit_6_Of_D_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.D, bitToTest: 6);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x73_Test_Bit_6_Of_E_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.E, bitToTest: 6);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x74_Test_Bit_6_Of_H_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.H, bitToTest: 6);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x75_Test_Bit_6_Of_L_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.L, bitToTest: 6);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x76_Test_Bit_6_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 6);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x77_Test_Bit_6_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.A, bitToTest: 6);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x78_Test_Bit_7_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.B, bitToTest: 7);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x79_Test_Bit_7_Of_C_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.C, bitToTest: 7);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x7A_Test_Bit_7_Of_D_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.D, bitToTest: 7);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x7B_Test_Bit_7_Of_E_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.E, bitToTest: 7);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x7C_Test_Bit_7_Of_H_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.H, bitToTest: 7);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x7D_Test_Bit_7_Of_L_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.L, bitToTest: 7);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x7E_Test_Bit_7_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 7);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0x7F_Test_Bit_7_Of_A_And_Set_Zero_Flag_If_It_Was_Zero()
+        {
+            TestBitAndSetFlags(Registers.A, bitToTest: 7);
         }
 
         /// <summary>
