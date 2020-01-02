@@ -95,7 +95,6 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0x00_Should_Rotate_B_Left_With_Carry()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
             var memory = new Memory(0xCB, 0x00);
             var cpu = new CPU(new Registers() { B = 0b_1010_1010 }, memory);
             cpu.Registers.SetFlag(Flags.Carry);
@@ -106,6 +105,111 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc b instruction should always clear N and H flags.");
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x01_Should_Rotate_C_Left_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x02_Should_Rotate_D_Left_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x03_Should_Rotate_E_Left_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x04_Should_Rotate_H_Left_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x05_Should_Rotate_L_Left_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x06_Should_Rotate_Address_Pointed_To_By_HL_Left_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RLC__HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x07_Should_Rotate_A_Left_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x08_Should_Rotate_B_Right_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x09_Should_Rotate_C_Right_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x0A_Should_Rotate_D_Right_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x0B_Should_Rotate_E_Right_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x0C_Should_Rotate_H_Right_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x0D_Should_Rotate_L_Right_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x0E_Should_Rotate_Address_Pointed_To_By_HL_Right_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RRC__HL_
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Instruction_0xCB_0x0F_Should_Rotate_A_Right_With_Carry()
+        {
+            //https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+            throw new NotImplementedException();
         }
 
         private static void AssertFlagsAreCleared(CPU cpu, Flags flags)
