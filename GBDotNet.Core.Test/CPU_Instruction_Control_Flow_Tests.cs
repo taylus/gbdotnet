@@ -426,6 +426,19 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
+        public void Instruction_0xD9_Should_Return_From_Subroutine_And_Enable_Interrupts()
+        {
+            var memory = new Memory(0xD9);
+            var cpu = new CPU(new Registers() { SP = 0xFFFE }, memory);
+            cpu.PushOntoStack(0x4000);  //manually push a return address onto the stack
+
+            cpu.Tick();
+
+            Assert.AreEqual(0x4000, cpu.Registers.PC);
+            Assert.IsTrue(cpu.InterruptsEnabled);
+        }
+
+        [TestMethod]
         public void Instruction_0xE9_Should_Jump_To_Address_Pointed_To_By_HL()
         {
             var memory = new Memory(0xE9);

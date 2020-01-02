@@ -18,6 +18,7 @@ namespace GBDotNet.Core
         public Registers Registers { get; private set; }
         public Memory Memory { get; private set; }
         public bool IsHalted { get; private set; }
+        public bool InterruptsEnabled { get; private set; }
 
         private readonly Action[] instructionSet;
 
@@ -260,7 +261,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xD6_Subtract_8_Bit_Immediate_From_A(),
                 () => Instruction_0xD7_Call_Reset_Vector_Ten(),
                 () => Instruction_0xD8_Return_From_Subroutine_If_Carry_Flag_Set(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xD9_Return_From_Subroutine_And_Enable_Interrupts(),
                 () => Instruction_0xDA_Jump_To_Immediate_16_Bit_Address_If_Carry_Flag_Set(),
                 () => { throw new NotImplementedException(); },
                 () => Instruction_0xDC_Call_Subroutine_At_Immediate_16_Bit_Address_If_Carry_Flag_Set(),
@@ -2127,6 +2128,15 @@ namespace GBDotNet.Core
         private void Instruction_0xD8_Return_From_Subroutine_If_Carry_Flag_Set()
         {
             if (Registers.HasFlag(Flags.Carry)) Return();
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RETI
+        /// </summary>
+        private void Instruction_0xD9_Return_From_Subroutine_And_Enable_Interrupts()
+        {
+            Return();
+            InterruptsEnabled = true;
         }
 
         /// <summary>
