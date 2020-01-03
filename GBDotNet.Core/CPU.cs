@@ -478,22 +478,22 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0x9E_Reset_Bit_3_Of_Address_Pointed_To_By_HL(),
                 () => Instruction_0xCB_0x9F_Reset_Bit_3_Of_A(),
                 //0xA0
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0xA0_Reset_Bit_4_Of_B(),
+                () => Instruction_0xCB_0xA1_Reset_Bit_4_Of_C(),
+                () => Instruction_0xCB_0xA2_Reset_Bit_4_Of_D(),
+                () => Instruction_0xCB_0xA3_Reset_Bit_4_Of_E(),
+                () => Instruction_0xCB_0xA4_Reset_Bit_4_Of_H(),
+                () => Instruction_0xCB_0xA5_Reset_Bit_4_Of_L(),
+                () => Instruction_0xCB_0xA6_Reset_Bit_4_Of_Address_Pointed_To_By_HL(),
+                () => Instruction_0xCB_0xA7_Reset_Bit_4_Of_A(),
+                () => Instruction_0xCB_0xA8_Reset_Bit_5_Of_B(),
+                () => Instruction_0xCB_0xA9_Reset_Bit_5_Of_C(),
+                () => Instruction_0xCB_0xAA_Reset_Bit_5_Of_D(),
+                () => Instruction_0xCB_0xAB_Reset_Bit_5_Of_E(),
+                () => Instruction_0xCB_0xAC_Reset_Bit_5_Of_H(),
+                () => Instruction_0xCB_0xAD_Reset_Bit_5_Of_L(),
+                () => Instruction_0xCB_0xAE_Reset_Bit_5_Of_Address_Pointed_To_By_HL(),
+                () => Instruction_0xCB_0xAF_Reset_Bit_5_Of_A(),
                 //0xB0
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -3049,7 +3049,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Registers.B, bitToTest: 6);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3057,7 +3057,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Registers.C, bitToTest: 6);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3065,7 +3065,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Registers.D, bitToTest: 6);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3073,7 +3073,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Registers.E, bitToTest: 6);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3081,7 +3081,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Registers.H, bitToTest: 6);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3097,7 +3097,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 6);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3105,7 +3105,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Registers.A, bitToTest: 6);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3113,7 +3113,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Registers.B, bitToTest: 7);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3121,7 +3121,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Registers.C, bitToTest: 7);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3129,7 +3129,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Registers.D, bitToTest: 7);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3137,7 +3137,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Registers.E, bitToTest: 7);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3145,7 +3145,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Registers.H, bitToTest: 7);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3161,7 +3161,7 @@ namespace GBDotNet.Core
         {
             TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 7);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
@@ -3249,7 +3249,7 @@ namespace GBDotNet.Core
         {
             Registers.C = ClearBit(Registers.C, 1);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
         /// </summary>
@@ -3257,7 +3257,7 @@ namespace GBDotNet.Core
         {
             Registers.D = ClearBit(Registers.D, 1);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
         /// </summary>
@@ -3265,7 +3265,7 @@ namespace GBDotNet.Core
         {
             Registers.E = ClearBit(Registers.E, 1);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
         /// </summary>
@@ -3273,7 +3273,7 @@ namespace GBDotNet.Core
         {
             Registers.H = ClearBit(Registers.H, 1);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
         /// </summary>
@@ -3289,7 +3289,7 @@ namespace GBDotNet.Core
         {
             Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 1);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
         /// </summary>
@@ -3424,6 +3424,134 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x9F_Reset_Bit_3_Of_A()
         {
             Registers.A = ClearBit(Registers.A, 3);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xA0_Reset_Bit_4_Of_B()
+        {
+            Registers.B = ClearBit(Registers.B, 4);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xA1_Reset_Bit_4_Of_C()
+        {
+            Registers.C = ClearBit(Registers.C, 4);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xA2_Reset_Bit_4_Of_D()
+        {
+            Registers.D = ClearBit(Registers.D, 4);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xA3_Reset_Bit_4_Of_E()
+        {
+            Registers.E = ClearBit(Registers.E, 4);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xA4_Reset_Bit_4_Of_H()
+        {
+            Registers.H = ClearBit(Registers.H, 4);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xA5_Reset_Bit_4_Of_L()
+        {
+            Registers.L = ClearBit(Registers.L, 4);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,_HL_
+        /// </summary>
+        private void Instruction_0xCB_0xA6_Reset_Bit_4_Of_Address_Pointed_To_By_HL()
+        {
+            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 4);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xA7_Reset_Bit_4_Of_A()
+        {
+            Registers.A = ClearBit(Registers.A, 4);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xA8_Reset_Bit_5_Of_B()
+        {
+            Registers.B = ClearBit(Registers.B, 5);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xA9_Reset_Bit_5_Of_C()
+        {
+            Registers.C = ClearBit(Registers.C, 5);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xAA_Reset_Bit_5_Of_D()
+        {
+            Registers.D = ClearBit(Registers.D, 5);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xAB_Reset_Bit_5_Of_E()
+        {
+            Registers.E = ClearBit(Registers.E, 5);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xAC_Reset_Bit_5_Of_H()
+        {
+            Registers.H = ClearBit(Registers.H, 5);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xAD_Reset_Bit_5_Of_L()
+        {
+            Registers.L = ClearBit(Registers.L, 5);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,_HL_
+        /// </summary>
+        private void Instruction_0xCB_0xAE_Reset_Bit_5_Of_Address_Pointed_To_By_HL()
+        {
+            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 5);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xAF_Reset_Bit_5_Of_A()
+        {
+            Registers.A = ClearBit(Registers.A, 5);
         }
 
         /// <summary>

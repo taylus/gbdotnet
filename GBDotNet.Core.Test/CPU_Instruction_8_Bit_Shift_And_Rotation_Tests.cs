@@ -1256,113 +1256,129 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0xA0_Should_Reset_Bit_4_Of_B()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xA0));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.B,
+                setValueUnderTest: (value) => cpu.Registers.B = value, bitToReset: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xA1_Should_Reset_Bit_4_Of_C()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xA1));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.C,
+                setValueUnderTest: (value) => cpu.Registers.C = value, bitToReset: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xA2_Should_Reset_Bit_4_Of_D()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xA2));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.D,
+                setValueUnderTest: (value) => cpu.Registers.D = value, bitToReset: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xA3_Should_Reset_Bit_4_Of_E()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xA3));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.E,
+                setValueUnderTest: (value) => cpu.Registers.E = value, bitToReset: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xA4_Should_Reset_Bit_4_Of_H()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xA4));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.H,
+                setValueUnderTest: (value) => cpu.Registers.H = value, bitToReset: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xA5_Should_Reset_Bit_4_Of_L()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xA5));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.L,
+                setValueUnderTest: (value) => cpu.Registers.L = value, bitToReset: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xA6_Should_Reset_Bit_4_Of_Address_Pointed_To_By_HL()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,_HL_
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xA6));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToReset: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xA7_Should_Reset_Bit_4_Of_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xA7));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.A,
+                setValueUnderTest: (value) => cpu.Registers.A = value, bitToReset: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xA8_Should_Reset_Bit_5_Of_B()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xA8));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.B,
+                setValueUnderTest: (value) => cpu.Registers.B = value, bitToReset: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xA9_Should_Reset_Bit_5_Of_C()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xA9));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.C,
+                setValueUnderTest: (value) => cpu.Registers.C = value, bitToReset: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xAA_Should_Reset_Bit_5_Of_D()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xAA));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.D,
+                setValueUnderTest: (value) => cpu.Registers.D = value, bitToReset: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xAB_Should_Reset_Bit_5_Of_E()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xAB));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.E,
+                setValueUnderTest: (value) => cpu.Registers.E = value, bitToReset: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xAC_Should_Reset_Bit_5_Of_H()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xAC));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.H,
+                setValueUnderTest: (value) => cpu.Registers.H = value, bitToReset: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xAD_Should_Reset_Bit_5_Of_L()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xAD));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.L,
+                setValueUnderTest: (value) => cpu.Registers.L = value, bitToReset: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xAE_Should_Reset_Bit_5_Of_Address_Pointed_To_By_HL()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,_HL_
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xAE));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToReset: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xAF_Should_Reset_Bit_5_Of_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xAF));
+            TestResInstruction(cpu, getValueUnderTest: () => cpu.Registers.A,
+                setValueUnderTest: (value) => cpu.Registers.A = value, bitToReset: 5);
         }
 
         [TestMethod]
