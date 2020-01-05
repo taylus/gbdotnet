@@ -110,8 +110,15 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0x01_Should_Rotate_C_Left_With_Carry()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x01);
+            var cpu = new CPU(new Registers() { C = 0b_0010_1010 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0101_0100, cpu.Registers.C);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc c instruction should always clear N and H flags.");
         }
 
         [TestMethod]
