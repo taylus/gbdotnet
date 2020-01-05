@@ -563,22 +563,22 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0xEE_Set_Bit_5_Of_Address_Pointed_To_By_HL(),
                 () => Instruction_0xCB_0xEF_Set_Bit_5_Of_A(),
                 //0xF0
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); }
+                () => Instruction_0xCB_0xF0_Set_Bit_6_Of_B(),
+                () => Instruction_0xCB_0xF1_Set_Bit_6_Of_C(),
+                () => Instruction_0xCB_0xF2_Set_Bit_6_Of_D(),
+                () => Instruction_0xCB_0xF3_Set_Bit_6_Of_E(),
+                () => Instruction_0xCB_0xF4_Set_Bit_6_Of_H(),
+                () => Instruction_0xCB_0xF5_Set_Bit_6_Of_L(),
+                () => Instruction_0xCB_0xF6_Set_Bit_6_Of_Address_Pointed_To_By_HL(),
+                () => Instruction_0xCB_0xF7_Set_Bit_6_Of_A(),
+                () => Instruction_0xCB_0xF8_Set_Bit_7_Of_B(),
+                () => Instruction_0xCB_0xF9_Set_Bit_7_Of_C(),
+                () => Instruction_0xCB_0xFA_Set_Bit_7_Of_D(),
+                () => Instruction_0xCB_0xFB_Set_Bit_7_Of_E(),
+                () => Instruction_0xCB_0xFC_Set_Bit_7_Of_H(),
+                () => Instruction_0xCB_0xFD_Set_Bit_7_Of_L(),
+                () => Instruction_0xCB_0xFE_Set_Bit_7_Of_Address_Pointed_To_By_HL(),
+                () => Instruction_0xCB_0xFF_Set_Bit_7_Of_A(),
             };
         }
 
@@ -3857,9 +3857,9 @@ namespace GBDotNet.Core
         {
             Registers.L = SetBit(Registers.L, 2);
         }
-            
+
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
         /// </summary>
         private void Instruction_0xCB_0xD6_Set_Bit_2_Of_Address_Pointed_To_By_HL()
         {
@@ -3921,9 +3921,9 @@ namespace GBDotNet.Core
         {
             Registers.L = SetBit(Registers.L, 3);
         }
-           
+
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
         /// </summary>
         private void Instruction_0xCB_0xDE_Set_Bit_3_Of_Address_Pointed_To_By_HL()
         {
@@ -3985,9 +3985,9 @@ namespace GBDotNet.Core
         {
             Registers.L = SetBit(Registers.L, 4);
         }
-                    
+
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
         /// </summary>
         private void Instruction_0xCB_0xE6_Set_Bit_4_Of_Address_Pointed_To_By_HL()
         {
@@ -4049,9 +4049,9 @@ namespace GBDotNet.Core
         {
             Registers.L = SetBit(Registers.L, 5);
         }
-                 
+
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
         /// </summary>
         private void Instruction_0xCB_0xEE_Set_Bit_5_Of_Address_Pointed_To_By_HL()
         {
@@ -4064,6 +4064,134 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0xEF_Set_Bit_5_Of_A()
         {
             Registers.A = SetBit(Registers.A, 5);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xF0_Set_Bit_6_Of_B()
+        {
+            Registers.B = SetBit(Registers.B, 6);
+        }
+                        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xF1_Set_Bit_6_Of_C()
+        {
+            Registers.C = SetBit(Registers.C, 6);
+        }
+                            
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xF2_Set_Bit_6_Of_D()
+        {
+            Registers.D = SetBit(Registers.D, 6);
+        }
+                             
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xF3_Set_Bit_6_Of_E()
+        {
+            Registers.E = SetBit(Registers.E, 6);
+        }
+                             
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xF4_Set_Bit_6_Of_H()
+        {
+            Registers.H = SetBit(Registers.H, 6);
+        }
+                           
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xF5_Set_Bit_6_Of_L()
+        {
+            Registers.L = SetBit(Registers.L, 6);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
+        /// </summary>
+        private void Instruction_0xCB_0xF6_Set_Bit_6_Of_Address_Pointed_To_By_HL()
+        {
+            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 6);
+        }
+                         
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xF7_Set_Bit_6_Of_A()
+        {
+            Registers.A = SetBit(Registers.A, 6);
+        }
+                          
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xF8_Set_Bit_7_Of_B()
+        {
+            Registers.B = SetBit(Registers.B, 7);
+        }
+                            
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xF9_Set_Bit_7_Of_C()
+        {
+            Registers.C = SetBit(Registers.C, 7);
+        }
+                          
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xFA_Set_Bit_7_Of_D()
+        {
+            Registers.D = SetBit(Registers.D, 7);
+        }
+                        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xFB_Set_Bit_7_Of_E()
+        {
+            Registers.E = SetBit(Registers.E, 7);
+        }
+                         
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xFC_Set_Bit_7_Of_H()
+        {
+            Registers.H = SetBit(Registers.H, 7);
+        }
+                             
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xFD_Set_Bit_7_Of_L()
+        {
+            Registers.L = SetBit(Registers.L, 7);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
+        /// </summary>
+        private void Instruction_0xCB_0xFE_Set_Bit_7_Of_Address_Pointed_To_By_HL()
+        {
+            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 7);
+        }
+                            
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
+        /// </summary>
+        private void Instruction_0xCB_0xFF_Set_Bit_7_Of_A()
+        {
+            Registers.A = SetBit(Registers.A, 7);
         }
 
         /// <summary>
