@@ -17,11 +17,18 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b1000_1100, cpu.Registers.A, "Accumulator has incorrect value after first rlca instruction.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be zero after first rlca instruction.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
-            cpu.Registers.PC--;
 
+            cpu.Registers.PC--;
             cpu.Tick();
             Assert.AreEqual(0b0001_1001, cpu.Registers.A, "Accumulator has incorrect value after second rlca instruction.");
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set after second rlca instruction.");
+            AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+
+            cpu.Registers.PC--;
+            cpu.Registers.A = 0;
+            cpu.Tick();
+            Assert.AreEqual(0, cpu.Registers.A, "Accumulator has incorrect value after first rlca instruction.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be zero after first rlca instruction.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
         }
 

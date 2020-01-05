@@ -722,7 +722,7 @@ namespace GBDotNet.Core
         /// <see cref="https://github.com/sinamas/gambatte/blob/master/libgambatte/src/cpu.cpp#L561"/>
         private void Instruction_0x07_Rotate_A_Left_With_Carry()
         {
-            Registers.A = RotateLeftWithCarryAndSetFlags(Registers.A);
+            Registers.A = RotateAccumulatorLeftWithCarryAndSetFlags(Registers.A);
         }
 
         /// <summary>
