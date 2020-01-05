@@ -1768,113 +1768,129 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0xE0_Should_Set_Bit_4_Of_B()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xE0));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.B,
+                setValueUnderTest: (value) => cpu.Registers.B = value, bitToSet: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xE1_Should_Set_Bit_4_Of_C()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xE1));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.C,
+                setValueUnderTest: (value) => cpu.Registers.C = value, bitToSet: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xE2_Should_Set_Bit_4_Of_D()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xE2));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.D,
+                setValueUnderTest: (value) => cpu.Registers.D = value, bitToSet: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xE3_Should_Set_Bit_4_Of_E()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xE3));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.E,
+                setValueUnderTest: (value) => cpu.Registers.E = value, bitToSet: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xE4_Should_Set_Bit_4_Of_H()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xE4));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.H,
+                setValueUnderTest: (value) => cpu.Registers.H = value, bitToSet: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xE5_Should_Set_Bit_4_Of_L()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xE5));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.L,
+                setValueUnderTest: (value) => cpu.Registers.L = value, bitToSet: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xE6_Should_Set_Bit_4_Of_Address_Pointed_To_By_HL()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xE6));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToSet: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xE7_Should_Set_Bit_4_Of_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xE7));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.A,
+                setValueUnderTest: (value) => cpu.Registers.A = value, bitToSet: 4);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xE8_Should_Set_Bit_5_Of_B()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xE8));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.B,
+                setValueUnderTest: (value) => cpu.Registers.B = value, bitToSet: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xE9_Should_Set_Bit_5_Of_C()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xE9));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.C,
+                setValueUnderTest: (value) => cpu.Registers.C = value, bitToSet: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xEA_Should_Set_Bit_5_Of_D()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xEA));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.D,
+                setValueUnderTest: (value) => cpu.Registers.D = value, bitToSet: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xEB_Should_Set_Bit_5_Of_E()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xEB));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.E,
+                setValueUnderTest: (value) => cpu.Registers.E = value, bitToSet: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xEC_Should_Set_Bit_5_Of_H()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xEC));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.H,
+                setValueUnderTest: (value) => cpu.Registers.H = value, bitToSet: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xED_Should_Set_Bit_5_Of_L()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xED));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.L,
+                setValueUnderTest: (value) => cpu.Registers.L = value, bitToSet: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xEE_Should_Set_Bit_5_Of_Address_Pointed_To_By_HL()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,_HL_
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xEE));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToSet: 5);
         }
 
         [TestMethod]
         public void Instruction_0xCB_0xEF_Should_Set_Bit_5_Of_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-            throw new NotImplementedException();
+            var cpu = new CPU(new Registers(), new Memory(0xCB, 0xEF));
+            TestSetInstruction(cpu, getValueUnderTest: () => cpu.Registers.A,
+                setValueUnderTest: (value) => cpu.Registers.A = value, bitToSet: 5);
         }
 
         [TestMethod]
