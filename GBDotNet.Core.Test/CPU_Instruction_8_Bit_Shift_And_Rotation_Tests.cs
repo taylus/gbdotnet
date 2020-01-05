@@ -139,14 +139,21 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b_0000_0000, cpu.Registers.C);
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc c instruction should always clear N and H flags.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc d instruction should always clear N and H flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x03_Should_Rotate_E_Left_With_Carry()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x03);
+            var cpu = new CPU(new Registers() { E = 0b_1111_1111 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_1111_1111, cpu.Registers.E);
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc e instruction should always clear N and H flags.");
         }
 
         [TestMethod]

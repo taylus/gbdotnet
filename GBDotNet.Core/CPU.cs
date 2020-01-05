@@ -311,7 +311,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0x00_Rotate_B_Left_With_Carry(),
                 () => Instruction_0xCB_0x01_Rotate_C_Left_With_Carry(),
                 () => Instruction_0xCB_0x02_Rotate_D_Left_With_Carry(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0x03_Rotate_E_Left_With_Carry(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -2672,6 +2672,14 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x02_Rotate_D_Left_With_Carry()
         {
             Registers.D = RotateLeftWithCarryAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
+        /// </summary>
+        private void Instruction_0xCB_0x03_Rotate_E_Left_With_Carry()
+        {
+            Registers.E = RotateLeftWithCarryAndSetFlags(Registers.E);
         }
 
         /// <summary>
