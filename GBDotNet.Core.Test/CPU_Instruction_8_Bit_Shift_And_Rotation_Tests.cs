@@ -33,7 +33,7 @@ namespace GBDotNet.Core.Test
         }
 
         [TestMethod]
-        public void Instruction_0x0F_Should_Rotate_A_Right_Circular()
+        public void Instruction_0x0F_Should_Rotate_A_Right_With_Carry()
         {
             var memory = new Memory(0x0F);
             var cpu = new CPU(new Registers() { A = 0b0100_0110 }, memory);
@@ -43,11 +43,18 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b0010_0011, cpu.Registers.A, "Accumulator has incorrect value after first rrca instruction.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be zero after first rrca instruction.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
-            cpu.Registers.PC--;
 
+            cpu.Registers.PC--;
             cpu.Tick();
             Assert.AreEqual(0b1001_0001, cpu.Registers.A, "Accumulator has incorrect value after second rrca instruction.");
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set after second rrca instruction.");
+            AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+
+            cpu.Registers.PC--;
+            cpu.Registers.A = 0;
+            cpu.Tick();
+            Assert.AreEqual(0, cpu.Registers.A, "Accumulator has incorrect value after first rlca instruction.");
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be zero after first rlca instruction.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
         }
 
@@ -216,8 +223,15 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0x08_Should_Rotate_B_Right_With_Carry()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x08);
+            var cpu = new CPU(new Registers() { B = 0b_0001_0000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0000_1000, cpu.Registers.B);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rrc b instruction should always clear N and H flags.");
         }
 
         [TestMethod]

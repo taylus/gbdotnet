@@ -47,7 +47,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x0C_Increment_C(),
                 () => Instruction_0x0D_Decrement_C(),
                 () => Instruction_0x0E_Load_C_With_8_Bit_Immediate(),
-                () => Instruction_0x0F_Rotate_A_Right_Circular(),
+                () => Instruction_0x0F_Rotate_A_Right_With_Carry(),
                 //0x10
                 () => Instruction_0x10_Stop(),
                 () => Instruction_0x11_Load_DE_With_16_Bit_Immediate(),
@@ -316,7 +316,7 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0x05_Rotate_L_Left_With_Carry(),
                 () => Instruction_0xCB_0x06_Rotate_Address_Pointed_To_By_HL_Left_With_Carry(),
                 () => Instruction_0xCB_0x07_Rotate_A_Left_With_Carry(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0x08_Rotate_B_Right_With_Carry(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -793,11 +793,9 @@ namespace GBDotNet.Core
         /// [0] -> [7 -> 0] -> C
         /// </summary>
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#RRCA"/>
-        private void Instruction_0x0F_Rotate_A_Right_Circular()
+        private void Instruction_0x0F_Rotate_A_Right_With_Carry()
         {
-            Registers.A = (byte)((Registers.A >> 1) | (Registers.A << 7));
-            Registers.SetFlagTo(Flags.Carry, (Registers.A & 0b1000_0000) != 0); //set carry to MSB (original LSB)
-            Registers.ClearFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            Registers.A = RotateAccumulatorRightWithCarryAndSetFlags(Registers.A);
         }
 
         /// <summary>
@@ -2715,6 +2713,14 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+        /// </summary>
+        private void Instruction_0xCB_0x08_Rotate_B_Right_With_Carry()
+        {
+            Registers.B = RotateRightWithCarryAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
         private void Instruction_0xCB_0x40_Test_Bit_0_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
@@ -4294,6 +4300,37 @@ namespace GBDotNet.Core
             Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry);
 
             var rotated = (byte)((value << 1) | (value >> 7));
+
+            if (clearZeroFlag)
+            {
+                Registers.ClearFlag(Flags.Zero);
+            }
+            else
+            {
+                Registers.SetFlagTo(Flags.Zero, rotated == 0);
+            }
+
+            return rotated;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RRCA
+        /// </summary>
+        private byte RotateAccumulatorRightWithCarryAndSetFlags(byte value)
+        {
+            return RotateRightWithCarryAndSetFlags(value, clearZeroFlag: true);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RRC__HL_
+        /// </summary>
+        private byte RotateRightWithCarryAndSetFlags(byte value, bool clearZeroFlag = false)
+        {
+            Registers.SetFlagTo(Flags.Carry, (value & 0b0000_0001) != 0); //capture LSB in carry flag before rotating
+            Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry);
+
+            var rotated = (byte)((value >> 1) | (value << 7));
 
             if (clearZeroFlag)
             {
