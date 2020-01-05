@@ -187,8 +187,16 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0x06_Should_Rotate_Address_Pointed_To_By_HL_Left_With_Carry()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#RLC__HL_
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x06);
+            var cpu = new CPU(new Registers() { HL = 0x0003 }, memory);
+            memory[cpu.Registers.HL] = 0b_0000_1111;
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0001_1110, memory[cpu.Registers.HL]);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc [hl] instruction should always clear N and H flags.");
         }
 
         [TestMethod]
