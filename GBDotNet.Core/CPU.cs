@@ -310,7 +310,7 @@ namespace GBDotNet.Core
                 //0x00
                 () => Instruction_0xCB_0x00_Rotate_B_Left_With_Carry(),
                 () => Instruction_0xCB_0x01_Rotate_C_Left_With_Carry(),
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0x02_Rotate_D_Left_With_Carry(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -2667,6 +2667,14 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
+        /// </summary>
+        private void Instruction_0xCB_0x02_Rotate_D_Left_With_Carry()
+        {
+            Registers.D = RotateLeftWithCarryAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
         private void Instruction_0xCB_0x40_Test_Bit_0_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
@@ -4230,14 +4238,33 @@ namespace GBDotNet.Core
 
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#RLCA
+        /// </summary>
+        private byte RotateAccumulatorLeftWithCarryAndSetFlags(byte value)
+        {
+            return RotateLeftWithCarryAndSetFlags(value, clearZeroFlag: true);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
         /// https://rednex.github.io/rgbds/gbz80.7.html#RLC__HL_
         /// </summary>
-        private byte RotateLeftWithCarryAndSetFlags(byte value)
+        private byte RotateLeftWithCarryAndSetFlags(byte value, bool clearZeroFlag = false)
         {
             Registers.SetFlagTo(Flags.Carry, (value & 0b1000_0000) != 0); //capture MSB in carry flag before rotating
-            Registers.ClearFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
-            return (byte)((value << 1) | (value >> 7));
+            Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry);
+
+            var rotated = (byte)((value << 1) | (value >> 7));
+
+            if (clearZeroFlag)
+            {
+                Registers.ClearFlag(Flags.Zero);
+            }
+            else
+            {
+                Registers.SetFlagTo(Flags.Zero, rotated == 0);
+            }
+
+            return rotated;
         }
 
         /// <summary>
