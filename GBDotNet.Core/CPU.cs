@@ -325,14 +325,14 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0x0E_Rotate_Address_Pointed_To_By_HL_Right_With_Carry(),
                 () => Instruction_0xCB_0x0F_Rotate_A_Right_With_Carry(),
                 //0x10
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0x10_Rotate_B_Left(),
+                () => Instruction_0xCB_0x11_Rotate_C_Left(),
+                () => Instruction_0xCB_0x12_Rotate_D_Left(),
+                () => Instruction_0xCB_0x13_Rotate_E_Left(),
+                () => Instruction_0xCB_0x14_Rotate_H_Left(),
+                () => Instruction_0xCB_0x15_Rotate_L_Left(),
+                () => Instruction_0xCB_0x16_Rotate_Address_Pointed_To_By_HL_Left(),
+                () => Instruction_0xCB_0x17_Rotate_A_Left(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -862,10 +862,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x17_Rotate_A_Left()
         {
-            bool oldCarry = Registers.HasFlag(Flags.Carry);
-            Registers.SetFlagTo(Flags.Carry, (Registers.A & 0b1000_0000) != 0);
-            Registers.A = (byte)((Registers.A << 1) | (oldCarry ? 1 : 0));
-            Registers.ClearFlag(Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            Registers.A = RotateAccumulatorLeftAndSetFlags(Registers.A);
         }
 
         /// <summary>
@@ -2777,6 +2774,70 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+        /// </summary>
+        private void Instruction_0xCB_0x10_Rotate_B_Left()
+        {
+            Registers.B = RotateLeftAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+        /// </summary>
+        private void Instruction_0xCB_0x11_Rotate_C_Left()
+        {
+            Registers.C = RotateLeftAndSetFlags(Registers.C);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+        /// </summary>
+        private void Instruction_0xCB_0x12_Rotate_D_Left()
+        {
+            Registers.D = RotateLeftAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+        /// </summary>
+        private void Instruction_0xCB_0x13_Rotate_E_Left()
+        {
+            Registers.E = RotateLeftAndSetFlags(Registers.E);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+        /// </summary>
+        private void Instruction_0xCB_0x14_Rotate_H_Left()
+        {
+            Registers.H = RotateLeftAndSetFlags(Registers.H);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+        /// </summary>
+        private void Instruction_0xCB_0x15_Rotate_L_Left()
+        {
+            Registers.L = RotateLeftAndSetFlags(Registers.L);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RL__HL_
+        /// </summary>
+        private void Instruction_0xCB_0x16_Rotate_Address_Pointed_To_By_HL_Left()
+        {
+            Memory[Registers.HL] = RotateLeftAndSetFlags(Memory[Registers.HL]);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RL_r8
+        /// </summary>
+        private void Instruction_0xCB_0x17_Rotate_A_Left()
+        {
+            Registers.A = RotateLeftAndSetFlags(Registers.A);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
         private void Instruction_0xCB_0x40_Test_Bit_0_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
@@ -3815,7 +3876,7 @@ namespace GBDotNet.Core
         {
             Registers.C = SetBit(Registers.C, 0);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3823,7 +3884,7 @@ namespace GBDotNet.Core
         {
             Registers.D = SetBit(Registers.D, 0);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3831,7 +3892,7 @@ namespace GBDotNet.Core
         {
             Registers.E = SetBit(Registers.E, 0);
         }
-            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3839,7 +3900,7 @@ namespace GBDotNet.Core
         {
             Registers.H = SetBit(Registers.H, 0);
         }
-          
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3855,7 +3916,7 @@ namespace GBDotNet.Core
         {
             Memory[Registers.HL] = SetBit(Memory[Registers.HL], 0);
         }
-              
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3863,7 +3924,7 @@ namespace GBDotNet.Core
         {
             Registers.A = SetBit(Registers.A, 0);
         }
-             
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3871,7 +3932,7 @@ namespace GBDotNet.Core
         {
             Registers.B = SetBit(Registers.B, 1);
         }
-           
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3879,7 +3940,7 @@ namespace GBDotNet.Core
         {
             Registers.C = SetBit(Registers.C, 1);
         }
-           
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3887,7 +3948,7 @@ namespace GBDotNet.Core
         {
             Registers.D = SetBit(Registers.D, 1);
         }
-            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3895,7 +3956,7 @@ namespace GBDotNet.Core
         {
             Registers.E = SetBit(Registers.E, 1);
         }
-           
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3903,7 +3964,7 @@ namespace GBDotNet.Core
         {
             Registers.H = SetBit(Registers.H, 1);
         }
-               
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3919,7 +3980,7 @@ namespace GBDotNet.Core
         {
             Memory[Registers.HL] = SetBit(Memory[Registers.HL], 1);
         }
-                
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3943,7 +4004,7 @@ namespace GBDotNet.Core
         {
             Registers.C = SetBit(Registers.C, 2);
         }
-          
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3951,7 +4012,7 @@ namespace GBDotNet.Core
         {
             Registers.D = SetBit(Registers.D, 2);
         }
-          
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3959,7 +4020,7 @@ namespace GBDotNet.Core
         {
             Registers.E = SetBit(Registers.E, 2);
         }
-          
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3967,7 +4028,7 @@ namespace GBDotNet.Core
         {
             Registers.H = SetBit(Registers.H, 2);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3983,7 +4044,7 @@ namespace GBDotNet.Core
         {
             Memory[Registers.HL] = SetBit(Memory[Registers.HL], 2);
         }
-           
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3991,7 +4052,7 @@ namespace GBDotNet.Core
         {
             Registers.A = SetBit(Registers.A, 2);
         }
-            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -3999,7 +4060,7 @@ namespace GBDotNet.Core
         {
             Registers.B = SetBit(Registers.B, 3);
         }
-               
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4007,7 +4068,7 @@ namespace GBDotNet.Core
         {
             Registers.C = SetBit(Registers.C, 3);
         }
-             
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4015,7 +4076,7 @@ namespace GBDotNet.Core
         {
             Registers.D = SetBit(Registers.D, 3);
         }
-             
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4023,7 +4084,7 @@ namespace GBDotNet.Core
         {
             Registers.E = SetBit(Registers.E, 3);
         }
-            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4031,7 +4092,7 @@ namespace GBDotNet.Core
         {
             Registers.H = SetBit(Registers.H, 3);
         }
-             
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4047,7 +4108,7 @@ namespace GBDotNet.Core
         {
             Memory[Registers.HL] = SetBit(Memory[Registers.HL], 3);
         }
-          
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4063,7 +4124,7 @@ namespace GBDotNet.Core
         {
             Registers.B = SetBit(Registers.B, 4);
         }
-                       
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4071,7 +4132,7 @@ namespace GBDotNet.Core
         {
             Registers.C = SetBit(Registers.C, 4);
         }
-                       
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4079,7 +4140,7 @@ namespace GBDotNet.Core
         {
             Registers.D = SetBit(Registers.D, 4);
         }
-                    
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4087,7 +4148,7 @@ namespace GBDotNet.Core
         {
             Registers.E = SetBit(Registers.E, 4);
         }
-                    
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4095,7 +4156,7 @@ namespace GBDotNet.Core
         {
             Registers.H = SetBit(Registers.H, 4);
         }
-                       
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4111,7 +4172,7 @@ namespace GBDotNet.Core
         {
             Memory[Registers.HL] = SetBit(Memory[Registers.HL], 4);
         }
-                      
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4119,7 +4180,7 @@ namespace GBDotNet.Core
         {
             Registers.A = SetBit(Registers.A, 4);
         }
-                     
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4127,7 +4188,7 @@ namespace GBDotNet.Core
         {
             Registers.B = SetBit(Registers.B, 5);
         }
-                      
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4135,7 +4196,7 @@ namespace GBDotNet.Core
         {
             Registers.C = SetBit(Registers.C, 5);
         }
-                    
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4143,7 +4204,7 @@ namespace GBDotNet.Core
         {
             Registers.D = SetBit(Registers.D, 5);
         }
-                      
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4151,7 +4212,7 @@ namespace GBDotNet.Core
         {
             Registers.E = SetBit(Registers.E, 5);
         }
-                    
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4159,7 +4220,7 @@ namespace GBDotNet.Core
         {
             Registers.H = SetBit(Registers.H, 5);
         }
-                    
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4175,7 +4236,7 @@ namespace GBDotNet.Core
         {
             Memory[Registers.HL] = SetBit(Memory[Registers.HL], 5);
         }
-                      
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4191,7 +4252,7 @@ namespace GBDotNet.Core
         {
             Registers.B = SetBit(Registers.B, 6);
         }
-                        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4199,7 +4260,7 @@ namespace GBDotNet.Core
         {
             Registers.C = SetBit(Registers.C, 6);
         }
-                            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4207,7 +4268,7 @@ namespace GBDotNet.Core
         {
             Registers.D = SetBit(Registers.D, 6);
         }
-                             
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4215,7 +4276,7 @@ namespace GBDotNet.Core
         {
             Registers.E = SetBit(Registers.E, 6);
         }
-                             
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4223,7 +4284,7 @@ namespace GBDotNet.Core
         {
             Registers.H = SetBit(Registers.H, 6);
         }
-                           
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4239,7 +4300,7 @@ namespace GBDotNet.Core
         {
             Memory[Registers.HL] = SetBit(Memory[Registers.HL], 6);
         }
-                         
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4247,7 +4308,7 @@ namespace GBDotNet.Core
         {
             Registers.A = SetBit(Registers.A, 6);
         }
-                          
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4255,7 +4316,7 @@ namespace GBDotNet.Core
         {
             Registers.B = SetBit(Registers.B, 7);
         }
-                            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4263,7 +4324,7 @@ namespace GBDotNet.Core
         {
             Registers.C = SetBit(Registers.C, 7);
         }
-                          
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4271,7 +4332,7 @@ namespace GBDotNet.Core
         {
             Registers.D = SetBit(Registers.D, 7);
         }
-                        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4279,7 +4340,7 @@ namespace GBDotNet.Core
         {
             Registers.E = SetBit(Registers.E, 7);
         }
-                         
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4287,7 +4348,7 @@ namespace GBDotNet.Core
         {
             Registers.H = SetBit(Registers.H, 7);
         }
-                             
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4303,7 +4364,7 @@ namespace GBDotNet.Core
         {
             Memory[Registers.HL] = SetBit(Memory[Registers.HL], 7);
         }
-                            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
         /// </summary>
@@ -4347,6 +4408,14 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RLA
+        /// </summary>
+        private byte RotateAccumulatorLeftAndSetFlags(byte value)
+        {
+            return RotateLeftAndSetFlags(value, clearZeroFlag: true);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
         /// https://rednex.github.io/rgbds/gbz80.7.html#RLC__HL_
         /// </summary>
@@ -4356,6 +4425,26 @@ namespace GBDotNet.Core
             Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry);
 
             var rotated = (byte)((value << 1) | (value >> 7));
+
+            if (clearZeroFlag)
+            {
+                Registers.ClearFlag(Flags.Zero);
+            }
+            else
+            {
+                Registers.SetFlagTo(Flags.Zero, rotated == 0);
+            }
+
+            return rotated;
+        }
+
+        private byte RotateLeftAndSetFlags(byte value, bool clearZeroFlag = false)
+        {
+            bool oldCarry = Registers.HasFlag(Flags.Carry);
+            Registers.SetFlagTo(Flags.Carry, (value & 0b1000_0000) != 0); //capture MSB in carry flag before rotating
+            Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry);
+
+            var rotated = (byte)((value << 1) | (oldCarry ? 1 : 0));
 
             if (clearZeroFlag)
             {
