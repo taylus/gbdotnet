@@ -319,11 +319,11 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0x08_Rotate_B_Right_With_Carry(),
                 () => Instruction_0xCB_0x09_Rotate_C_Right_With_Carry(),
                 () => Instruction_0xCB_0x0A_Rotate_D_Right_With_Carry(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0x0B_Rotate_E_Right_With_Carry(),
+                () => Instruction_0xCB_0x0C_Rotate_H_Right_With_Carry(),
+                () => Instruction_0xCB_0x0D_Rotate_L_Right_With_Carry(),
+                () => Instruction_0xCB_0x0E_Rotate_Address_Pointed_To_By_HL_Right_With_Carry(),
+                () => Instruction_0xCB_0x0F_Rotate_A_Right_With_Carry(),
                 //0x10
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -2734,6 +2734,46 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x0A_Rotate_D_Right_With_Carry()
         {
             Registers.D = RotateRightWithCarryAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+        /// </summary>
+        private void Instruction_0xCB_0x0B_Rotate_E_Right_With_Carry()
+        {
+            Registers.E = RotateRightWithCarryAndSetFlags(Registers.E);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+        /// </summary>
+        private void Instruction_0xCB_0x0C_Rotate_H_Right_With_Carry()
+        {
+            Registers.H = RotateRightWithCarryAndSetFlags(Registers.H);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+        /// </summary>
+        private void Instruction_0xCB_0x0D_Rotate_L_Right_With_Carry()
+        {
+            Registers.L = RotateRightWithCarryAndSetFlags(Registers.L);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RRC__HL_
+        /// </summary>
+        private void Instruction_0xCB_0x0E_Rotate_Address_Pointed_To_By_HL_Right_With_Carry()
+        {
+            Memory[Registers.HL] = RotateRightWithCarryAndSetFlags(Memory[Registers.HL]);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RRC_r8
+        /// </summary>
+        private void Instruction_0xCB_0x0F_Rotate_A_Right_With_Carry()
+        {
+            Registers.A = RotateRightWithCarryAndSetFlags(Registers.A);
         }
 
         /// <summary>
