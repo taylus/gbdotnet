@@ -342,14 +342,14 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0x1E_Rotate_Address_Pointed_To_By_HL_Right(),
                 () => Instruction_0xCB_0x1F_Rotate_A_Right(),
                 //0x20
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0x20_Shift_B_Left(),
+                () => Instruction_0xCB_0x21_Shift_C_Left(),
+                () => Instruction_0xCB_0x22_Shift_D_Left(),
+                () => Instruction_0xCB_0x23_Shift_E_Left(),
+                () => Instruction_0xCB_0x24_Shift_H_Left(),
+                () => Instruction_0xCB_0x25_Shift_L_Left(),
+                () => Instruction_0xCB_0x26_Shift_Address_Pointed_To_By_HL_Left(),
+                () => Instruction_0xCB_0x27_Shift_A_Left(),
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -2899,6 +2899,70 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SLA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x20_Shift_B_Left()
+        {
+            Registers.B = ShiftLeftAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SLA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x21_Shift_C_Left()
+        {
+            Registers.C = ShiftLeftAndSetFlags(Registers.C);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SLA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x22_Shift_D_Left()
+        {
+            Registers.D = ShiftLeftAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SLA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x23_Shift_E_Left()
+        {
+            Registers.E = ShiftLeftAndSetFlags(Registers.E);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SLA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x24_Shift_H_Left()
+        {
+            Registers.H = ShiftLeftAndSetFlags(Registers.H);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SLA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x25_Shift_L_Left()
+        {
+            Registers.L = ShiftLeftAndSetFlags(Registers.L);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SLA__HL_
+        /// </summary>
+        private void Instruction_0xCB_0x26_Shift_Address_Pointed_To_By_HL_Left()
+        {
+            Memory[Registers.HL] = ShiftLeftAndSetFlags(Memory[Registers.HL]);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SLA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x27_Shift_A_Left()
+        {
+            Registers.A = ShiftLeftAndSetFlags(Registers.A);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#BIT_u3,r8
         /// </summary>
         private void Instruction_0xCB_0x40_Test_Bit_0_Of_B_And_Set_Zero_Flag_If_It_Was_Zero()
@@ -4504,6 +4568,21 @@ namespace GBDotNet.Core
             }
 
             return rotated;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SLA_r8
+        /// </summary>
+        private byte ShiftLeftAndSetFlags(byte value)
+        {
+            Registers.SetFlagTo(Flags.Carry, (value & 0b1000_0000) != 0); //capture MSB in carry flag before shifting
+            Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry);
+
+            var shifted = (byte)(value << 1);
+
+            Registers.SetFlagTo(Flags.Zero, shifted == 0);
+
+            return shifted;
         }
 
         /// <summary>
