@@ -722,7 +722,7 @@ namespace GBDotNet.Core
         /// <see cref="https://github.com/sinamas/gambatte/blob/master/libgambatte/src/cpu.cpp#L561"/>
         private void Instruction_0x07_Rotate_A_Left_With_Carry()
         {
-            Registers.A = RotateAccumulatorLeftWithCarryAndSetFlags(Registers.A);
+            Registers.A = RotateLeftWithCarryAndSetFlags(Registers.A, clearZeroFlag: true);
         }
 
         /// <summary>
@@ -795,7 +795,7 @@ namespace GBDotNet.Core
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#RRCA"/>
         private void Instruction_0x0F_Rotate_A_Right_With_Carry()
         {
-            Registers.A = RotateAccumulatorRightWithCarryAndSetFlags(Registers.A);
+            Registers.A = RotateRightWithCarryAndSetFlags(Registers.A, clearZeroFlag: true);
         }
 
         /// <summary>
@@ -862,7 +862,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x17_Rotate_A_Left()
         {
-            Registers.A = RotateAccumulatorLeftAndSetFlags(Registers.A);
+            Registers.A = RotateLeftAndSetFlags(Registers.A, clearZeroFlag: true);
         }
 
         /// <summary>
@@ -926,7 +926,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x1F_Rotate_A_Right()
         {
-            Registers.A = RotateAccumulatorRightAndSetFlags(Registers.A);
+            Registers.A = RotateRightAndSetFlags(Registers.A, clearZeroFlag: true);
         }
 
         /// <summary>
@@ -4405,22 +4405,6 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#RLCA
-        /// </summary>
-        private byte RotateAccumulatorLeftWithCarryAndSetFlags(byte value)
-        {
-            return RotateLeftWithCarryAndSetFlags(value, clearZeroFlag: true);
-        }
-
-        /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#RLA
-        /// </summary>
-        private byte RotateAccumulatorLeftAndSetFlags(byte value)
-        {
-            return RotateLeftAndSetFlags(value, clearZeroFlag: true);
-        }
-
-        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#RLC_r8
         /// https://rednex.github.io/rgbds/gbz80.7.html#RLC__HL_
         /// </summary>
@@ -4464,22 +4448,6 @@ namespace GBDotNet.Core
             }
 
             return rotated;
-        }
-
-        /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#RRCA
-        /// </summary>
-        private byte RotateAccumulatorRightWithCarryAndSetFlags(byte value)
-        {
-            return RotateRightWithCarryAndSetFlags(value, clearZeroFlag: true);
-        }
-
-        /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#RRA
-        /// </summary>
-        private byte RotateAccumulatorRightAndSetFlags(byte value)
-        {
-            return RotateRightAndSetFlags(value, clearZeroFlag: true);
         }
 
         /// <summary>
