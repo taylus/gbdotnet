@@ -681,23 +681,43 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0x28_Should_Arithmetic_Shift_B_Right()
         {
-            //arithmetic shifts preserve the sign bit: https://stackoverflow.com/a/6269641
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x28);
+            var cpu = new CPU(new Registers() { B = 0b_0000_0000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0000_0000, cpu.Registers.B);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sra b instruction should always clear N and H flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x29_Should_Arithmetic_Shift_C_Right()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x29);
+            var cpu = new CPU(new Registers() { C = 0b_0000_0001 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0000_0000, cpu.Registers.C);
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sra c instruction should always clear N and H flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x2A_Should_Arithmetic_Shift_D_Right()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x2A);
+            var cpu = new CPU(new Registers() { D = 0b_1000_0000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_1100_0000, cpu.Registers.D);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sra d instruction should always clear N and H flags.");
         }
 
         [TestMethod]

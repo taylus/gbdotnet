@@ -350,14 +350,14 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0x25_Shift_L_Left(),
                 () => Instruction_0xCB_0x26_Shift_Address_Pointed_To_By_HL_Left(),
                 () => Instruction_0xCB_0x27_Shift_A_Left(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0x28_Should_Arithmetic_Shift_B_Right(),
+                () => Instruction_0xCB_0x29_Should_Arithmetic_Shift_C_Right(),
+                () => Instruction_0xCB_0x2A_Should_Arithmetic_Shift_D_Right(),
+                () => Instruction_0xCB_0x2B_Should_Arithmetic_Shift_E_Right(),
+                () => Instruction_0xCB_0x2C_Should_Arithmetic_Shift_H_Right(),
+                () => Instruction_0xCB_0x2D_Should_Arithmetic_Shift_L_Right(),
+                () => Instruction_0xCB_0x2E_Should_Arithmetic_Shift_Address_Pointed_To_By_HL_Right(),
+                () => Instruction_0xCB_0x2F_Should_Arithmetic_Shift_A_Right(),
                 //0x30
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -2963,6 +2963,70 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x28_Should_Arithmetic_Shift_B_Right()
+        {
+            Registers.B = ArithmeticShiftRightAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x29_Should_Arithmetic_Shift_C_Right()
+        {
+            Registers.C = ArithmeticShiftRightAndSetFlags(Registers.C);
+        }
+        
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x2A_Should_Arithmetic_Shift_D_Right()
+        {
+            Registers.D = ArithmeticShiftRightAndSetFlags(Registers.D);
+        }
+           
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x2B_Should_Arithmetic_Shift_E_Right()
+        {
+            Registers.E = ArithmeticShiftRightAndSetFlags(Registers.E);
+        }
+            
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x2C_Should_Arithmetic_Shift_H_Right()
+        {
+            Registers.H = ArithmeticShiftRightAndSetFlags(Registers.H);
+        }
+            
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x2D_Should_Arithmetic_Shift_L_Right()
+        {
+            Registers.L = ArithmeticShiftRightAndSetFlags(Registers.L);
+        }
+              
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SRA__HL_
+        /// </summary>
+        private void Instruction_0xCB_0x2E_Should_Arithmetic_Shift_Address_Pointed_To_By_HL_Right()
+        {
+            Memory[Registers.HL] = ArithmeticShiftRightAndSetFlags(Memory[Registers.HL]);
+        }
+            
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
+        /// </summary>
+        private void Instruction_0xCB_0x2F_Should_Arithmetic_Shift_A_Right()
+        {
+            Registers.A = ArithmeticShiftRightAndSetFlags(Registers.A);
+        }
+
+        /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
         /// </summary>
         private void Instruction_0xCB_0x38_Shift_B_Right()
@@ -4658,6 +4722,22 @@ namespace GBDotNet.Core
             Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry);
 
             var shifted = (byte)(value >> 1);
+
+            Registers.SetFlagTo(Flags.Zero, shifted == 0);
+
+            return shifted;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
+        /// "Arithmetic" shift preserves the sign bit https://stackoverflow.com/a/6269641
+        /// </summary>
+        private byte ArithmeticShiftRightAndSetFlags(byte value)
+        {
+            Registers.SetFlagTo(Flags.Carry, (value & 0b0000_0001) != 0); //capture LSB in carry flag before shifting
+            Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry);
+
+            var shifted = (byte)((value >> 1) | (value & 0b1000_0000));
 
             Registers.SetFlagTo(Flags.Zero, shifted == 0);
 
