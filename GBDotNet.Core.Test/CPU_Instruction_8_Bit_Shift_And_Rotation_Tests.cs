@@ -794,57 +794,114 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0x38_Should_Shift_B_Right()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x38);
+            var cpu = new CPU(new Registers() { B = 0b_0000_0000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0000_0000, cpu.Registers.B);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl b instruction should always clear N and H flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x39_Should_Shift_C_Right()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x39);
+            var cpu = new CPU(new Registers() { C = 0b_0000_0001 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0000_0000, cpu.Registers.C);
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl c instruction should always clear N and H flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x3A_Should_Shift_D_Right()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x3A);
+            var cpu = new CPU(new Registers() { D = 0b_1111_1111 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0111_1111, cpu.Registers.D);
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl d instruction should always clear N and H flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x3B_Should_Shift_E_Right()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x3B);
+            var cpu = new CPU(new Registers() { E = 0b_1111_1110 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0111_1111, cpu.Registers.E);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl e instruction should always clear N and H flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x3C_Should_Shift_H_Right()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x3C);
+            var cpu = new CPU(new Registers() { H = 0b_1100_1111 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0110_0111, cpu.Registers.H);
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl h instruction should always clear N and H flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x3D_Should_Shift_L_Right()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x3D);
+            var cpu = new CPU(new Registers() { L = 0b_1100_1110 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0110_0111, cpu.Registers.L);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl l instruction should always clear N and H flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x3E_Should_Shift_Address_Pointed_To_By_HL_Right()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRL__HL_
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x3E);
+            var cpu = new CPU(new Registers() { HL = 0x0003 }, memory);
+            memory[cpu.Registers.HL] = 0b_0101_0101;
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0010_1010, memory[cpu.Registers.HL]);
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl [hl] instruction should always clear N and H flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x3F_Should_Shift_A_Right()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x3F);
+            var cpu = new CPU(new Registers() { A = 0b_1010_1010 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0101_0101, cpu.Registers.A);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl a instruction should always clear N and H flags.");
         }
 
         [TestMethod]
