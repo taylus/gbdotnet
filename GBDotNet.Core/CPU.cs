@@ -334,13 +334,13 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0x16_Rotate_Address_Pointed_To_By_HL_Left(),
                 () => Instruction_0xCB_0x17_Rotate_A_Left(),
                 () => Instruction_0xCB_0x18_Rotate_B_Right(),
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0x19_Rotate_C_Right(),
+                () => Instruction_0xCB_0x1A_Rotate_D_Right(),
+                () => Instruction_0xCB_0x1B_Rotate_E_Right(),
+                () => Instruction_0xCB_0x1C_Rotate_H_Right(),
+                () => Instruction_0xCB_0x1D_Rotate_L_Right(),
+                () => Instruction_0xCB_0x1E_Rotate_Address_Pointed_To_By_HL_Right(),
+                () => Instruction_0xCB_0x1F_Rotate_A_Right(),
                 //0x20
                 () => { throw new NotImplementedException(); },
                 () => { throw new NotImplementedException(); },
@@ -2840,6 +2840,62 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x18_Rotate_B_Right()
         {
             Registers.B = RotateRightAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+        /// </summary>
+        private void Instruction_0xCB_0x19_Rotate_C_Right()
+        {
+            Registers.C = RotateRightAndSetFlags(Registers.C);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+        /// </summary>
+        private void Instruction_0xCB_0x1A_Rotate_D_Right()
+        {
+            Registers.D = RotateRightAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+        /// </summary>
+        private void Instruction_0xCB_0x1B_Rotate_E_Right()
+        {
+            Registers.E = RotateRightAndSetFlags(Registers.E);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+        /// </summary>
+        private void Instruction_0xCB_0x1C_Rotate_H_Right()
+        {
+            Registers.H = RotateRightAndSetFlags(Registers.H);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+        /// </summary>
+        private void Instruction_0xCB_0x1D_Rotate_L_Right()
+        {
+            Registers.L = RotateRightAndSetFlags(Registers.L);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RR__HL_
+        /// </summary>
+        private void Instruction_0xCB_0x1E_Rotate_Address_Pointed_To_By_HL_Right()
+        {
+            Memory[Registers.HL] = RotateRightAndSetFlags(Memory[Registers.HL]);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#RR_r8
+        /// </summary>
+        private void Instruction_0xCB_0x1F_Rotate_A_Right()
+        {
+            Registers.A = RotateRightAndSetFlags(Registers.A);
         }
 
         /// <summary>
