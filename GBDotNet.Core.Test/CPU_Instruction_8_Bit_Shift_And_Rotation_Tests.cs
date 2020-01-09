@@ -555,7 +555,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x1F_Should_Rotate_A_Right()
         {
             var memory = new Memory(0xCB, 0x1F);
-            var cpu = new CPU(new Registers() { L = 0b_0000_0000}, memory);
+            var cpu = new CPU(new Registers() { L = 0b_0000_0000 }, memory);
 
             cpu.Tick();
 
