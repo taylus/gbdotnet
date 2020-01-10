@@ -794,57 +794,106 @@ namespace GBDotNet.Core.Test
         [TestMethod]
         public void Instruction_0xCB_0x30_Should_Swap_Nibbles_In_B()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x30);
+            var cpu = new CPU(new Registers() { B = 0b_1111_0000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0000_1111, cpu.Registers.B);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap b instruction should always clear N, H, and C flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x31_Should_Swap_Nibbles_In_C()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x31);
+            var cpu = new CPU(new Registers() { C = 0b_0000_1111 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_1111_0000, cpu.Registers.C);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap c instruction should always clear N, H, and C flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x32_Should_Swap_Nibbles_In_D()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x32);
+            var cpu = new CPU(new Registers() { D = 0b_0000_0000 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0000_0000, cpu.Registers.D);
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap d instruction should always clear N, H, and C flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x33_Should_Swap_Nibbles_In_E()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x33);
+            var cpu = new CPU(new Registers() { E = 0b_1111_1111 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_1111_1111, cpu.Registers.E);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap e instruction should always clear N, H, and C flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x34_Should_Swap_Nibbles_In_H()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x34);
+            var cpu = new CPU(new Registers() { H = 0b_1010_0101 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0101_1010, cpu.Registers.H);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap h instruction should always clear N, H, and C flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x35_Should_Swap_Nibbles_In_L()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x35);
+            var cpu = new CPU(new Registers() { L = 0b_0101_1010 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_1010_0101, cpu.Registers.L);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap l instruction should always clear N, H, and C flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x36_Should_Swap_Nibbles_In_Address_Pointed_To_By_HL()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP__HL_
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x36);
+            var cpu = new CPU(new Registers() { HL = 0x0003 }, memory);
+            memory[cpu.Registers.HL] = 0b_0110_1001;
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_1001_0110, memory[cpu.Registers.HL]);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap [hl] instruction should always clear N, H, and C flags.");
         }
 
         [TestMethod]
         public void Instruction_0xCB_0x37_Should_Swap_Nibbles_In_A()
         {
-            //https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
-            throw new NotImplementedException();
+            var memory = new Memory(0xCB, 0x37);
+            var cpu = new CPU(new Registers() { A = 0b_1001_0110 }, memory);
+
+            cpu.Tick();
+
+            Assert.AreEqual(0b_0110_1001, cpu.Registers.A);
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap a instruction should always clear N, H, and C flags.");
         }
 
         [TestMethod]

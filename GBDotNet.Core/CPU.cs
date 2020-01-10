@@ -359,14 +359,14 @@ namespace GBDotNet.Core
                 () => Instruction_0xCB_0x2E_Should_Arithmetic_Shift_Address_Pointed_To_By_HL_Right(),
                 () => Instruction_0xCB_0x2F_Should_Arithmetic_Shift_A_Right(),
                 //0x30
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
-                () => { throw new NotImplementedException(); },
+                () => Instruction_0xCB_0x30_Swap_Nibbles_In_B(),
+                () => Instruction_0xCB_0x31_Swap_Nibbles_In_C(),
+                () => Instruction_0xCB_0x32_Swap_Nibbles_In_D(),
+                () => Instruction_0xCB_0x33_Swap_Nibbles_In_E(),
+                () => Instruction_0xCB_0x34_Swap_Nibbles_In_H(),
+                () => Instruction_0xCB_0x35_Swap_Nibbles_In_L(),
+                () => Instruction_0xCB_0x36_Swap_Nibbles_In_Address_Pointed_To_By_HL(),
+                () => Instruction_0xCB_0x36_Swap_Nibbles_In_A(),
                 () => Instruction_0xCB_0x38_Shift_B_Right(),
                 () => Instruction_0xCB_0x39_Shift_C_Right(),
                 () => Instruction_0xCB_0x3A_Shift_D_Right(),
@@ -2977,7 +2977,7 @@ namespace GBDotNet.Core
         {
             Registers.C = ArithmeticShiftRightAndSetFlags(Registers.C);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
         /// </summary>
@@ -2985,7 +2985,7 @@ namespace GBDotNet.Core
         {
             Registers.D = ArithmeticShiftRightAndSetFlags(Registers.D);
         }
-           
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
         /// </summary>
@@ -2993,7 +2993,7 @@ namespace GBDotNet.Core
         {
             Registers.E = ArithmeticShiftRightAndSetFlags(Registers.E);
         }
-            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
         /// </summary>
@@ -3001,7 +3001,7 @@ namespace GBDotNet.Core
         {
             Registers.H = ArithmeticShiftRightAndSetFlags(Registers.H);
         }
-            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
         /// </summary>
@@ -3009,7 +3009,7 @@ namespace GBDotNet.Core
         {
             Registers.L = ArithmeticShiftRightAndSetFlags(Registers.L);
         }
-              
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRA__HL_
         /// </summary>
@@ -3017,13 +3017,77 @@ namespace GBDotNet.Core
         {
             Memory[Registers.HL] = ArithmeticShiftRightAndSetFlags(Memory[Registers.HL]);
         }
-            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRA_r8
         /// </summary>
         private void Instruction_0xCB_0x2F_Should_Arithmetic_Shift_A_Right()
         {
             Registers.A = ArithmeticShiftRightAndSetFlags(Registers.A);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+        /// </summary>
+        private void Instruction_0xCB_0x30_Swap_Nibbles_In_B()
+        {
+            Registers.B = SwapNibblesAndSetFlags(Registers.B);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+        /// </summary>
+        private void Instruction_0xCB_0x31_Swap_Nibbles_In_C()
+        {
+            Registers.C = SwapNibblesAndSetFlags(Registers.C);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+        /// </summary>
+        private void Instruction_0xCB_0x32_Swap_Nibbles_In_D()
+        {
+            Registers.D = SwapNibblesAndSetFlags(Registers.D);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+        /// </summary>
+        private void Instruction_0xCB_0x33_Swap_Nibbles_In_E()
+        {
+            Registers.E = SwapNibblesAndSetFlags(Registers.E);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+        /// </summary>
+        private void Instruction_0xCB_0x34_Swap_Nibbles_In_H()
+        {
+            Registers.H = SwapNibblesAndSetFlags(Registers.H);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+        /// </summary>
+        private void Instruction_0xCB_0x35_Swap_Nibbles_In_L()
+        {
+            Registers.L = SwapNibblesAndSetFlags(Registers.L);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SWAP__HL_
+        /// </summary>
+        private void Instruction_0xCB_0x36_Swap_Nibbles_In_Address_Pointed_To_By_HL()
+        {
+            Memory[Registers.HL] = SwapNibblesAndSetFlags(Memory[Registers.HL]);
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+        /// </summary>
+        private void Instruction_0xCB_0x36_Swap_Nibbles_In_A()
+        {
+            Registers.A = SwapNibblesAndSetFlags(Registers.A);
         }
 
         /// <summary>
@@ -3049,7 +3113,7 @@ namespace GBDotNet.Core
         {
             Registers.D = ShiftRightAndSetFlags(Registers.D);
         }
-            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
         /// </summary>
@@ -3057,7 +3121,7 @@ namespace GBDotNet.Core
         {
             Registers.E = ShiftRightAndSetFlags(Registers.E);
         }
-        
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
         /// </summary>
@@ -3065,7 +3129,7 @@ namespace GBDotNet.Core
         {
             Registers.H = ShiftRightAndSetFlags(Registers.H);
         }
-           
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
         /// </summary>
@@ -3073,7 +3137,7 @@ namespace GBDotNet.Core
         {
             Registers.L = ShiftRightAndSetFlags(Registers.L);
         }
-            
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRL__HL_
         /// </summary>
@@ -3081,7 +3145,7 @@ namespace GBDotNet.Core
         {
             Memory[Registers.HL] = ShiftRightAndSetFlags(Memory[Registers.HL]);
         }
-         
+
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#SRL_r8
         /// </summary>
@@ -4742,6 +4806,17 @@ namespace GBDotNet.Core
             Registers.SetFlagTo(Flags.Zero, shifted == 0);
 
             return shifted;
+        }
+
+        /// <summary>
+        /// https://rednex.github.io/rgbds/gbz80.7.html#SWAP_r8
+        /// </summary>
+        private byte SwapNibblesAndSetFlags(byte value)
+        {
+            byte swapped = (byte)((value << 4) | (value >> 4));
+            Registers.ClearFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry);
+            Registers.SetFlagTo(Flags.Zero, swapped == 0);
+            return swapped;
         }
 
         /// <summary>
