@@ -16,4 +16,8 @@
     <ProjectReference Include="..\GBDotNet.Core\GBDotNet.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CPU\" />
+  </ItemGroup>
+
 </Project>
