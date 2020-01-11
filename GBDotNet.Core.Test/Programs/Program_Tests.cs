@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test
@@ -30,6 +32,33 @@ namespace GBDotNet.Core.Test
             }
 
             Assert.AreEqual(program.Length, cpu.Registers.PC);
+        }
+
+        [TestMethod]
+        public void Hello_World_Program_Should_Write_Hello_World_To_Memory()
+        {
+            var program = new List<byte>() { 0x21, 0x00, 0x40 };    //ld hl, $4000
+            program.AddRange(BuildProgramToLoadStringIntoMemoryAddressPointedToByHL("Hello, world!"));
+            program.AddRange(new byte[] { 0x76 });  //add halt instruction to end
+            var memory = new Memory(program.ToArray());
+            var cpu = new CPU(new Registers(), memory);
+
+            while (!cpu.IsHalted)
+            {
+                Console.WriteLine($"CPU state before executing instruction at address {cpu.Registers.PC:x4}:");
+                Console.WriteLine(cpu + Environment.NewLine);
+                cpu.Tick();
+            }
+
+            CollectionAssert.AreEqual("Hello, world!".ToArray(), memory.Skip(0x4000).Take(13).Select(b => (char)b).ToArray());
+        }
+
+        private static IEnumerable<byte> BuildProgramToLoadStringIntoMemoryAddressPointedToByHL(string str)
+        {
+            //surround each character w/ instructions to store them in memory:
+            //0x3E, nn  =>  ld a, nn
+            //0x22      =>  ld [hl+], a 
+            return str.SelectMany(c => new byte[] { 0x3E, (byte)c, 0x22 });
         }
     }
 }
