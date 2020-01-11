@@ -5,9 +5,9 @@ using System.Collections.Generic;
 namespace GBDotNet.Core
 {
     /// <summary>
-    /// Implements a region of memory as an addressable byte array.
+    /// Implements a region of RAM as an addressable byte array.
     /// </summary>
-    public class Memory : IEnumerable<byte>
+    public class Memory : IMemory
     {
         private const int size = ushort.MaxValue + 1;
         private readonly byte[] memory;
