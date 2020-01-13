@@ -583,6 +583,25 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// Initializes the CPU's internal state to what it would be immediately
+        /// after executing the boot ROM.
+        /// </summary>
+        /// <see cref="https://gbdev.gg8.se/wiki/articles/Gameboy_Bootstrap_ROM"/>
+        /// <remarks>
+        /// TODO: Maybe change this later to actually execute the boot ROM for that
+        /// classic logo scroll and sfx: https://github.com/taylus/gbdotnet/issues/13
+        /// </remarks>
+        public void Boot()
+        {
+            Registers.AF = 0x0100;
+            Registers.BC = 0x0014;
+            Registers.DE = 0x0000;
+            Registers.HL = 0xC060;
+            Registers.SP = 0xFFFE;
+            Registers.PC = 0x0100;
+        }
+
+        /// <summary>
         /// Implements a single iteration of the processor's fetch/decode/execute cycle.
         /// </summary>
         public void Tick()
