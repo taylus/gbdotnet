@@ -16,14 +16,14 @@ namespace GBDotNet.Core
     public partial class CPU
     {
         public Registers Registers { get; private set; }
-        public Memory Memory { get; private set; }
+        public IMemory Memory { get; private set; }
         public bool IsHalted { get; private set; }
         public bool InterruptsEnabled { get; private set; }
 
         private readonly Action[] instructionSet;
         private readonly Action[] prefixCBInstructions;
 
-        public CPU(Registers registers, Memory memory)
+        public CPU(Registers registers, IMemory memory)
         {
             Registers = registers;
             Memory = memory;
