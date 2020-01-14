@@ -1,14 +1,41 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using GBDotNet.Core;
 
-namespace ConsoleApp1
+namespace GBDotNet.ConsoleApp
 {
     public class Program
     {
         //TODO: load from command-line args
         private const string romPath = @"C:\roms\gb\Tetris (World) (Rev A).gb";
+        private const string logPath = "gbdotnet.log";
 
         public static void Main()
+        {
+            var stderr = Console.Error; //capture stderr to log exceptions both to log file and console
+
+            using (var log = new StreamWriter(logPath))
+            {
+                try
+                {
+                    Console.SetOut(log);
+                    var cpu = Start(romPath);
+                    Run(cpu);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    stderr.WriteLine(ex);
+                }
+                finally
+                {
+                    Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
+                }
+            }
+        }
+
+        private static CPU Start(string romPath)
         {
             var memoryBus = new MemoryBus();
             var cpu = new CPU(new Registers(), memoryBus);
@@ -17,6 +44,11 @@ namespace ConsoleApp1
             var rom = new RomFile(romPath);
             memoryBus.LoadRom(rom);
 
+            return cpu;
+        }
+
+        private static void Run(CPU cpu)
+        {
             do
             {
                 Console.WriteLine(cpu);
