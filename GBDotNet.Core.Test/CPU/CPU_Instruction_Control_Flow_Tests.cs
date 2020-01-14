@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test
 {
@@ -48,7 +47,7 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
 
-            Assert.AreEqual(addressOfJump + 1, cpu.Registers.PC, "Expected jr nz instruction to *not* jump when zero flag is set.");
+            Assert.AreEqual(addressOfJump + 2, cpu.Registers.PC, "Expected jr nz instruction to *not* jump when zero flag is set.");
         }
 
         [TestMethod]
@@ -70,7 +69,7 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
 
-            Assert.AreEqual(addressOfJump + 1, cpu.Registers.PC, "Expected jr z instruction to *not* jump when zero flag is not set.");
+            Assert.AreEqual(addressOfJump + 2, cpu.Registers.PC, "Expected jr z instruction to *not* jump when zero flag is not set.");
         }
 
         [TestMethod]
@@ -91,7 +90,7 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
 
-            Assert.AreEqual(addressOfJump + 1, cpu.Registers.PC, "Expected jr nc instruction to *not* jump when carry flag is set.");
+            Assert.AreEqual(addressOfJump + 2, cpu.Registers.PC, "Expected jr nc instruction to *not* jump when carry flag is set.");
         }
 
         [TestMethod]
@@ -113,7 +112,7 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
 
-            Assert.AreEqual(addressOfJump + 1, cpu.Registers.PC, "Expected jr c instruction to *not* jump when carry flag is not set.");
+            Assert.AreEqual(addressOfJump + 2, cpu.Registers.PC, "Expected jr c instruction to *not* jump when carry flag is not set.");
         }
 
         [TestMethod]
