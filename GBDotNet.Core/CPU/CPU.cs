@@ -16,14 +16,14 @@ namespace GBDotNet.Core
     public partial class CPU
     {
         public Registers Registers { get; private set; }
-        public Memory Memory { get; private set; }
+        public IMemory Memory { get; private set; }
         public bool IsHalted { get; private set; }
         public bool InterruptsEnabled { get; private set; }
 
         private readonly Action[] instructionSet;
         private readonly Action[] prefixCBInstructions;
 
-        public CPU(Registers registers, Memory memory)
+        public CPU(Registers registers, IMemory memory)
         {
             Registers = registers;
             Memory = memory;
@@ -656,9 +656,9 @@ namespace GBDotNet.Core
             return Common.FromLittleEndian(low, high);
         }
 
-        private void RelativeJump()
+        private void RelativeJump(sbyte signedImmediate)
         {
-            Registers.PC += (ushort)(sbyte)(Fetch() + 1);
+            Registers.PC += (ushort)signedImmediate;
         }
 
         private void AbsoluteJump(ushort address)
@@ -889,7 +889,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x18_Relative_Jump_By_8_Bit_Signed_Immediate()
         {
-            RelativeJump();
+            var signedImmediate = (sbyte)Fetch();
+            RelativeJump(signedImmediate);
         }
 
         /// <summary>
@@ -953,8 +954,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x20_Relative_Jump_By_Signed_Immediate_If_Zero_Flag_Not_Set()
         {
-            if (Registers.HasFlag(Flags.Zero)) return;
-            RelativeJump();
+            var signedImmediate = (sbyte)Fetch();
+            if (!Registers.HasFlag(Flags.Zero)) RelativeJump(signedImmediate);
         }
 
         /// <summary>
@@ -1052,8 +1053,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x28_Relative_Jump_By_Signed_Immediate_If_Zero_Flag_Set()
         {
-            if (!Registers.HasFlag(Flags.Zero)) return;
-            RelativeJump();
+            var signedImmediate = (sbyte)Fetch();
+            if (Registers.HasFlag(Flags.Zero)) RelativeJump(signedImmediate);
         }
 
         /// <summary>
@@ -1121,8 +1122,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x30_Relative_Jump_By_Signed_Immediate_If_Carry_Flag_Not_Set()
         {
-            if (Registers.HasFlag(Flags.Carry)) return;
-            RelativeJump();
+            var signedImmediate = (sbyte)Fetch();
+            if (!Registers.HasFlag(Flags.Carry)) RelativeJump(signedImmediate);
         }
 
         /// <summary>
@@ -1190,8 +1191,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x38_Relative_Jump_By_Signed_Immediate_If_Carry_Flag_Set()
         {
-            if (!Registers.HasFlag(Flags.Carry)) return;
-            RelativeJump();
+            var signedImmediate = (sbyte)Fetch();
+            if (Registers.HasFlag(Flags.Carry)) RelativeJump(signedImmediate);
         }
 
         /// <summary>

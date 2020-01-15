@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GBDotNet.Core
+﻿namespace GBDotNet.Core
 {
     /// <summary>
     /// Implements the CPU's registers and the ability to "combine" some of the
@@ -95,13 +93,7 @@ namespace GBDotNet.Core
 
         public override string ToString()
         {
-            return
-                $"AF: {AF:x4}{Environment.NewLine}" +
-                $"BC: {BC:x4}{Environment.NewLine}" +
-                $"DE: {DE:x4}{Environment.NewLine}" +
-                $"HL: {HL:x4}{Environment.NewLine}" +
-                $"SP: {SP:x4}{Environment.NewLine}" +
-                $"PC: {PC:x4}";
+            return $"AF: {AF:x4} BC: {BC:x4} DE: {DE:x4} HL: {HL:x4} SP: {SP:x4} PC: {PC:x4}";
         }
     }
 }

@@ -1,25 +1,60 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using GBDotNet.Core;
 
-namespace ConsoleApp1
+namespace GBDotNet.ConsoleApp
 {
     public class Program
     {
+        //TODO: load from command-line args
+        private const string romPath = @"C:\roms\gb\Tetris (World) (Rev A).gb";
+        private const string logPath = "gbdotnet.log";
+
         public static void Main()
         {
-            Console.WriteLine("Memory");
-            var memory = new Memory(0x03, 0x03, 0x76);
-            memory.HexDump(bytesPerLine: 16, stopAfterBytes: 64);
+            var stderr = Console.Error; //capture stderr to log exceptions both to log file and console
 
-            Console.WriteLine($"{Environment.NewLine}CPU");
-            CPU cpu = new CPU(new Registers(), memory);
+            using (var log = new StreamWriter(logPath))
+            {
+                try
+                {
+                    Console.SetOut(log);
+                    var cpu = Start(romPath);
+                    Run(cpu);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    stderr.WriteLine(ex);
+                }
+                finally
+                {
+                    Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
+                }
+            }
+        }
 
+        private static CPU Start(string romPath)
+        {
+            var memoryBus = new MemoryBus();
+            var cpu = new CPU(new Registers(), memoryBus);
+            cpu.Boot();
+
+            var rom = new RomFile(romPath);
+            memoryBus.LoadRom(rom);
+
+            return cpu;
+        }
+
+        private static void Run(CPU cpu)
+        {
             do
             {
                 Console.WriteLine(cpu);
-                Console.WriteLine("Press enter to single step...");
+                //Console.WriteLine("Press enter to single step...");
                 cpu.Tick();
-                Console.ReadLine();
+                //Console.ReadLine();
             } while (!cpu.IsHalted);
 
             Console.WriteLine("CPU halted.");
