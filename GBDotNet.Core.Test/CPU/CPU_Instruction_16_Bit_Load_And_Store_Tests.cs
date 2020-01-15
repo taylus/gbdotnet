@@ -210,6 +210,7 @@ namespace GBDotNet.Core.Test
                     cpu.Memory[2] = (byte)j;
                     cpu.Tick();
                     Assert.AreEqual((j << 8) | i, registerUnderTest());
+                    Assert.AreEqual(12, cpu.CyclesLastTick);
                     cpu.Registers.PC -= 3;  //rewind to run again w/ new value
                 }
             }

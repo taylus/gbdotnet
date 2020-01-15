@@ -19,6 +19,8 @@ namespace GBDotNet.Core
         public IMemory Memory { get; private set; }
         public bool IsHalted { get; private set; }
         public bool InterruptsEnabled { get; private set; }
+        public int CyclesLastTick { get; private set; }
+        public long TotalElapsedCycles { get; private set; }
 
         private readonly Action[] instructionSet;
         private readonly Action[] prefixCBInstructions;
@@ -607,8 +609,10 @@ namespace GBDotNet.Core
         public void Tick()
         {
             if (IsHalted) return;
+            CyclesLastTick = 0;
             byte opcode = Fetch();
             Execute(opcode);
+            TotalElapsedCycles += CyclesLastTick;
         }
 
         /// <summary>
@@ -616,7 +620,26 @@ namespace GBDotNet.Core
         /// </summary>
         private byte Fetch()
         {
+            CyclesLastTick += 4;
             return Memory[Registers.PC++];
+        }
+
+        /// <summary>
+        /// Retrieves the data at the given memory address.
+        /// </summary>
+        private byte MemoryRead(ushort address)
+        {
+            CyclesLastTick += 4;
+            return Memory[address];
+        }
+
+        /// <summary>
+        /// Writes the given byte to the given memory address.
+        /// </summary>
+        private void MemoryWrite(ushort address, byte value)
+        {
+            CyclesLastTick += 4;
+            Memory[address] = value;
         }
 
         /// <summary>
@@ -690,7 +713,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x02_Load_Address_Pointed_To_By_BC_With_A()
         {
-            Memory[Registers.BC] = Registers.A;
+            MemoryWrite(address: Registers.BC, value: Registers.A);
         }
 
         /// <summary>
@@ -698,6 +721,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x03_Increment_BC()
         {
+            CyclesLastTick += 4;
             Registers.BC++;
         }
 

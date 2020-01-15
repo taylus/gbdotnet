@@ -130,6 +130,7 @@ namespace GBDotNet.Core.Test
                 cpu.Tick();
                 var expected = (ushort)(i + 1);
                 Assert.AreEqual(expected, registerPairUnderTest());
+                Assert.AreEqual(8, cpu.CyclesLastTick);
                 cpu.Registers.PC--;
             }
         }
