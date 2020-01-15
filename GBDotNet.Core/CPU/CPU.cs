@@ -598,7 +598,7 @@ namespace GBDotNet.Core
             Registers.DE = 0x0000;
             Registers.HL = 0xC060;
             Registers.SP = 0xFFFE;
-            Registers.PC = 0x0100;
+            Registers.PC = 0x0000;
         }
 
         /// <summary>

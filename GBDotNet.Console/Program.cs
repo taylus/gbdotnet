@@ -8,7 +8,7 @@ namespace GBDotNet.ConsoleApp
     public class Program
     {
         //TODO: load from command-line args
-        private const string romPath = @"C:\roms\gb\Tetris (World) (Rev A).gb";
+        private const string romPath = @"C:\roms\gb\[BIOS] Nintendo Game Boy Boot ROM (World).gb";
         private const string logPath = "gbdotnet.log";
 
         public static void Main()

@@ -13,7 +13,8 @@ namespace GBDotNet.Core
         public byte[] Data { get; private set; }
 
         public const int BankSize = 0x4000;
-        public int NumberOfBanks => Math.Max(1, Data.Length / BankSize);
+        public const int MinRomSize = BankSize * 2;
+        public int NumberOfBanks => Math.Max(2, Data.Length / BankSize);
         public bool HasHeader { get; set; }
 
         /// <summary>
@@ -37,15 +38,16 @@ namespace GBDotNet.Core
         /// </summary>
         public RomFile(byte[] data)
         {
+            if (data.Length < MinRomSize) Array.Resize(ref data, MinRomSize);
             Data = data;
         }
 
         /// <summary>
         /// Loads a ROM from the file at the given path.
         /// </summary>
-        public RomFile(string path)
+        public RomFile(string path) : this(File.ReadAllBytes(path))
         {
-            Data = File.ReadAllBytes(path);
+
         }
 
         /// <summary>
