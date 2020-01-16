@@ -150,7 +150,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x6B_Load_L_From_E(),
                 () => Instruction_0x6C_Load_L_From_H(),
                 () => { },  //ld l, l => nop
-                () => Instruction_0x6C_Load_L_From_Address_Pointed_To_By_HL(),
+                () => Instruction_0x6E_Load_L_From_Address_Pointed_To_By_HL(),
                 () => Instruction_0x6F_Load_L_From_A(),
                 //0x70
                 () => Instruction_0x70_Load_Address_Pointed_To_By_HL_With_B(),
@@ -1448,7 +1448,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x56_Load_D_From_Address_Pointed_To_By_HL()
         {
-            Registers.D = Memory[Registers.HL];
+            Registers.D = MemoryRead(Registers.HL);
         }
 
         /// <summary>
@@ -1504,7 +1504,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x5E_Load_E_From_Address_Pointed_To_By_HL()
         {
-            Registers.E = Memory[Registers.HL];
+            Registers.E = MemoryRead(Registers.HL);
         }
 
         /// <summary>
@@ -1560,7 +1560,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x66_Load_H_From_Address_Pointed_To_By_HL()
         {
-            Registers.H = Memory[Registers.HL];
+            Registers.H = MemoryRead(Registers.HL);
         }
 
         /// <summary>
@@ -1614,9 +1614,9 @@ namespace GBDotNet.Core
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,_HL_
         /// </summary>
-        private void Instruction_0x6C_Load_L_From_Address_Pointed_To_By_HL()
+        private void Instruction_0x6E_Load_L_From_Address_Pointed_To_By_HL()
         {
-            Registers.L = Memory[Registers.HL];
+            Registers.L = MemoryRead(Registers.HL);
         }
 
         /// <summary>
