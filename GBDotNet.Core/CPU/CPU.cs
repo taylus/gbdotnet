@@ -2187,7 +2187,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xB6_Bitwise_Or_Address_Pointed_To_By_HL_With_A()
         {
-            OrWithAccumulatorAndSetFlags(Memory[Registers.HL]);
+            OrWithAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>
@@ -2251,7 +2251,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xBE_Compare_Address_Pointed_To_By_HL_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
-            CompareToAccumulatorAndSetFlags(Memory[Registers.HL]);
+            CompareToAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>

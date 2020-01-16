@@ -810,7 +810,8 @@ namespace GBDotNet.Core.Test
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
                 expectedZero: false,
                 expectedCarry: true,
-                expectedHalfCarry: false);
+                expectedHalfCarry: false,
+                expectedCycles: 8);
         }
 
         [TestMethod]
@@ -969,9 +970,9 @@ namespace GBDotNet.Core.Test
         /// <summary>
         /// Tests instructions like cp a, b. These instructions behave just like subtraction (set the same flags) but don't store the result in the accumulator.
         /// </summary>
-        private static void TestComparing8BitRegisterToAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry)
+        private static void TestComparing8BitRegisterToAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry, int expectedCycles = 4)
         {
-            TestSubtracting8BitRegisterFromAccumulator(cpu, a, registerValue, registerSetter, expectedZero, expectedCarry, expectedHalfCarry, null, performSubtraction: false);
+            TestSubtracting8BitRegisterFromAccumulator(cpu, a, registerValue, registerSetter, expectedZero, expectedCarry, expectedHalfCarry, null, performSubtraction: false, expectedCycles: expectedCycles);
         }
 
         /// <summary>

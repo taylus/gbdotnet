@@ -279,7 +279,7 @@ namespace GBDotNet.Core.Test
             TestOring8BitRegisterWithAccumulator(cpu,
                 a: 0xAB, registerValue: 0xCD,
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
-                expectedZero: false);
+                expectedZero: false, expectedCycles: 8);
         }
 
         [TestMethod]
@@ -386,7 +386,7 @@ namespace GBDotNet.Core.Test
         /// <summary>
         /// Tests instructions like or a, b.
         /// </summary>
-        private static void TestOring8BitRegisterWithAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero)
+        private static void TestOring8BitRegisterWithAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, int expectedCycles = 4)
         {
             cpu.Registers.PC = 0;   //assume the and instruction is always at the beginning of memory
             cpu.Registers.SetFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry);   //set these flags (or instructions always clear them)
@@ -405,6 +405,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "OR instructions should always clear the N flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "OR instructions should always clear the H flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "OR instructions should always clear the C flag.");
+            Assert.AreEqual(expectedCycles, cpu.CyclesLastTick);
         }
     }
 }
