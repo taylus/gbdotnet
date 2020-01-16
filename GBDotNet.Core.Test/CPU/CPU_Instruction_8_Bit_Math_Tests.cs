@@ -141,6 +141,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Expected carry flag to be set when BCD adjustment is > 99.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected daa instruction to always clear half carry flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected daa instruction to set zero flag only when adjusted accumulator is zero.");
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -158,6 +159,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(expectedDifference, cpu.Registers.A, "Expected daa instruction to adjust accumulator for binary coded decimal subtraction.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected daa instruction to always clear half carry flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected daa instruction to set zero flag only when adjusted accumulator is zero.");
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -190,6 +192,7 @@ namespace GBDotNet.Core.Test
 
                 Assert.AreEqual((byte)~i, cpu.Registers.A);
                 Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "cpl instruction should always set N and H flags.");
+                Assert.AreEqual(4, cpu.CyclesLastTick);
             }
         }
 

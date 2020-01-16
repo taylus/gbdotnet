@@ -117,6 +117,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xFF, memory[0x4000]);
             Assert.AreEqual(0x4001, cpu.Registers.HL);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -137,6 +138,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xFF, cpu.Registers.A);
             Assert.AreEqual(0x0002, cpu.Registers.HL);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]

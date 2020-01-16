@@ -42,6 +42,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(addressOfJump + 3, cpu.Registers.PC, "Expected jr nz instruction to jump when zero flag is not set.");
+            Assert.AreEqual(12, cpu.CyclesLastTick);
 
             //set zero flag and replay => should not jump
             cpu.Registers.PC = 0;
@@ -50,6 +51,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(addressOfJump + 2, cpu.Registers.PC, "Expected jr nz instruction to *not* jump when zero flag is set.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -64,6 +66,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(addressOfJump + 3, cpu.Registers.PC, "Expected jr z instruction to jump when zero flag is set.");
+            Assert.AreEqual(12, cpu.CyclesLastTick);
 
             //clear zero flag and replay => should not jump
             cpu.Registers.PC = 0;
@@ -72,6 +75,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(addressOfJump + 2, cpu.Registers.PC, "Expected jr z instruction to *not* jump when zero flag is not set.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]

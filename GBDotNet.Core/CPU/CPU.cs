@@ -1002,7 +1002,8 @@ namespace GBDotNet.Core
         /// </remarks>
         private void Instruction_0x22_Load_Address_Pointed_To_By_HL_With_A_Then_Increment_HL()
         {
-            Memory[Registers.HL++] = Registers.A;
+            MemoryWrite(Registers.HL, Registers.A);
+            Registers.HL++;
         }
 
         /// <summary>
@@ -1102,7 +1103,8 @@ namespace GBDotNet.Core
         /// </remarks>
         private void Instruction_0x2A_Load_A_With_Address_Pointed_To_By_HL_Then_Increment_HL()
         {
-            Registers.A = Memory[Registers.HL++];
+            Registers.A = MemoryRead(Registers.HL);
+            Registers.HL++;
         }
 
         /// <summary>
