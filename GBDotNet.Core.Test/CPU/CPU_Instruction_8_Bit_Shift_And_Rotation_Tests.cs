@@ -371,6 +371,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rl b instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -385,6 +386,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rl c instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -400,6 +402,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rl d instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -415,6 +418,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rl e instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -430,6 +434,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rl h instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -444,6 +449,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rl l instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -459,6 +465,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rl [hl] instruction should always clear N and H flags.");
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -473,6 +480,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rl a instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -487,6 +495,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rr b instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -502,6 +511,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rr c instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -516,6 +526,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rr d instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -530,6 +541,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rr e instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -545,6 +557,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rr h instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -559,6 +572,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rr l instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -575,6 +589,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rr [hl] instruction should always clear N and H flags.");
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -589,6 +604,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rr a instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -603,6 +619,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sla b instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -617,6 +634,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sla c instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -631,6 +649,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sla d instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -645,6 +664,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sla e instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -659,6 +679,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sla h instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -673,6 +694,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sla l instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -688,6 +710,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sla [hl] instruction should always clear N and H flags.");
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -702,6 +725,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sla a instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -716,6 +740,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sra b instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -730,6 +755,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sra c instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -744,6 +770,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sra d instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -758,6 +785,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sra e instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -772,6 +800,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sra h instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -786,6 +815,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sra l instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -801,6 +831,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sra [hl] instruction should always clear N and H flags.");
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -815,6 +846,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "sra a instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -828,6 +860,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b_0000_1111, cpu.Registers.B);
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap b instruction should always clear N, H, and C flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -841,6 +874,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b_1111_0000, cpu.Registers.C);
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap c instruction should always clear N, H, and C flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -854,6 +888,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b_0000_0000, cpu.Registers.D);
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap d instruction should always clear N, H, and C flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -867,6 +902,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b_1111_1111, cpu.Registers.E);
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap e instruction should always clear N, H, and C flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -880,6 +916,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b_0101_1010, cpu.Registers.H);
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap h instruction should always clear N, H, and C flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -893,6 +930,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b_1010_0101, cpu.Registers.L);
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap l instruction should always clear N, H, and C flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -907,6 +945,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b_1001_0110, memory[cpu.Registers.HL]);
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap [hl] instruction should always clear N, H, and C flags.");
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -920,6 +959,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b_0110_1001, cpu.Registers.A);
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry), "swap a instruction should always clear N, H, and C flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -934,6 +974,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl b instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -948,6 +989,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl c instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -962,6 +1004,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl d instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -976,6 +1019,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl e instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -990,6 +1034,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl h instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -1004,6 +1049,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl l instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -1019,6 +1065,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl [hl] instruction should always clear N and H flags.");
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -1033,6 +1080,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "srl a instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -1081,7 +1129,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x46_Should_Test_Bit_0_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x46));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 0);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 0, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1137,7 +1185,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x4E_Should_Test_Bit_1_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x4E));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 1);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 1, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1193,7 +1241,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x56_Should_Test_Bit_2_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x56));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 2);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 2, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1249,7 +1297,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x5E_Should_Test_Bit_3_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x5E));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 3);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 3, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1305,7 +1353,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x66_Should_Test_Bit_4_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x66));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 4);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 4, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1361,7 +1409,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x6E_Should_Test_Bit_5_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x6E));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 5);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 5, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1417,7 +1465,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x76_Should_Test_Bit_6_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x76));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 6);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 6, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1473,7 +1521,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x7E_Should_Test_Bit_7_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x7E));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 7);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 7, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1536,7 +1584,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x86));
             TestResInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToReset: 0);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToReset: 0, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1600,7 +1649,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x8E));
             TestResInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToReset: 1);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToReset: 1, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1664,7 +1714,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x96));
             TestResInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToReset: 2);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToReset: 2, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1728,7 +1779,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x9E));
             TestResInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToReset: 3);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToReset: 3, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1792,7 +1844,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xA6));
             TestResInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToReset: 4);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToReset: 4, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1856,7 +1909,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xAE));
             TestResInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToReset: 5);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToReset: 5, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1920,7 +1974,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xB6));
             TestResInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToReset: 6);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToReset: 6, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -1984,7 +2039,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xBE));
             TestResInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToReset: 7);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToReset: 7, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -2048,7 +2104,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xC6));
             TestSetInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToSet: 0);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToSet: 0, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -2112,7 +2169,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xCE));
             TestSetInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToSet: 1);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToSet: 1, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -2176,7 +2234,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xD6));
             TestSetInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToSet: 2);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToSet: 2, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -2240,7 +2299,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xDE));
             TestSetInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToSet: 3);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToSet: 3, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -2304,7 +2364,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xE6));
             TestSetInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToSet: 4);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToSet: 4, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -2368,7 +2429,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xEE));
             TestSetInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToSet: 5);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToSet: 5, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -2432,7 +2494,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xF6));
             TestSetInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToSet: 6);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToSet: 6, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -2496,7 +2559,8 @@ namespace GBDotNet.Core.Test
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0xFE));
             TestSetInstruction(cpu, getValueUnderTest: () => cpu.Memory[cpu.Registers.HL],
-                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToSet: 7);
+                setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value,
+                bitToSet: 7, expectedCycles: 16);
         }
 
         [TestMethod]
@@ -2510,7 +2574,7 @@ namespace GBDotNet.Core.Test
         /// <summary>
         /// Tests instructions like bit 0, b
         /// </summary>
-        private static void TestBitInstruction(CPU cpu, Action<byte> setValueUnderTest, int bitToTest)
+        private static void TestBitInstruction(CPU cpu, Action<byte> setValueUnderTest, int bitToTest, int expectedCycles = 8)
         {
             //start with bit under test set to zero => bit instruction should set zero flag
             setValueUnderTest(0);
@@ -2519,6 +2583,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero), "Expected bit instruction to set zero flag when specified bit is 0.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "Expected bit instruction to always clear N flag.");
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected bit instruction to always set H flag.");
+            Assert.AreEqual(expectedCycles, cpu.CyclesLastTick);
 
             //set bit under test to 1 => bit instruction should clear zero flag
             setValueUnderTest((byte)(1 << bitToTest));
@@ -2529,26 +2594,29 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected bit instruction to clear zero flag when specified bit is 1.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "Expected bit instruction to always clear N flag.");
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected bit instruction to always set H flag.");
+            Assert.AreEqual(expectedCycles, cpu.CyclesLastTick);
         }
 
         /// <summary>
         /// Tests instructions like res 0, b
         /// </summary>
-        private static void TestResInstruction(CPU cpu, Func<byte> getValueUnderTest, Action<byte> setValueUnderTest, int bitToReset)
+        private static void TestResInstruction(CPU cpu, Func<byte> getValueUnderTest, Action<byte> setValueUnderTest, int bitToReset, int expectedCycles = 8)
         {
             setValueUnderTest(0xFF);
             cpu.Tick();
             Assert.IsFalse(getValueUnderTest().IsBitSet(bitToReset), "Expected res instruction to set specified bit to zero.");
+            Assert.AreEqual(expectedCycles, cpu.CyclesLastTick);
         }
 
         /// <summary>
         /// Tests instructions like set 0, b
         /// </summary>
-        private static void TestSetInstruction(CPU cpu, Func<byte> getValueUnderTest, Action<byte> setValueUnderTest, int bitToSet)
+        private static void TestSetInstruction(CPU cpu, Func<byte> getValueUnderTest, Action<byte> setValueUnderTest, int bitToSet, int expectedCycles = 8)
         {
             setValueUnderTest(0);
             cpu.Tick();
             Assert.IsTrue(getValueUnderTest().IsBitSet(bitToSet), "Expected set instruction to set specified bit to 1.");
+            Assert.AreEqual(expectedCycles, cpu.CyclesLastTick);
         }
 
         private static void AssertFlagsAreCleared(CPU cpu, Flags flags)

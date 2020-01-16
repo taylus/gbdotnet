@@ -2892,7 +2892,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x16_Rotate_Address_Pointed_To_By_HL_Left()
         {
-            Memory[Registers.HL] = RotateLeftAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, RotateLeftAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -2956,7 +2956,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x1E_Rotate_Address_Pointed_To_By_HL_Right()
         {
-            Memory[Registers.HL] = RotateRightAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, RotateRightAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -3020,7 +3020,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x26_Shift_Address_Pointed_To_By_HL_Left()
         {
-            Memory[Registers.HL] = ShiftLeftAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, ShiftLeftAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -3084,7 +3084,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x2E_Should_Arithmetic_Shift_Address_Pointed_To_By_HL_Right()
         {
-            Memory[Registers.HL] = ArithmeticShiftRightAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, ArithmeticShiftRightAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -3148,7 +3148,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x36_Swap_Nibbles_In_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SwapNibblesAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, SwapNibblesAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -3212,7 +3212,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x3E_Shift_Address_Pointed_To_By_HL_Right()
         {
-            Memory[Registers.HL] = ShiftRightAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, ShiftRightAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -3276,7 +3276,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x46_Test_Bit_0_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 0);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 0);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3340,7 +3341,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x4E_Test_Bit_1_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 1);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 1);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3404,7 +3406,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x56_Test_Bit_2_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 2);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 2);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3468,7 +3471,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x5E_Test_Bit_3_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 3);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 3);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3532,7 +3536,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x66_Test_Bit_4_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 4);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 4);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3596,7 +3601,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x6E_Test_Bit_5_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 5);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 5);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3660,7 +3666,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x76_Test_Bit_6_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 6);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 6);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3724,7 +3731,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x7E_Test_Bit_7_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 7);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 7);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3788,7 +3796,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x86_Reset_Bit_0_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 0);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 0));
         }
 
         /// <summary>
@@ -3852,7 +3860,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x8E_Reset_Bit_1_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 1);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 1));
         }
 
         /// <summary>
@@ -3916,7 +3924,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x96_Reset_Bit_2_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 2);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 2));
         }
 
         /// <summary>
@@ -3980,7 +3988,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x9E_Reset_Bit_3_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 3);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 3));
         }
 
         /// <summary>
@@ -4044,7 +4052,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA6_Reset_Bit_4_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 4);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 4));
         }
 
         /// <summary>
@@ -4108,7 +4116,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xAE_Reset_Bit_5_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 5);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 5));
         }
 
         /// <summary>
@@ -4172,7 +4180,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB6_Reset_Bit_6_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 6);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 6));
         }
 
         /// <summary>
@@ -4236,7 +4244,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xBE_Reset_Bit_7_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 7);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 7));
         }
 
         /// <summary>
@@ -4300,7 +4308,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC6_Set_Bit_0_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 0);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 0));
         }
 
         /// <summary>
@@ -4364,7 +4372,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xCE_Set_Bit_1_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 1);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 1));
         }
 
         /// <summary>
@@ -4428,7 +4436,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD6_Set_Bit_2_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 2);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 2));
         }
 
         /// <summary>
@@ -4492,7 +4500,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xDE_Set_Bit_3_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 3);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 3));
         }
 
         /// <summary>
@@ -4556,7 +4564,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE6_Set_Bit_4_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 4);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 4));
         }
 
         /// <summary>
@@ -4620,7 +4628,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xEE_Set_Bit_5_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 5);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 5));
         }
 
         /// <summary>
@@ -4684,7 +4692,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF6_Set_Bit_6_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 6);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 6));
         }
 
         /// <summary>
@@ -4748,7 +4756,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xFE_Set_Bit_7_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 7);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 7));
         }
 
         /// <summary>
