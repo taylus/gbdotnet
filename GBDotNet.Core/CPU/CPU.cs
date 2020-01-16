@@ -2764,7 +2764,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x06_Rotate_Address_Pointed_To_By_HL_Left_With_Carry()
         {
-            Memory[Registers.HL] = RotateLeftWithCarryAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, RotateLeftWithCarryAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -2828,7 +2828,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x0E_Rotate_Address_Pointed_To_By_HL_Right_With_Carry()
         {
-            Memory[Registers.HL] = RotateRightWithCarryAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, RotateRightWithCarryAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>

@@ -129,6 +129,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc b instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -143,6 +144,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc c instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -157,6 +159,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc d instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -171,6 +174,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc e instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -185,6 +189,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc h instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -199,6 +204,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc l instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -214,6 +220,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc [hl] instruction should always clear N and H flags.");
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -228,6 +235,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rlc a instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -242,6 +250,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rrc b instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -256,6 +265,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rrc c instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -270,6 +280,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rrc d instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -284,6 +295,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rrc e instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -298,6 +310,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rrc h instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -312,6 +325,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rrc l instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -327,6 +341,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rrc [hl] instruction should always clear N and H flags.");
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -341,6 +356,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Zero));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "rrc a instruction should always clear N and H flags.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
