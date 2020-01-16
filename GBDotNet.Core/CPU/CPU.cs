@@ -1800,7 +1800,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x86_Add_Address_Pointed_To_By_HL_To_A()
         {
-            AddToAccumulatorAndSetFlags(Memory[Registers.HL]);
+            AddToAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>
@@ -1864,7 +1864,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x8E_Add_Address_Pointed_To_By_HL_Plus_Carry_To_A()
         {
-            AddToAccumulatorAndSetFlags(Memory[Registers.HL], carryBit: Registers.HasFlag(Flags.Carry));
+            AddToAccumulatorAndSetFlags(MemoryRead(Registers.HL), carryBit: Registers.HasFlag(Flags.Carry));
         }
 
         /// <summary>

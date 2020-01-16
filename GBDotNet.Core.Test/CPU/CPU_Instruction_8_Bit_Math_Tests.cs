@@ -358,7 +358,8 @@ namespace GBDotNet.Core.Test
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
                 expectedZero: false,
                 expectedCarry: false,
-                expectedHalfCarry: false);
+                expectedHalfCarry: false,
+                expectedCycles: 8);
         }
 
         [TestMethod]
@@ -470,7 +471,8 @@ namespace GBDotNet.Core.Test
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
                 expectedZero: false,
                 expectedCarry: false,
-                expectedHalfCarry: false);
+                expectedHalfCarry: false,
+                expectedCycles: 8);
         }
 
         [TestMethod]
@@ -892,7 +894,7 @@ namespace GBDotNet.Core.Test
         /// <summary>
         /// Tests instructions like add a, b or adc a, b
         /// </summary>
-        private static void TestAdding8BitRegisterToAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null)
+        private static void TestAdding8BitRegisterToAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null, int expectedCycles = 4)
         {
             cpu.Registers.PC = 0;   //assume the add instruction is always at the beginning of memory
             cpu.Registers.SetFlag(Flags.AddSubtract);   //set the N flag (add instructions should always clear it)
@@ -920,6 +922,8 @@ namespace GBDotNet.Core.Test
                 Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should be set when adding {registerValue} to accumulator {a}.");
             else
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should not be set when adding {registerValue} to accumulator {a}.");
+
+            Assert.AreEqual(expectedCycles, cpu.CyclesLastTick);
         }
 
         /// <summary>
