@@ -19,6 +19,8 @@ namespace GBDotNet.Core
         public IMemory Memory { get; private set; }
         public bool IsHalted { get; private set; }
         public bool InterruptsEnabled { get; private set; }
+        public int CyclesLastTick { get; private set; }
+        public long TotalElapsedCycles { get; private set; }
 
         private readonly Action[] instructionSet;
         private readonly Action[] prefixCBInstructions;
@@ -148,7 +150,7 @@ namespace GBDotNet.Core
                 () => Instruction_0x6B_Load_L_From_E(),
                 () => Instruction_0x6C_Load_L_From_H(),
                 () => { },  //ld l, l => nop
-                () => Instruction_0x6C_Load_L_From_Address_Pointed_To_By_HL(),
+                () => Instruction_0x6E_Load_L_From_Address_Pointed_To_By_HL(),
                 () => Instruction_0x6F_Load_L_From_A(),
                 //0x70
                 () => Instruction_0x70_Load_Address_Pointed_To_By_HL_With_B(),
@@ -607,8 +609,10 @@ namespace GBDotNet.Core
         public void Tick()
         {
             if (IsHalted) return;
+            CyclesLastTick = 0;
             byte opcode = Fetch();
             Execute(opcode);
+            TotalElapsedCycles += CyclesLastTick;
         }
 
         /// <summary>
@@ -616,7 +620,26 @@ namespace GBDotNet.Core
         /// </summary>
         private byte Fetch()
         {
+            CyclesLastTick += 4;
             return Memory[Registers.PC++];
+        }
+
+        /// <summary>
+        /// Retrieves the data at the given memory address.
+        /// </summary>
+        private byte MemoryRead(int address)
+        {
+            CyclesLastTick += 4;
+            return Memory[address];
+        }
+
+        /// <summary>
+        /// Writes the given byte to the given memory address.
+        /// </summary>
+        private void MemoryWrite(int address, byte value)
+        {
+            CyclesLastTick += 4;
+            Memory[address] = value;
         }
 
         /// <summary>
@@ -633,9 +656,9 @@ namespace GBDotNet.Core
         internal void PushOntoStack(byte high, byte low)
         {
             Registers.SP--;
-            Memory[Registers.SP] = high;
+            MemoryWrite(Registers.SP, high);
             Registers.SP--;
-            Memory[Registers.SP] = low;
+            MemoryWrite(Registers.SP, low);
         }
 
         /// <summary>
@@ -651,19 +674,21 @@ namespace GBDotNet.Core
         /// </summary>
         private ushort PopStack()
         {
-            byte low = Memory[Registers.SP++];
-            byte high = Memory[Registers.SP++];
+            byte low = MemoryRead(Registers.SP++);
+            byte high = MemoryRead(Registers.SP++);
             return Common.FromLittleEndian(low, high);
         }
 
         private void RelativeJump(sbyte signedImmediate)
         {
             Registers.PC += (ushort)signedImmediate;
+            CyclesLastTick += 4;
         }
 
         private void AbsoluteJump(ushort address)
         {
             Registers.PC = address;
+            CyclesLastTick += 4;
         }
 
         private void Call(ushort destinationAddress, ushort returnAddress)
@@ -690,7 +715,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x02_Load_Address_Pointed_To_By_BC_With_A()
         {
-            Memory[Registers.BC] = Registers.A;
+            MemoryWrite(address: Registers.BC, value: Registers.A);
         }
 
         /// <summary>
@@ -698,6 +723,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x03_Increment_BC()
         {
+            CyclesLastTick += 4;
             Registers.BC++;
         }
 
@@ -754,8 +780,8 @@ namespace GBDotNet.Core
             byte addressHigh = Fetch();
             ushort address = Common.FromLittleEndian(addressLow, addressHigh);
 
-            Memory[address] = (byte)(Registers.SP & 0xFF);
-            Memory[address + 1] = (byte)(Registers.SP >> 8);
+            MemoryWrite(address, (byte)(Registers.SP & 0xFF));
+            MemoryWrite(address + 1, (byte)(Registers.SP >> 8));
         }
 
         /// <summary>
@@ -771,7 +797,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x0A_Load_A_From_Address_Pointed_To_By_BC()
         {
-            Registers.A = Memory[Registers.BC];
+            Registers.A = MemoryRead(Registers.BC);
         }
 
         /// <summary>
@@ -779,6 +805,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x0B_Decrement_BC()
         {
+            CyclesLastTick += 4;
             Registers.BC--;
         }
 
@@ -840,7 +867,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x12_Load_Address_Pointed_To_By_DE_With_A()
         {
-            Memory[Registers.DE] = Registers.A;
+            MemoryWrite(address: Registers.DE, value: Registers.A);
         }
 
         /// <summary>
@@ -848,6 +875,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x13_Increment_DE()
         {
+            CyclesLastTick += 4;
             Registers.DE++;
         }
 
@@ -906,7 +934,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x1A_Load_A_From_Address_Pointed_To_By_DE()
         {
-            Registers.A = Memory[Registers.DE];
+            Registers.A = MemoryRead(Registers.DE);
         }
 
         /// <summary>
@@ -914,6 +942,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x1B_Decrement_DE()
         {
+            CyclesLastTick += 4;
             Registers.DE--;
         }
 
@@ -974,7 +1003,8 @@ namespace GBDotNet.Core
         /// </remarks>
         private void Instruction_0x22_Load_Address_Pointed_To_By_HL_With_A_Then_Increment_HL()
         {
-            Memory[Registers.HL++] = Registers.A;
+            MemoryWrite(Registers.HL, Registers.A);
+            Registers.HL++;
         }
 
         /// <summary>
@@ -982,6 +1012,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x23_Increment_HL()
         {
+            CyclesLastTick += 4;
             Registers.HL++;
         }
 
@@ -1073,7 +1104,8 @@ namespace GBDotNet.Core
         /// </remarks>
         private void Instruction_0x2A_Load_A_With_Address_Pointed_To_By_HL_Then_Increment_HL()
         {
-            Registers.A = Memory[Registers.HL++];
+            Registers.A = MemoryRead(Registers.HL);
+            Registers.HL++;
         }
 
         /// <summary>
@@ -1081,6 +1113,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x2B_Decrement_HL()
         {
+            CyclesLastTick += 4;
             Registers.HL--;
         }
 
@@ -1142,7 +1175,8 @@ namespace GBDotNet.Core
         /// </remarks>
         private void Instruction_0x32_Load_Address_Pointed_To_By_HL_With_A_Then_Decrement_HL()
         {
-            Memory[Registers.HL--] = Registers.A;
+            MemoryWrite(Registers.HL, Registers.A);
+            Registers.HL--;
         }
 
         /// <summary>
@@ -1150,6 +1184,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x33_Increment_SP()
         {
+            CyclesLastTick += 4;
             Registers.SP++;
         }
 
@@ -1158,7 +1193,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x34_Increment_Value_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = Increment8BitValueAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, Increment8BitValueAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -1166,7 +1201,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x35_Decrement_Value_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = Decrement8BitValueAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, Decrement8BitValueAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -1174,7 +1209,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x36_Load_Address_Pointed_To_By_HL_With_8_Bit_Immediate()
         {
-            Memory[Registers.HL] = Fetch();
+            MemoryWrite(Registers.HL, Fetch());
         }
 
         /// <summary>
@@ -1211,7 +1246,8 @@ namespace GBDotNet.Core
         /// </remarks>
         private void Instruction_0x3A_Load_A_With_Address_Pointed_To_By_HL_Then_Decrement_HL()
         {
-            Registers.A = Memory[Registers.HL--];
+            Registers.A = MemoryRead(Registers.HL);
+            Registers.HL--;
         }
 
         /// <summary>
@@ -1219,6 +1255,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x3B_Decrement_SP()
         {
+            CyclesLastTick += 4;
             Registers.SP--;
         }
 
@@ -1300,7 +1337,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x46_Load_B_From_Address_Pointed_To_By_HL()
         {
-            Registers.B = Memory[Registers.HL];
+            Registers.B = MemoryRead(Registers.HL);
         }
 
         /// <summary>
@@ -1356,7 +1393,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x4E_Load_C_From_Address_Pointed_To_By_HL()
         {
-            Registers.C = Memory[Registers.HL];
+            Registers.C = MemoryRead(Registers.HL);
         }
 
         /// <summary>
@@ -1412,7 +1449,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x56_Load_D_From_Address_Pointed_To_By_HL()
         {
-            Registers.D = Memory[Registers.HL];
+            Registers.D = MemoryRead(Registers.HL);
         }
 
         /// <summary>
@@ -1468,7 +1505,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x5E_Load_E_From_Address_Pointed_To_By_HL()
         {
-            Registers.E = Memory[Registers.HL];
+            Registers.E = MemoryRead(Registers.HL);
         }
 
         /// <summary>
@@ -1524,7 +1561,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x66_Load_H_From_Address_Pointed_To_By_HL()
         {
-            Registers.H = Memory[Registers.HL];
+            Registers.H = MemoryRead(Registers.HL);
         }
 
         /// <summary>
@@ -1578,9 +1615,9 @@ namespace GBDotNet.Core
         /// <summary>
         /// https://rednex.github.io/rgbds/gbz80.7.html#LD_r8,_HL_
         /// </summary>
-        private void Instruction_0x6C_Load_L_From_Address_Pointed_To_By_HL()
+        private void Instruction_0x6E_Load_L_From_Address_Pointed_To_By_HL()
         {
-            Registers.L = Memory[Registers.HL];
+            Registers.L = MemoryRead(Registers.HL);
         }
 
         /// <summary>
@@ -1596,7 +1633,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x70_Load_Address_Pointed_To_By_HL_With_B()
         {
-            Memory[Registers.HL] = Registers.B;
+            MemoryWrite(Registers.HL, Registers.B);
         }
 
         /// <summary>
@@ -1604,7 +1641,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x71_Load_Address_Pointed_To_By_HL_With_C()
         {
-            Memory[Registers.HL] = Registers.C;
+            MemoryWrite(Registers.HL, Registers.C);
         }
 
         /// <summary>
@@ -1612,7 +1649,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x72_Load_Address_Pointed_To_By_HL_With_D()
         {
-            Memory[Registers.HL] = Registers.D;
+            MemoryWrite(Registers.HL, Registers.D);
         }
 
         /// <summary>
@@ -1620,7 +1657,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x73_Load_Address_Pointed_To_By_HL_With_E()
         {
-            Memory[Registers.HL] = Registers.E;
+            MemoryWrite(Registers.HL, Registers.E);
         }
 
         /// <summary>
@@ -1628,7 +1665,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x74_Load_Address_Pointed_To_By_HL_With_H()
         {
-            Memory[Registers.HL] = Registers.H;
+            MemoryWrite(Registers.HL, Registers.H);
         }
 
         /// <summary>
@@ -1636,7 +1673,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x75_Load_Address_Pointed_To_By_HL_With_L()
         {
-            Memory[Registers.HL] = Registers.L;
+            MemoryWrite(Registers.HL, Registers.L);
         }
 
         /// <summary>
@@ -1652,7 +1689,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x77_Load_Address_Pointed_To_By_HL_With_A()
         {
-            Memory[Registers.HL] = Registers.A;
+            MemoryWrite(Registers.HL, Registers.A);
         }
 
         /// <summary>
@@ -1708,7 +1745,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x7E_Load_A_From_Address_Pointed_To_By_HL()
         {
-            Registers.A = Memory[Registers.HL];
+            Registers.A = MemoryRead(Registers.HL);
         }
 
         /// <summary>
@@ -1764,7 +1801,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x86_Add_Address_Pointed_To_By_HL_To_A()
         {
-            AddToAccumulatorAndSetFlags(Memory[Registers.HL]);
+            AddToAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>
@@ -1828,7 +1865,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x8E_Add_Address_Pointed_To_By_HL_Plus_Carry_To_A()
         {
-            AddToAccumulatorAndSetFlags(Memory[Registers.HL], carryBit: Registers.HasFlag(Flags.Carry));
+            AddToAccumulatorAndSetFlags(MemoryRead(Registers.HL), carryBit: Registers.HasFlag(Flags.Carry));
         }
 
         /// <summary>
@@ -1892,7 +1929,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x96_Subtract_Address_Pointed_To_By_HL_From_A()
         {
-            SubtractFromAccumulatorAndSetFlags(Memory[Registers.HL]);
+            SubtractFromAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>
@@ -1956,7 +1993,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x9E_Subtract_Address_Pointed_To_By_HL_Plus_Carry_From_A()
         {
-            SubtractFromAccumulatorAndSetFlags(Memory[Registers.HL], carryBit: Registers.HasFlag(Flags.Carry));
+            SubtractFromAccumulatorAndSetFlags(MemoryRead(Registers.HL), carryBit: Registers.HasFlag(Flags.Carry));
         }
 
         /// <summary>
@@ -2020,7 +2057,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xA6_Bitwise_And_Address_Pointed_To_By_HL_With_A()
         {
-            AndWithAccumulatorAndSetFlags(Registers.B);
+            AndWithAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>
@@ -2084,7 +2121,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xAE_Bitwise_Exclusive_Or_Address_Pointed_To_By_HL_With_A()
         {
-            XorWithAccumulatorAndSetFlags(Memory[Registers.HL]);
+            XorWithAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>
@@ -2151,7 +2188,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xB6_Bitwise_Or_Address_Pointed_To_By_HL_With_A()
         {
-            OrWithAccumulatorAndSetFlags(Memory[Registers.HL]);
+            OrWithAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>
@@ -2215,7 +2252,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xBE_Compare_Address_Pointed_To_By_HL_To_A_And_Set_Flags_As_If_It_Was_Subtracted_From_A()
         {
-            CompareToAccumulatorAndSetFlags(Memory[Registers.HL]);
+            CompareToAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>
@@ -2231,6 +2268,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xC0_Return_From_Subroutine_If_Zero_Flag_Not_Set()
         {
+            CyclesLastTick += 4;
             if (!Registers.HasFlag(Flags.Zero)) Return();
         }
 
@@ -2274,6 +2312,7 @@ namespace GBDotNet.Core
         private void Instruction_0xC5_Push_BC_Onto_Stack()
         {
             PushOntoStack(Registers.B, Registers.C);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -2297,6 +2336,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xC8_Return_From_Subroutine_If_Zero_Flag_Set()
         {
+            CyclesLastTick += 4;
             if (Registers.HasFlag(Flags.Zero)) Return();
         }
 
@@ -2356,6 +2396,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xD0_Return_From_Subroutine_If_Carry_Flag_Not_Set()
         {
+            CyclesLastTick += 4;
             if (!Registers.HasFlag(Flags.Carry)) Return();
         }
 
@@ -2391,6 +2432,7 @@ namespace GBDotNet.Core
         private void Instruction_0xD5_Push_DE_Onto_Stack()
         {
             PushOntoStack(Registers.D, Registers.E);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -2414,6 +2456,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xD8_Return_From_Subroutine_If_Carry_Flag_Set()
         {
+            CyclesLastTick += 4;
             if (Registers.HasFlag(Flags.Carry)) Return();
         }
 
@@ -2432,7 +2475,7 @@ namespace GBDotNet.Core
         private void Instruction_0xDA_Jump_To_Immediate_16_Bit_Address_If_Carry_Flag_Set()
         {
             ushort address = Common.FromLittleEndian(Fetch(), Fetch());
-            if (Registers.HasFlag(Flags.Carry)) Call(address, returnAddress: Registers.PC);
+            if (Registers.HasFlag(Flags.Carry)) AbsoluteJump(address);
         }
 
         /// <summary>
@@ -2465,7 +2508,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xE0_Load_A_Into_High_Memory_Address_Offset_By_Unsigned_8_Bit_Immediate()
         {
-            Memory[0xFF00 + Fetch()] = Registers.A;
+            MemoryWrite(0xFF00 + Fetch(), Registers.A);
         }
 
         /// <summary>
@@ -2481,7 +2524,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xE2_Load_A_Into_High_Memory_Address_Offset_By_C()
         {
-            Memory[0xFF00 + Registers.C] = Registers.A;
+            MemoryWrite(0xFF00 + Registers.C, Registers.A);
         }
 
         /// <summary>
@@ -2489,6 +2532,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xE5_Push_HL_Onto_Stack()
         {
+            CyclesLastTick += 4;
             PushOntoStack(Registers.H, Registers.L);
         }
 
@@ -2518,6 +2562,7 @@ namespace GBDotNet.Core
             Registers.ClearFlag(Flags.AddSubtract | Flags.Zero);
             Registers.SetFlagTo(Flags.HalfCarry, ((Registers.SP & 0xF) + (immediate & 0xF) > 0xF));
             Registers.SetFlagTo(Flags.Carry, ((Registers.SP & 0xFF) + immediate > 0xFF));
+            CyclesLastTick += 8;
         }
 
         /// <summary>
@@ -2526,6 +2571,7 @@ namespace GBDotNet.Core
         private void Instruction_0xE9_Jump_To_Address_Pointed_To_By_HL()
         {
             AbsoluteJump(Registers.HL);
+            CyclesLastTick = 4;
         }
 
         /// <summary>
@@ -2534,7 +2580,7 @@ namespace GBDotNet.Core
         private void Instruction_0xEA_Load_Immediate_Memory_Location_From_A()
         {
             var address = Common.FromLittleEndian(Fetch(), Fetch());
-            Memory[address] = Registers.A;
+            MemoryWrite(address, Registers.A);
         }
 
         /// <summary>
@@ -2558,7 +2604,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xF0_Load_A_From_High_Memory_Address_Offset_By_8_Bit_Immediate()
         {
-            Registers.A = Memory[0xFF00 + Fetch()];
+            Registers.A = MemoryRead(0xFF00 + Fetch());
         }
 
         /// <summary>
@@ -2574,7 +2620,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xF2_Load_A_From_High_Memory_Address_Offset_By_C()
         {
-            Registers.A = Memory[0xFF00 + Registers.C];
+            Registers.A = MemoryRead(0xFF00 + Registers.C);
         }
 
         /// <summary>
@@ -2590,6 +2636,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xF5_Push_AF_Onto_Stack()
         {
+            CyclesLastTick += 4;
             PushOntoStack(Registers.A, Registers.F);
         }
 
@@ -2619,6 +2666,7 @@ namespace GBDotNet.Core
             Registers.ClearFlag(Flags.AddSubtract | Flags.Zero);
             Registers.SetFlagTo(Flags.HalfCarry, ((Registers.SP & 0xF) + (immediate & 0xF) > 0xF));
             Registers.SetFlagTo(Flags.Carry, ((Registers.SP & 0xFF) + immediate > 0xFF));
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -2627,6 +2675,7 @@ namespace GBDotNet.Core
         private void Instruction_0xF9_Load_Stack_Pointer_From_HL()
         {
             Registers.SP = Registers.HL;
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -2635,7 +2684,7 @@ namespace GBDotNet.Core
         private void Instruction_0xFA_Load_A_From_Immediate_Memory_Location()
         {
             var address = Common.FromLittleEndian(Fetch(), Fetch());
-            Registers.A = Memory[address];
+            Registers.A = MemoryRead(address);
         }
 
         /// <summary>
@@ -2715,7 +2764,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x06_Rotate_Address_Pointed_To_By_HL_Left_With_Carry()
         {
-            Memory[Registers.HL] = RotateLeftWithCarryAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, RotateLeftWithCarryAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -2779,7 +2828,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x0E_Rotate_Address_Pointed_To_By_HL_Right_With_Carry()
         {
-            Memory[Registers.HL] = RotateRightWithCarryAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, RotateRightWithCarryAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -2843,7 +2892,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x16_Rotate_Address_Pointed_To_By_HL_Left()
         {
-            Memory[Registers.HL] = RotateLeftAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, RotateLeftAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -2907,7 +2956,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x1E_Rotate_Address_Pointed_To_By_HL_Right()
         {
-            Memory[Registers.HL] = RotateRightAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, RotateRightAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -2971,7 +3020,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x26_Shift_Address_Pointed_To_By_HL_Left()
         {
-            Memory[Registers.HL] = ShiftLeftAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, ShiftLeftAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -3035,7 +3084,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x2E_Should_Arithmetic_Shift_Address_Pointed_To_By_HL_Right()
         {
-            Memory[Registers.HL] = ArithmeticShiftRightAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, ArithmeticShiftRightAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -3099,7 +3148,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x36_Swap_Nibbles_In_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SwapNibblesAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, SwapNibblesAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -3163,7 +3212,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x3E_Shift_Address_Pointed_To_By_HL_Right()
         {
-            Memory[Registers.HL] = ShiftRightAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, ShiftRightAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -3227,7 +3276,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x46_Test_Bit_0_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 0);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 0);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3291,7 +3341,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x4E_Test_Bit_1_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 1);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 1);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3355,7 +3406,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x56_Test_Bit_2_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 2);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 2);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3419,7 +3471,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x5E_Test_Bit_3_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 3);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 3);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3483,7 +3536,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x66_Test_Bit_4_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 4);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 4);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3547,7 +3601,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x6E_Test_Bit_5_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 5);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 5);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3611,7 +3666,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x76_Test_Bit_6_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 6);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 6);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3675,7 +3731,8 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x7E_Test_Bit_7_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
-            TestBitAndSetFlags(Memory[Registers.HL], bitToTest: 7);
+            TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 7);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3739,7 +3796,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x86_Reset_Bit_0_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 0);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 0));
         }
 
         /// <summary>
@@ -3803,7 +3860,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x8E_Reset_Bit_1_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 1);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 1));
         }
 
         /// <summary>
@@ -3867,7 +3924,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x96_Reset_Bit_2_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 2);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 2));
         }
 
         /// <summary>
@@ -3931,7 +3988,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x9E_Reset_Bit_3_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 3);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 3));
         }
 
         /// <summary>
@@ -3995,7 +4052,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA6_Reset_Bit_4_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 4);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 4));
         }
 
         /// <summary>
@@ -4059,7 +4116,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xAE_Reset_Bit_5_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 5);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 5));
         }
 
         /// <summary>
@@ -4123,7 +4180,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB6_Reset_Bit_6_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 6);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 6));
         }
 
         /// <summary>
@@ -4187,7 +4244,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xBE_Reset_Bit_7_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = ClearBit(Memory[Registers.HL], 7);
+            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 7));
         }
 
         /// <summary>
@@ -4251,7 +4308,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC6_Set_Bit_0_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 0);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 0));
         }
 
         /// <summary>
@@ -4315,7 +4372,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xCE_Set_Bit_1_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 1);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 1));
         }
 
         /// <summary>
@@ -4379,7 +4436,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD6_Set_Bit_2_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 2);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 2));
         }
 
         /// <summary>
@@ -4443,7 +4500,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xDE_Set_Bit_3_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 3);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 3));
         }
 
         /// <summary>
@@ -4507,7 +4564,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE6_Set_Bit_4_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 4);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 4));
         }
 
         /// <summary>
@@ -4571,7 +4628,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xEE_Set_Bit_5_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 5);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 5));
         }
 
         /// <summary>
@@ -4635,7 +4692,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF6_Set_Bit_6_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 6);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 6));
         }
 
         /// <summary>
@@ -4699,7 +4756,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xFE_Set_Bit_7_Of_Address_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = SetBit(Memory[Registers.HL], 7);
+            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 7));
         }
 
         /// <summary>
@@ -4978,6 +5035,7 @@ namespace GBDotNet.Core
             Registers.SetFlagTo(Flags.HalfCarry, ((Registers.HL & 0xFFF) + (value & 0xFFF) > 0xFFF));
             Registers.SetFlagTo(Flags.Carry, (Registers.HL + value > 0xFFFF));
             Registers.HL += value;
+            CyclesLastTick += 4;
         }
 
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#INC_r8"/>
@@ -5014,6 +5072,6 @@ namespace GBDotNet.Core
             return newValue;
         }
 
-        public override string ToString() => Registers.ToString();
+        public override string ToString() => $"{Registers} T: {TotalElapsedCycles}";
     }
 }

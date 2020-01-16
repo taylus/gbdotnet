@@ -27,6 +27,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xCD, memory[0xFF10], "Expected low byte of stack pointer to be stored at given address.");
             Assert.AreEqual(0xAB, memory[0xFF11], "Expected high byte of stack pointer to be stored at given address + 1.");
+            Assert.AreEqual(20, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -63,6 +64,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xABCD, cpu.Registers.BC);
             Assert.AreEqual(initialStackPointer + 2, cpu.Registers.SP);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -75,6 +77,7 @@ namespace GBDotNet.Core.Test
 
             CollectionAssert.AreEqual(new byte[] { 0xC5, 0xEF, 0xBE }, memory.Take(3).ToArray());
             Assert.AreEqual(initialStackPointer - 2, cpu.Registers.SP);
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -87,6 +90,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0x1234, cpu.Registers.DE);
             Assert.AreEqual(0x0004, cpu.Registers.SP);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -99,6 +103,7 @@ namespace GBDotNet.Core.Test
 
             CollectionAssert.AreEqual(new byte[] { 0xD5, 0x34, 0x12 }, memory.Take(3).ToArray());
             Assert.AreEqual(initialStackPointer - 2, cpu.Registers.SP);
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -111,6 +116,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xDEAD, cpu.Registers.HL);
             Assert.AreEqual(0x0003, cpu.Registers.SP);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -123,6 +129,7 @@ namespace GBDotNet.Core.Test
 
             CollectionAssert.AreEqual(new byte[] { 0xE5, 0x00, 0x40 }, memory.Take(3).ToArray());
             Assert.AreEqual(initialStackPointer - 2, cpu.Registers.SP);
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -135,6 +142,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xBEEF, cpu.Registers.AF);
             Assert.AreEqual(0x0003, cpu.Registers.SP);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -147,6 +155,7 @@ namespace GBDotNet.Core.Test
 
             CollectionAssert.AreEqual(new byte[] { 0xF5, 0xF0, 0xFF }, memory.Take(3).ToArray());
             Assert.AreEqual(initialStackPointer - 2, cpu.Registers.SP);
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -181,6 +190,9 @@ namespace GBDotNet.Core.Test
                 {
                     Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), $"For SP = {cpu.Registers.SP}, e8 = {i}, expected carry flag to be cleared when SP + e8 does not overflow from bit 7.");
                 }
+
+                Assert.AreEqual(12, cpu.CyclesLastTick);
+
                 cpu.Registers.PC -= 2;
             }
         }
@@ -194,6 +206,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xBABE, cpu.Registers.SP);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         /// <summary>
@@ -210,6 +223,7 @@ namespace GBDotNet.Core.Test
                     cpu.Memory[2] = (byte)j;
                     cpu.Tick();
                     Assert.AreEqual((j << 8) | i, registerUnderTest());
+                    Assert.AreEqual(12, cpu.CyclesLastTick);
                     cpu.Registers.PC -= 3;  //rewind to run again w/ new value
                 }
             }

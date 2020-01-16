@@ -15,6 +15,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(cpu.Registers.A, memory[cpu.Registers.BC]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -33,16 +34,19 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
             Assert.AreEqual(0x0A, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.BC}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
 
             cpu.Registers.PC = 0;
             cpu.Registers.BC = 1;
             cpu.Tick();
             Assert.AreEqual(0x01, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.BC}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
 
             cpu.Registers.PC = 0;
             cpu.Registers.BC = 2;
             cpu.Tick();
             Assert.AreEqual(0x02, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.BC}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -62,6 +66,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(cpu.Registers.A, memory[cpu.Registers.DE]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -80,16 +85,19 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
             Assert.AreEqual(0x1A, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.DE}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
 
             cpu.Registers.PC = 0;
             cpu.Registers.DE = 1;
             cpu.Tick();
             Assert.AreEqual(0x01, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.DE}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
 
             cpu.Registers.PC = 0;
             cpu.Registers.DE = 2;
             cpu.Tick();
             Assert.AreEqual(0x02, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.DE}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -110,6 +118,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xFF, memory[0x4000]);
             Assert.AreEqual(0x4001, cpu.Registers.HL);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -130,6 +139,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xFF, cpu.Registers.A);
             Assert.AreEqual(0x0002, cpu.Registers.HL);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -150,6 +160,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xAA, memory[0x0001]);
             Assert.AreEqual(0x0000, cpu.Registers.HL);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -161,6 +172,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xFF, memory[0x1000]);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -173,6 +185,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xAA, cpu.Registers.A);
             Assert.AreEqual(0x0000, cpu.Registers.HL);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -242,6 +255,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xBB, cpu.Registers.B);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -313,6 +327,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xCC, cpu.Registers.C);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -384,6 +399,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xDD, cpu.Registers.D);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -455,6 +471,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xEE, cpu.Registers.E);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -526,6 +543,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xFF, cpu.Registers.H);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -597,6 +615,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xBA, cpu.Registers.L);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -618,6 +637,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xBB, memory[0x8000]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -629,6 +649,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xCC, memory[0x8000]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -640,6 +661,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xDD, memory[0x8000]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -651,6 +673,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xEE, memory[0x8000]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -662,6 +685,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x88, memory[0x8800]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -673,6 +697,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xFF, memory[0x90FF]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -684,6 +709,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.IsTrue(cpu.IsHalted);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -695,6 +721,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, memory[0x8000]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -766,6 +793,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, cpu.Registers.A);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -777,6 +805,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, memory[0xFF80]);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -788,6 +817,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, memory[0xFF80]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -799,6 +829,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, memory[0x8000]);
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -811,6 +842,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, cpu.Registers.A);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -823,6 +855,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, cpu.Registers.A);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -834,6 +867,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, cpu.Registers.A);
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         /// <summary>
@@ -849,6 +883,7 @@ namespace GBDotNet.Core.Test
                 cpu.Memory[1] = (byte)i;
                 cpu.Tick();
                 Assert.AreEqual(i, registerUnderTest(), $"Expected register to be set to {i} after executing ld instruction w/ 8-bit immediate {i}.");
+                Assert.AreEqual(8, cpu.CyclesLastTick);
                 cpu.Registers.PC -= 2;  //rewind by the size of the instruction
             }
         }
@@ -866,6 +901,7 @@ namespace GBDotNet.Core.Test
                 sourceRegisterSetter((byte)i);
                 cpu.Tick();
                 Assert.AreEqual(i, destinationRegisterGetter(), $"Expected destination register to be set to {i} after executing ld instruction from source register w/ value {i}.");
+                Assert.AreEqual(4, cpu.CyclesLastTick);
                 cpu.Registers.PC--;  //rewind by the size of the instruction
             }
         }

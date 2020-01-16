@@ -121,6 +121,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0xFFFD, cpu.Registers.SP);
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero | Flags.AddSubtract), "add sp, e8 instruction should always clear Z and N flags.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry | Flags.HalfCarry));
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         private static void TestIncrement16BitRegister(CPU cpu, Func<ushort> registerPairUnderTest)
@@ -130,6 +131,7 @@ namespace GBDotNet.Core.Test
                 cpu.Tick();
                 var expected = (ushort)(i + 1);
                 Assert.AreEqual(expected, registerPairUnderTest());
+                Assert.AreEqual(8, cpu.CyclesLastTick);
                 cpu.Registers.PC--;
             }
         }
@@ -140,6 +142,7 @@ namespace GBDotNet.Core.Test
             {
                 cpu.Tick();
                 Assert.AreEqual(i, registerPairUnderTest());
+                Assert.AreEqual(8, cpu.CyclesLastTick);
                 cpu.Registers.PC--;
             }
         }
@@ -186,6 +189,8 @@ namespace GBDotNet.Core.Test
                     Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set.");
                 else
                     Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should not be set.");
+
+                Assert.AreEqual(8, cpu.CyclesLastTick);
             }
         }
     }

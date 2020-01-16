@@ -141,6 +141,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Expected carry flag to be set when BCD adjustment is > 99.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected daa instruction to always clear half carry flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected daa instruction to set zero flag only when adjusted accumulator is zero.");
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -158,6 +159,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(expectedDifference, cpu.Registers.A, "Expected daa instruction to adjust accumulator for binary coded decimal subtraction.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "Expected daa instruction to always clear half carry flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "Expected daa instruction to set zero flag only when adjusted accumulator is zero.");
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -190,6 +192,7 @@ namespace GBDotNet.Core.Test
 
                 Assert.AreEqual((byte)~i, cpu.Registers.A);
                 Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "cpl instruction should always set N and H flags.");
+                Assert.AreEqual(4, cpu.CyclesLastTick);
             }
         }
 
@@ -198,7 +201,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x34);
             var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
-            TestIncrement8BitValue(cpu, () => memory[cpu.Registers.HL]);
+            TestIncrement8BitValue(cpu, () => memory[cpu.Registers.HL], expectedTicks: 12);
         }
 
         [TestMethod]
@@ -206,7 +209,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x35);
             var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
-            TestDecrement8BitValue(cpu, () => memory[cpu.Registers.HL]);
+            TestDecrement8BitValue(cpu, () => memory[cpu.Registers.HL], expectedTicks: 12);
         }
 
         [TestMethod]
@@ -220,6 +223,7 @@ namespace GBDotNet.Core.Test
 
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Expected scf instruction to set carry flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "Expected scf instruction to clear N and H flags.");
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -249,12 +253,14 @@ namespace GBDotNet.Core.Test
 
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Expected ccf instruction to toggle carry flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "Expected ccf instruction to clear N and H flags.");
+            Assert.AreEqual(4, cpu.CyclesLastTick);
 
             cpu.Registers.PC--;
             cpu.Tick();
 
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Expected ccf instruction to toggle carry flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "Expected ccf instruction to clear N and H flags.");
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -352,7 +358,8 @@ namespace GBDotNet.Core.Test
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
                 expectedZero: false,
                 expectedCarry: false,
-                expectedHalfCarry: false);
+                expectedHalfCarry: false,
+                expectedCycles: 8);
         }
 
         [TestMethod]
@@ -464,7 +471,8 @@ namespace GBDotNet.Core.Test
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
                 expectedZero: false,
                 expectedCarry: false,
-                expectedHalfCarry: false);
+                expectedHalfCarry: false,
+                expectedCycles: 8);
         }
 
         [TestMethod]
@@ -576,7 +584,8 @@ namespace GBDotNet.Core.Test
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
                 expectedZero: false,
                 expectedCarry: false,
-                expectedHalfCarry: true);
+                expectedHalfCarry: true,
+                expectedCycles: 8);
         }
 
         [TestMethod]
@@ -688,7 +697,8 @@ namespace GBDotNet.Core.Test
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
                 expectedZero: false,
                 expectedCarry: false,
-                expectedHalfCarry: true);
+                expectedHalfCarry: true,
+                expectedCycles: 8);
         }
 
         [TestMethod]
@@ -800,7 +810,8 @@ namespace GBDotNet.Core.Test
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
                 expectedZero: false,
                 expectedCarry: true,
-                expectedHalfCarry: false);
+                expectedHalfCarry: false,
+                expectedCycles: 8);
         }
 
         [TestMethod]
@@ -827,6 +838,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(expected, cpu.Registers.A);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -840,6 +852,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(expected, cpu.Registers.A);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -852,6 +865,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(expected, cpu.Registers.A);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -865,6 +879,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(expected, cpu.Registers.A);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -881,12 +896,13 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         /// <summary>
         /// Tests instructions like add a, b or adc a, b
         /// </summary>
-        private static void TestAdding8BitRegisterToAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null)
+        private static void TestAdding8BitRegisterToAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null, int expectedCycles = 4)
         {
             cpu.Registers.PC = 0;   //assume the add instruction is always at the beginning of memory
             cpu.Registers.SetFlag(Flags.AddSubtract);   //set the N flag (add instructions should always clear it)
@@ -914,6 +930,8 @@ namespace GBDotNet.Core.Test
                 Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should be set when adding {registerValue} to accumulator {a}.");
             else
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should not be set when adding {registerValue} to accumulator {a}.");
+
+            Assert.AreEqual(expectedCycles, cpu.CyclesLastTick);
         }
 
         /// <summary>
@@ -921,7 +939,7 @@ namespace GBDotNet.Core.Test
         /// If <paramref name="performSubtraction"/> is false, tests instructions like cp a, b.
         /// </summary>
         private static void TestSubtracting8BitRegisterFromAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter,
-            bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null, bool performSubtraction = true)
+            bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null, bool performSubtraction = true, int expectedCycles = 4)
         {
             cpu.Registers.PC = 0;   //assume the add instruction is always at the beginning of memory
             cpu.Registers.ClearFlag(Flags.AddSubtract);   //clear the N flag (subtract instructions should always set it)
@@ -950,21 +968,23 @@ namespace GBDotNet.Core.Test
                 Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should be set when subtracting from or comparing {registerValue} w/ accumulator {a}.");
             else
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should not be set when subtracting from or comparing {registerValue} w/ accumulator {a}.");
+
+            Assert.AreEqual(expectedCycles, cpu.CyclesLastTick);
         }
 
         /// <summary>
         /// Tests instructions like cp a, b. These instructions behave just like subtraction (set the same flags) but don't store the result in the accumulator.
         /// </summary>
-        private static void TestComparing8BitRegisterToAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry)
+        private static void TestComparing8BitRegisterToAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, bool expectedCarry, bool expectedHalfCarry, int expectedCycles = 4)
         {
-            TestSubtracting8BitRegisterFromAccumulator(cpu, a, registerValue, registerSetter, expectedZero, expectedCarry, expectedHalfCarry, null, performSubtraction: false);
+            TestSubtracting8BitRegisterFromAccumulator(cpu, a, registerValue, registerSetter, expectedZero, expectedCarry, expectedHalfCarry, null, performSubtraction: false, expectedCycles: expectedCycles);
         }
 
         /// <summary>
         /// Tests instructions like inc b.
         /// </summary>
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#INC_r8"/>
-        private static void TestIncrement8BitValue(CPU cpu, Func<byte> getterForValueBeingIncremented)
+        private static void TestIncrement8BitValue(CPU cpu, Func<byte> getterForValueBeingIncremented, int expectedTicks = 4)
         {
             //loop up since we're incrementing (making sure to cover wraparound)
             for (int i = 0; i <= byte.MaxValue; i++)
@@ -995,6 +1015,8 @@ namespace GBDotNet.Core.Test
 
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be cleared whenever an 8-bit value is incremented.");
 
+                Assert.AreEqual(expectedTicks, cpu.CyclesLastTick);
+
                 cpu.Registers.PC--;
             }
         }
@@ -1003,7 +1025,7 @@ namespace GBDotNet.Core.Test
         /// Tests instructions like dec b.
         /// </summary>
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#DEC_r8"/>
-        private static void TestDecrement8BitValue(CPU cpu, Func<byte> getterForValueBeingDecremented)
+        private static void TestDecrement8BitValue(CPU cpu, Func<byte> getterForValueBeingDecremented, int expectedTicks = 4)
         {
             //loop down since we're decrementing (making sure to cover wraparound)
             for (int i = byte.MaxValue; i >= 0; i--)
@@ -1032,6 +1054,8 @@ namespace GBDotNet.Core.Test
                 }
 
                 Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be set whenever an 8-bit value is decremented.");
+
+                Assert.AreEqual(expectedTicks, cpu.CyclesLastTick);
 
                 cpu.Registers.PC--;
             }
