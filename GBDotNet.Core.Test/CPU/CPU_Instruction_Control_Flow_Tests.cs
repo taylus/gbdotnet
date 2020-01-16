@@ -484,6 +484,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x4000, cpu.Registers.PC);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]

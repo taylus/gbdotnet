@@ -116,6 +116,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xDEAD, cpu.Registers.HL);
             Assert.AreEqual(0x0003, cpu.Registers.SP);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -128,6 +129,7 @@ namespace GBDotNet.Core.Test
 
             CollectionAssert.AreEqual(new byte[] { 0xE5, 0x00, 0x40 }, memory.Take(3).ToArray());
             Assert.AreEqual(initialStackPointer - 2, cpu.Registers.SP);
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]

@@ -2508,7 +2508,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xE0_Load_A_Into_High_Memory_Address_Offset_By_Unsigned_8_Bit_Immediate()
         {
-            Memory[0xFF00 + Fetch()] = Registers.A;
+            MemoryWrite(0xFF00 + Fetch(), Registers.A);
         }
 
         /// <summary>
@@ -2524,7 +2524,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xE2_Load_A_Into_High_Memory_Address_Offset_By_C()
         {
-            Memory[0xFF00 + Registers.C] = Registers.A;
+            MemoryWrite(0xFF00 + Registers.C, Registers.A);
         }
 
         /// <summary>
@@ -2532,6 +2532,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xE5_Push_HL_Onto_Stack()
         {
+            CyclesLastTick += 4;
             PushOntoStack(Registers.H, Registers.L);
         }
 
@@ -2561,6 +2562,7 @@ namespace GBDotNet.Core
             Registers.ClearFlag(Flags.AddSubtract | Flags.Zero);
             Registers.SetFlagTo(Flags.HalfCarry, ((Registers.SP & 0xF) + (immediate & 0xF) > 0xF));
             Registers.SetFlagTo(Flags.Carry, ((Registers.SP & 0xFF) + immediate > 0xFF));
+            CyclesLastTick += 8;
         }
 
         /// <summary>
@@ -2569,6 +2571,7 @@ namespace GBDotNet.Core
         private void Instruction_0xE9_Jump_To_Address_Pointed_To_By_HL()
         {
             AbsoluteJump(Registers.HL);
+            CyclesLastTick = 4;
         }
 
         /// <summary>
@@ -2577,7 +2580,7 @@ namespace GBDotNet.Core
         private void Instruction_0xEA_Load_Immediate_Memory_Location_From_A()
         {
             var address = Common.FromLittleEndian(Fetch(), Fetch());
-            Memory[address] = Registers.A;
+            MemoryWrite(address, Registers.A);
         }
 
         /// <summary>
