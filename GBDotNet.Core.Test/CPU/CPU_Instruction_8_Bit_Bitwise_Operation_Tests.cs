@@ -87,7 +87,7 @@ namespace GBDotNet.Core.Test
             TestAnding8BitRegisterWithAccumulator(cpu,
                 a: 0xF0, registerValue: 0x0F,
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
-                expectedZero: true);
+                expectedZero: true, expectedCycles: 8);
         }
 
         [TestMethod]
@@ -183,7 +183,7 @@ namespace GBDotNet.Core.Test
             TestXoring8BitRegisterWithAccumulator(cpu,
                 a: 0xAA, registerValue: 0xAA,
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
-                expectedZero: true);
+                expectedZero: true, expectedCycles: 8);
         }
 
         [TestMethod]
@@ -334,7 +334,7 @@ namespace GBDotNet.Core.Test
         /// <summary>
         /// Tests instructions like and a, b.
         /// </summary>
-        private static void TestAnding8BitRegisterWithAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero)
+        private static void TestAnding8BitRegisterWithAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, int expectedCycles = 4)
         {
             cpu.Registers.PC = 0;   //assume the and instruction is always at the beginning of memory
             cpu.Registers.SetFlag(Flags.AddSubtract);   //set the N flag (and instructions should always clear it)
@@ -355,12 +355,13 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "AND instructions should always clear the N flag.");
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), "AND instructions should always set the H flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "AND instructions should always clear the C flag.");
+            Assert.AreEqual(expectedCycles, cpu.CyclesLastTick);
         }
 
         /// <summary>
         /// Tests instructions like xor a, b.
         /// </summary>
-        private static void TestXoring8BitRegisterWithAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero)
+        private static void TestXoring8BitRegisterWithAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter, bool expectedZero, int expectedCycles = 4)
         {
             cpu.Registers.PC = 0;   //assume the and instruction is always at the beginning of memory
             cpu.Registers.SetFlag(Flags.AddSubtract | Flags.HalfCarry | Flags.Carry);   //set these flags (xor instructions always clear them)
@@ -379,6 +380,7 @@ namespace GBDotNet.Core.Test
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "XOR instructions should always clear the N flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), "XOR instructions should always clear the H flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "XOR instructions should always clear the C flag.");
+            Assert.AreEqual(expectedCycles, cpu.CyclesLastTick);
         }
 
         /// <summary>

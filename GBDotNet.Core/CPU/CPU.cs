@@ -2056,7 +2056,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xA6_Bitwise_And_Address_Pointed_To_By_HL_With_A()
         {
-            AndWithAccumulatorAndSetFlags(Registers.B);
+            AndWithAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>
@@ -2120,7 +2120,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xAE_Bitwise_Exclusive_Or_Address_Pointed_To_By_HL_With_A()
         {
-            XorWithAccumulatorAndSetFlags(Memory[Registers.HL]);
+            XorWithAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>
