@@ -995,6 +995,8 @@ namespace GBDotNet.Core.Test
 
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be cleared whenever an 8-bit value is incremented.");
 
+                Assert.AreEqual(4, cpu.CyclesLastTick);
+
                 cpu.Registers.PC--;
             }
         }
@@ -1032,6 +1034,8 @@ namespace GBDotNet.Core.Test
                 }
 
                 Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be set whenever an 8-bit value is decremented.");
+
+                Assert.AreEqual(4, cpu.CyclesLastTick);
 
                 cpu.Registers.PC--;
             }

@@ -141,6 +141,7 @@ namespace GBDotNet.Core.Test
             {
                 cpu.Tick();
                 Assert.AreEqual(i, registerPairUnderTest());
+                Assert.AreEqual(8, cpu.CyclesLastTick);
                 cpu.Registers.PC--;
             }
         }
@@ -187,6 +188,8 @@ namespace GBDotNet.Core.Test
                     Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set.");
                 else
                     Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should not be set.");
+
+                Assert.AreEqual(8, cpu.CyclesLastTick);
             }
         }
     }

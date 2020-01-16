@@ -34,16 +34,19 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
             Assert.AreEqual(0x0A, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.BC}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
 
             cpu.Registers.PC = 0;
             cpu.Registers.BC = 1;
             cpu.Tick();
             Assert.AreEqual(0x01, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.BC}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
 
             cpu.Registers.PC = 0;
             cpu.Registers.BC = 2;
             cpu.Tick();
             Assert.AreEqual(0x02, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.BC}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -850,6 +853,7 @@ namespace GBDotNet.Core.Test
                 cpu.Memory[1] = (byte)i;
                 cpu.Tick();
                 Assert.AreEqual(i, registerUnderTest(), $"Expected register to be set to {i} after executing ld instruction w/ 8-bit immediate {i}.");
+                Assert.AreEqual(8, cpu.CyclesLastTick);
                 cpu.Registers.PC -= 2;  //rewind by the size of the instruction
             }
         }

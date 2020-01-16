@@ -627,7 +627,7 @@ namespace GBDotNet.Core
         /// <summary>
         /// Retrieves the data at the given memory address.
         /// </summary>
-        private byte MemoryRead(ushort address)
+        private byte MemoryRead(int address)
         {
             CyclesLastTick += 4;
             return Memory[address];
@@ -636,7 +636,7 @@ namespace GBDotNet.Core
         /// <summary>
         /// Writes the given byte to the given memory address.
         /// </summary>
-        private void MemoryWrite(ushort address, byte value)
+        private void MemoryWrite(int address, byte value)
         {
             CyclesLastTick += 4;
             Memory[address] = value;
@@ -778,8 +778,8 @@ namespace GBDotNet.Core
             byte addressHigh = Fetch();
             ushort address = Common.FromLittleEndian(addressLow, addressHigh);
 
-            Memory[address] = (byte)(Registers.SP & 0xFF);
-            Memory[address + 1] = (byte)(Registers.SP >> 8);
+            MemoryWrite(address, (byte)(Registers.SP & 0xFF));
+            MemoryWrite(address + 1, (byte)(Registers.SP >> 8));
         }
 
         /// <summary>
@@ -795,7 +795,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x0A_Load_A_From_Address_Pointed_To_By_BC()
         {
-            Registers.A = Memory[Registers.BC];
+            Registers.A = MemoryRead(Registers.BC);
         }
 
         /// <summary>
@@ -803,6 +803,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x0B_Decrement_BC()
         {
+            CyclesLastTick += 4;
             Registers.BC--;
         }
 
@@ -872,6 +873,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x13_Increment_DE()
         {
+            CyclesLastTick += 4;
             Registers.DE++;
         }
 
@@ -938,6 +940,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x1B_Decrement_DE()
         {
+            CyclesLastTick += 4;
             Registers.DE--;
         }
 
@@ -1006,6 +1009,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x23_Increment_HL()
         {
+            CyclesLastTick += 4;
             Registers.HL++;
         }
 
@@ -1105,6 +1109,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x2B_Decrement_HL()
         {
+            CyclesLastTick += 4;
             Registers.HL--;
         }
 
@@ -1174,6 +1179,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x33_Increment_SP()
         {
+            CyclesLastTick += 4;
             Registers.SP++;
         }
 
@@ -1243,6 +1249,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x3B_Decrement_SP()
         {
+            CyclesLastTick += 4;
             Registers.SP--;
         }
 
@@ -5002,6 +5009,7 @@ namespace GBDotNet.Core
             Registers.SetFlagTo(Flags.HalfCarry, ((Registers.HL & 0xFFF) + (value & 0xFFF) > 0xFFF));
             Registers.SetFlagTo(Flags.Carry, (Registers.HL + value > 0xFFFF));
             Registers.HL += value;
+            CyclesLastTick += 4;
         }
 
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#INC_r8"/>

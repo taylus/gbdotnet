@@ -17,12 +17,14 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b1000_1100, cpu.Registers.A, "Accumulator has incorrect value after first rlca instruction.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be zero after first rlca instruction.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
 
             cpu.Registers.PC--;
             cpu.Tick();
             Assert.AreEqual(0b0001_1001, cpu.Registers.A, "Accumulator has incorrect value after second rlca instruction.");
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set after second rlca instruction.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
 
             cpu.Registers.PC--;
             cpu.Registers.A = 0;
@@ -30,6 +32,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0, cpu.Registers.A, "Accumulator has incorrect value after first rlca instruction.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be zero after first rlca instruction.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -43,12 +46,14 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0b0010_0011, cpu.Registers.A, "Accumulator has incorrect value after first rrca instruction.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be zero after first rrca instruction.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
 
             cpu.Registers.PC--;
             cpu.Tick();
             Assert.AreEqual(0b1001_0001, cpu.Registers.A, "Accumulator has incorrect value after second rrca instruction.");
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set after second rrca instruction.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
 
             cpu.Registers.PC--;
             cpu.Registers.A = 0;
@@ -56,6 +61,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0, cpu.Registers.A, "Accumulator has incorrect value after first rlca instruction.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be zero after first rlca instruction.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]

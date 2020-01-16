@@ -27,6 +27,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xCD, memory[0xFF10], "Expected low byte of stack pointer to be stored at given address.");
             Assert.AreEqual(0xAB, memory[0xFF11], "Expected high byte of stack pointer to be stored at given address + 1.");
+            Assert.AreEqual(20, cpu.CyclesLastTick);
         }
 
         [TestMethod]
