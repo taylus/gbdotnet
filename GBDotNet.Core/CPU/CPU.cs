@@ -1336,7 +1336,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x46_Load_B_From_Address_Pointed_To_By_HL()
         {
-            Registers.B = Memory[Registers.HL];
+            Registers.B = MemoryRead(Registers.HL);
         }
 
         /// <summary>
@@ -1392,7 +1392,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x4E_Load_C_From_Address_Pointed_To_By_HL()
         {
-            Registers.C = Memory[Registers.HL];
+            Registers.C = MemoryRead(Registers.HL);
         }
 
         /// <summary>

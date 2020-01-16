@@ -254,6 +254,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xBB, cpu.Registers.B);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -325,6 +326,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xCC, cpu.Registers.C);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -879,6 +881,7 @@ namespace GBDotNet.Core.Test
                 sourceRegisterSetter((byte)i);
                 cpu.Tick();
                 Assert.AreEqual(i, destinationRegisterGetter(), $"Expected destination register to be set to {i} after executing ld instruction from source register w/ value {i}.");
+                Assert.AreEqual(4, cpu.CyclesLastTick);
                 cpu.Registers.PC--;  //rewind by the size of the instruction
             }
         }
