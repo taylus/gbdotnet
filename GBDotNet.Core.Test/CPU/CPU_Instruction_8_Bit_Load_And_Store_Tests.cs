@@ -636,6 +636,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xBB, memory[0x8000]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -647,6 +648,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xCC, memory[0x8000]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -658,6 +660,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xDD, memory[0x8000]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -669,6 +672,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xEE, memory[0x8000]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -680,6 +684,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x88, memory[0x8800]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -691,6 +696,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xFF, memory[0x90FF]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -702,6 +708,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.IsTrue(cpu.IsHalted);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -713,6 +720,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, memory[0x8000]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -784,6 +792,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, cpu.Registers.A);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]

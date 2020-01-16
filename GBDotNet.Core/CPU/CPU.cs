@@ -1632,7 +1632,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x70_Load_Address_Pointed_To_By_HL_With_B()
         {
-            Memory[Registers.HL] = Registers.B;
+            MemoryWrite(Registers.HL, Registers.B);
         }
 
         /// <summary>
@@ -1640,7 +1640,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x71_Load_Address_Pointed_To_By_HL_With_C()
         {
-            Memory[Registers.HL] = Registers.C;
+            MemoryWrite(Registers.HL, Registers.C);
         }
 
         /// <summary>
@@ -1648,7 +1648,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x72_Load_Address_Pointed_To_By_HL_With_D()
         {
-            Memory[Registers.HL] = Registers.D;
+            MemoryWrite(Registers.HL, Registers.D);
         }
 
         /// <summary>
@@ -1656,7 +1656,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x73_Load_Address_Pointed_To_By_HL_With_E()
         {
-            Memory[Registers.HL] = Registers.E;
+            MemoryWrite(Registers.HL, Registers.E);
         }
 
         /// <summary>
@@ -1664,7 +1664,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x74_Load_Address_Pointed_To_By_HL_With_H()
         {
-            Memory[Registers.HL] = Registers.H;
+            MemoryWrite(Registers.HL, Registers.H);
         }
 
         /// <summary>
@@ -1672,7 +1672,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x75_Load_Address_Pointed_To_By_HL_With_L()
         {
-            Memory[Registers.HL] = Registers.L;
+            MemoryWrite(Registers.HL, Registers.L);
         }
 
         /// <summary>
@@ -1688,7 +1688,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x77_Load_Address_Pointed_To_By_HL_With_A()
         {
-            Memory[Registers.HL] = Registers.A;
+            MemoryWrite(Registers.HL, Registers.A);
         }
 
         /// <summary>
@@ -1744,7 +1744,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x7E_Load_A_From_Address_Pointed_To_By_HL()
         {
-            Registers.A = Memory[Registers.HL];
+            Registers.A = MemoryRead(Registers.HL);
         }
 
         /// <summary>
