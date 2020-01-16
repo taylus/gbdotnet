@@ -656,9 +656,9 @@ namespace GBDotNet.Core
         internal void PushOntoStack(byte high, byte low)
         {
             Registers.SP--;
-            Memory[Registers.SP] = high;
+            MemoryWrite(Registers.SP, high);
             Registers.SP--;
-            Memory[Registers.SP] = low;
+            MemoryWrite(Registers.SP, low);
         }
 
         /// <summary>
@@ -674,8 +674,8 @@ namespace GBDotNet.Core
         /// </summary>
         private ushort PopStack()
         {
-            byte low = Memory[Registers.SP++];
-            byte high = Memory[Registers.SP++];
+            byte low = MemoryRead(Registers.SP++);
+            byte high = MemoryRead(Registers.SP++);
             return Common.FromLittleEndian(low, high);
         }
 
@@ -688,6 +688,7 @@ namespace GBDotNet.Core
         private void AbsoluteJump(ushort address)
         {
             Registers.PC = address;
+            CyclesLastTick += 4;
         }
 
         private void Call(ushort destinationAddress, ushort returnAddress)
@@ -2267,6 +2268,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xC0_Return_From_Subroutine_If_Zero_Flag_Not_Set()
         {
+            CyclesLastTick += 4;
             if (!Registers.HasFlag(Flags.Zero)) Return();
         }
 
@@ -2310,6 +2312,7 @@ namespace GBDotNet.Core
         private void Instruction_0xC5_Push_BC_Onto_Stack()
         {
             PushOntoStack(Registers.B, Registers.C);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -2333,6 +2336,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xC8_Return_From_Subroutine_If_Zero_Flag_Set()
         {
+            CyclesLastTick += 4;
             if (Registers.HasFlag(Flags.Zero)) Return();
         }
 

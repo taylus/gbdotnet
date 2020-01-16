@@ -62,6 +62,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(expectedAddress, cpu.Registers.PC, $"Expected rst instruction to set program counter to address {expectedAddress:x4}.");
+            Assert.AreEqual(16, cpu.CyclesLastTick);
 
             var expectedReturnAddress = initialProgramCounter + 1;  //rst instructions are 1 byte long
             var pushedReturnAddress = Common.FromLittleEndian(memory[cpu.Registers.SP], memory[cpu.Registers.SP + 1]);
