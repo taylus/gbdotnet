@@ -66,6 +66,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(cpu.Registers.A, memory[cpu.Registers.DE]);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]

@@ -867,7 +867,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x12_Load_Address_Pointed_To_By_DE_With_A()
         {
-            Memory[Registers.DE] = Registers.A;
+            MemoryWrite(address: Registers.DE, value: Registers.A);
         }
 
         /// <summary>
