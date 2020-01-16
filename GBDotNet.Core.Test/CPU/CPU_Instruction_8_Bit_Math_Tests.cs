@@ -201,7 +201,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x34);
             var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
-            TestIncrement8BitValue(cpu, () => memory[cpu.Registers.HL]);
+            TestIncrement8BitValue(cpu, () => memory[cpu.Registers.HL], expectedTicks: 12);
         }
 
         [TestMethod]
@@ -209,7 +209,7 @@ namespace GBDotNet.Core.Test
         {
             var memory = new Memory(0x35);
             var cpu = new CPU(new Registers() { HL = 0x4000 }, memory);
-            TestDecrement8BitValue(cpu, () => memory[cpu.Registers.HL]);
+            TestDecrement8BitValue(cpu, () => memory[cpu.Registers.HL], expectedTicks: 12);
         }
 
         [TestMethod]
@@ -223,6 +223,7 @@ namespace GBDotNet.Core.Test
 
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Expected scf instruction to set carry flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "Expected scf instruction to clear N and H flags.");
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -252,12 +253,14 @@ namespace GBDotNet.Core.Test
 
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Expected ccf instruction to toggle carry flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "Expected ccf instruction to clear N and H flags.");
+            Assert.AreEqual(4, cpu.CyclesLastTick);
 
             cpu.Registers.PC--;
             cpu.Tick();
 
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Expected ccf instruction to toggle carry flag.");
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract | Flags.HalfCarry), "Expected ccf instruction to clear N and H flags.");
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -967,7 +970,7 @@ namespace GBDotNet.Core.Test
         /// Tests instructions like inc b.
         /// </summary>
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#INC_r8"/>
-        private static void TestIncrement8BitValue(CPU cpu, Func<byte> getterForValueBeingIncremented)
+        private static void TestIncrement8BitValue(CPU cpu, Func<byte> getterForValueBeingIncremented, int expectedTicks = 4)
         {
             //loop up since we're incrementing (making sure to cover wraparound)
             for (int i = 0; i <= byte.MaxValue; i++)
@@ -998,7 +1001,7 @@ namespace GBDotNet.Core.Test
 
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be cleared whenever an 8-bit value is incremented.");
 
-                Assert.AreEqual(4, cpu.CyclesLastTick);
+                Assert.AreEqual(expectedTicks, cpu.CyclesLastTick);
 
                 cpu.Registers.PC--;
             }
@@ -1008,7 +1011,7 @@ namespace GBDotNet.Core.Test
         /// Tests instructions like dec b.
         /// </summary>
         /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html#DEC_r8"/>
-        private static void TestDecrement8BitValue(CPU cpu, Func<byte> getterForValueBeingDecremented)
+        private static void TestDecrement8BitValue(CPU cpu, Func<byte> getterForValueBeingDecremented, int expectedTicks = 4)
         {
             //loop down since we're decrementing (making sure to cover wraparound)
             for (int i = byte.MaxValue; i >= 0; i--)
@@ -1038,7 +1041,7 @@ namespace GBDotNet.Core.Test
 
                 Assert.IsTrue(cpu.Registers.HasFlag(Flags.AddSubtract), $"Expected add/subtract flag to be set whenever an 8-bit value is decremented.");
 
-                Assert.AreEqual(4, cpu.CyclesLastTick);
+                Assert.AreEqual(expectedTicks, cpu.CyclesLastTick);
 
                 cpu.Registers.PC--;
             }

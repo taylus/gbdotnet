@@ -1174,7 +1174,8 @@ namespace GBDotNet.Core
         /// </remarks>
         private void Instruction_0x32_Load_Address_Pointed_To_By_HL_With_A_Then_Decrement_HL()
         {
-            Memory[Registers.HL--] = Registers.A;
+            MemoryWrite(Registers.HL, Registers.A);
+            Registers.HL--;
         }
 
         /// <summary>
@@ -1191,7 +1192,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x34_Increment_Value_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = Increment8BitValueAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, Increment8BitValueAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -1199,7 +1200,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x35_Decrement_Value_Pointed_To_By_HL()
         {
-            Memory[Registers.HL] = Decrement8BitValueAndSetFlags(Memory[Registers.HL]);
+            MemoryWrite(Registers.HL, Decrement8BitValueAndSetFlags(MemoryRead(Registers.HL)));
         }
 
         /// <summary>
@@ -1207,7 +1208,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x36_Load_Address_Pointed_To_By_HL_With_8_Bit_Immediate()
         {
-            Memory[Registers.HL] = Fetch();
+            MemoryWrite(Registers.HL, Fetch());
         }
 
         /// <summary>
@@ -1244,7 +1245,8 @@ namespace GBDotNet.Core
         /// </remarks>
         private void Instruction_0x3A_Load_A_With_Address_Pointed_To_By_HL_Then_Decrement_HL()
         {
-            Registers.A = Memory[Registers.HL--];
+            Registers.A = MemoryRead(Registers.HL);
+            Registers.HL--;
         }
 
         /// <summary>

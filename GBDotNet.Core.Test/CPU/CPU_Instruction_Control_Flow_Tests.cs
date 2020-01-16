@@ -89,6 +89,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(addressOfJump + 3, cpu.Registers.PC, "Expected jr nc instruction to jump when carry flag is not set.");
+            Assert.AreEqual(12, cpu.CyclesLastTick);
 
             //set carry flag and replay => should not jump
             cpu.Registers.PC = 0;
@@ -97,6 +98,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(addressOfJump + 2, cpu.Registers.PC, "Expected jr nc instruction to *not* jump when carry flag is set.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -111,6 +113,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(addressOfJump + 3, cpu.Registers.PC, "Expected jr c instruction to jump when carry flag is set.");
+            Assert.AreEqual(12, cpu.CyclesLastTick);
 
             //clear carry flag and replay => should not jump
             cpu.Registers.PC = 0;
@@ -119,6 +122,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(addressOfJump + 2, cpu.Registers.PC, "Expected jr c instruction to *not* jump when carry flag is not set.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
