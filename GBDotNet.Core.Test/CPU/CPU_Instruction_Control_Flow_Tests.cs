@@ -496,6 +496,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.IsFalse(cpu.InterruptsEnabled);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -507,6 +508,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.IsTrue(cpu.InterruptsEnabled);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
     }
 }

@@ -841,6 +841,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, cpu.Registers.A);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -853,6 +854,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, cpu.Registers.A);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -864,6 +866,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xAA, cpu.Registers.A);
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         /// <summary>

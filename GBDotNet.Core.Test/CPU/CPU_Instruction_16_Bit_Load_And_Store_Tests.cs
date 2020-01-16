@@ -142,6 +142,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xBEEF, cpu.Registers.AF);
             Assert.AreEqual(0x0003, cpu.Registers.SP);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -154,6 +155,7 @@ namespace GBDotNet.Core.Test
 
             CollectionAssert.AreEqual(new byte[] { 0xF5, 0xF0, 0xFF }, memory.Take(3).ToArray());
             Assert.AreEqual(initialStackPointer - 2, cpu.Registers.SP);
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -188,6 +190,9 @@ namespace GBDotNet.Core.Test
                 {
                     Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), $"For SP = {cpu.Registers.SP}, e8 = {i}, expected carry flag to be cleared when SP + e8 does not overflow from bit 7.");
                 }
+
+                Assert.AreEqual(12, cpu.CyclesLastTick);
+
                 cpu.Registers.PC -= 2;
             }
         }
@@ -201,6 +206,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0xBABE, cpu.Registers.SP);
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         /// <summary>

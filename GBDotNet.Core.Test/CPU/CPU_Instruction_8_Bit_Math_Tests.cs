@@ -896,6 +896,7 @@ namespace GBDotNet.Core.Test
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry));
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry));
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero));
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         /// <summary>

@@ -2604,7 +2604,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xF0_Load_A_From_High_Memory_Address_Offset_By_8_Bit_Immediate()
         {
-            Registers.A = Memory[0xFF00 + Fetch()];
+            Registers.A = MemoryRead(0xFF00 + Fetch());
         }
 
         /// <summary>
@@ -2620,7 +2620,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xF2_Load_A_From_High_Memory_Address_Offset_By_C()
         {
-            Registers.A = Memory[0xFF00 + Registers.C];
+            Registers.A = MemoryRead(0xFF00 + Registers.C);
         }
 
         /// <summary>
@@ -2636,6 +2636,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xF5_Push_AF_Onto_Stack()
         {
+            CyclesLastTick += 4;
             PushOntoStack(Registers.A, Registers.F);
         }
 
@@ -2665,6 +2666,7 @@ namespace GBDotNet.Core
             Registers.ClearFlag(Flags.AddSubtract | Flags.Zero);
             Registers.SetFlagTo(Flags.HalfCarry, ((Registers.SP & 0xF) + (immediate & 0xF) > 0xF));
             Registers.SetFlagTo(Flags.Carry, ((Registers.SP & 0xFF) + immediate > 0xFF));
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -2673,6 +2675,7 @@ namespace GBDotNet.Core
         private void Instruction_0xF9_Load_Stack_Pointer_From_HL()
         {
             Registers.SP = Registers.HL;
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -2681,7 +2684,7 @@ namespace GBDotNet.Core
         private void Instruction_0xFA_Load_A_From_Immediate_Memory_Location()
         {
             var address = Common.FromLittleEndian(Fetch(), Fetch());
-            Registers.A = Memory[address];
+            Registers.A = MemoryRead(address);
         }
 
         /// <summary>
