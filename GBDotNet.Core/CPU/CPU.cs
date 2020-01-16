@@ -1928,7 +1928,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x96_Subtract_Address_Pointed_To_By_HL_From_A()
         {
-            SubtractFromAccumulatorAndSetFlags(Memory[Registers.HL]);
+            SubtractFromAccumulatorAndSetFlags(MemoryRead(Registers.HL));
         }
 
         /// <summary>
@@ -1992,7 +1992,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x9E_Subtract_Address_Pointed_To_By_HL_Plus_Carry_From_A()
         {
-            SubtractFromAccumulatorAndSetFlags(Memory[Registers.HL], carryBit: Registers.HasFlag(Flags.Carry));
+            SubtractFromAccumulatorAndSetFlags(MemoryRead(Registers.HL), carryBit: Registers.HasFlag(Flags.Carry));
         }
 
         /// <summary>

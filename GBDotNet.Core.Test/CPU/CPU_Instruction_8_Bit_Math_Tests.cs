@@ -584,7 +584,8 @@ namespace GBDotNet.Core.Test
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
                 expectedZero: false,
                 expectedCarry: false,
-                expectedHalfCarry: true);
+                expectedHalfCarry: true,
+                expectedCycles: 8);
         }
 
         [TestMethod]
@@ -696,7 +697,8 @@ namespace GBDotNet.Core.Test
                 registerSetter: (value) => memory[cpu.Registers.HL] = value,
                 expectedZero: false,
                 expectedCarry: false,
-                expectedHalfCarry: true);
+                expectedHalfCarry: true,
+                expectedCycles: 8);
         }
 
         [TestMethod]
@@ -931,7 +933,7 @@ namespace GBDotNet.Core.Test
         /// If <paramref name="performSubtraction"/> is false, tests instructions like cp a, b.
         /// </summary>
         private static void TestSubtracting8BitRegisterFromAccumulator(CPU cpu, byte a, byte registerValue, Action<byte> registerSetter,
-            bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null, bool performSubtraction = true)
+            bool expectedZero, bool expectedCarry, bool expectedHalfCarry, bool? carryBit = null, bool performSubtraction = true, int expectedCycles = 4)
         {
             cpu.Registers.PC = 0;   //assume the add instruction is always at the beginning of memory
             cpu.Registers.ClearFlag(Flags.AddSubtract);   //clear the N flag (subtract instructions should always set it)
@@ -960,6 +962,8 @@ namespace GBDotNet.Core.Test
                 Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should be set when subtracting from or comparing {registerValue} w/ accumulator {a}.");
             else
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"Half carry flag should not be set when subtracting from or comparing {registerValue} w/ accumulator {a}.");
+
+            Assert.AreEqual(expectedCycles, cpu.CyclesLastTick);
         }
 
         /// <summary>
