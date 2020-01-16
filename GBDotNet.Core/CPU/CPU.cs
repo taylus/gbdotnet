@@ -2396,6 +2396,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xD0_Return_From_Subroutine_If_Carry_Flag_Not_Set()
         {
+            CyclesLastTick += 4;
             if (!Registers.HasFlag(Flags.Carry)) Return();
         }
 
@@ -2431,6 +2432,7 @@ namespace GBDotNet.Core
         private void Instruction_0xD5_Push_DE_Onto_Stack()
         {
             PushOntoStack(Registers.D, Registers.E);
+            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -2454,6 +2456,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xD8_Return_From_Subroutine_If_Carry_Flag_Set()
         {
+            CyclesLastTick += 4;
             if (Registers.HasFlag(Flags.Carry)) Return();
         }
 
@@ -2472,7 +2475,7 @@ namespace GBDotNet.Core
         private void Instruction_0xDA_Jump_To_Immediate_16_Bit_Address_If_Carry_Flag_Set()
         {
             ushort address = Common.FromLittleEndian(Fetch(), Fetch());
-            if (Registers.HasFlag(Flags.Carry)) Call(address, returnAddress: Registers.PC);
+            if (Registers.HasFlag(Flags.Carry)) AbsoluteJump(address);
         }
 
         /// <summary>

@@ -325,6 +325,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected ret nc instruction to return from subroutine when carry flag is not set.");
+            Assert.AreEqual(20, cpu.CyclesLastTick);
 
             //set carry flag and replay => should not return from subroutine
             cpu.Registers.PC = 0;
@@ -333,6 +334,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x0001, cpu.Registers.PC, "Expected ret nc instruction to *not* return from subroutine when carry flag is set.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -345,6 +347,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected jp nc instruction to jump to address when carry flag is not set.");
+            Assert.AreEqual(16, cpu.CyclesLastTick);
 
             //set carry flag and replay => should not jump to address
             cpu.Registers.PC = 0;
@@ -353,6 +356,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x0003, cpu.Registers.PC, "Expected jp nc instruction to *not* jump to address when carry flag is set.");
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -366,6 +370,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x4000, cpu.Registers.PC);
+            Assert.AreEqual(24, cpu.CyclesLastTick);
 
             var expectedReturnAddress = initialProgramCounter + 3;  //call instructions are 3 bytes long
             var pushedReturnAddress = Common.FromLittleEndian(memory[cpu.Registers.SP], memory[cpu.Registers.SP + 1]);
@@ -378,6 +383,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(expectedReturnAddress, cpu.Registers.PC, "Expected call nc instruction to *not* call subroutine when carry flag is set.");
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -392,6 +398,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected ret c instruction to return from subroutine when carry flag is set.");
+            Assert.AreEqual(20, cpu.CyclesLastTick);
 
             //clear carry flag and replay => should not return from subroutine
             cpu.Registers.PC = 0;
@@ -400,6 +407,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x0001, cpu.Registers.PC, "Expected ret c instruction to *not* return from subroutine when carry flag is clear.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -413,6 +421,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected jp c instruction to jump to immediate address when carry flag is set.");
+            Assert.AreEqual(16, cpu.CyclesLastTick);
 
             //clear carry flag and replay => should not return from subroutine
             cpu.Registers.PC = 0;
@@ -421,6 +430,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x0003, cpu.Registers.PC, "Expected jp c instruction to *not* jump when carry flag is clear.");
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -435,6 +445,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(0x4000, cpu.Registers.PC, "Expected call c instruction to call subroutine at immediate address when carry flag is set.");
+            Assert.AreEqual(24, cpu.CyclesLastTick);
 
             var expectedReturnAddress = initialProgramCounter + 3;  //call instructions are 3 bytes long
             var pushedReturnAddress = Common.FromLittleEndian(memory[cpu.Registers.SP], memory[cpu.Registers.SP + 1]);
@@ -447,6 +458,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(expectedReturnAddress, cpu.Registers.PC, "Expected call c instruction to *not* call subroutine when carry flag is clear.");
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -460,6 +472,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0x4000, cpu.Registers.PC);
             Assert.IsTrue(cpu.InterruptsEnabled);
+            Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 
         [TestMethod]
