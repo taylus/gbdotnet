@@ -682,6 +682,7 @@ namespace GBDotNet.Core
         private void RelativeJump(sbyte signedImmediate)
         {
             Registers.PC += (ushort)signedImmediate;
+            CyclesLastTick += 4;
         }
 
         private void AbsoluteJump(ushort address)
@@ -932,7 +933,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x1A_Load_A_From_Address_Pointed_To_By_DE()
         {
-            Registers.A = Memory[Registers.DE];
+            Registers.A = MemoryRead(Registers.DE);
         }
 
         /// <summary>

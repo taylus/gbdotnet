@@ -79,6 +79,7 @@ namespace GBDotNet.Core.Test
                 Assert.AreEqual((byte)(1 << i), cpu.Registers.A, "Accumulator has incorrect value after rla instruction.");
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be cleared after rla instruction.");
                 AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+                Assert.AreEqual(4, cpu.CyclesLastTick);
                 cpu.Registers.PC--;
             }
 
@@ -86,6 +87,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0, cpu.Registers.A, "Accumulator should be zero after a full left rotation.");
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set again after a full left rotation.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -103,6 +105,7 @@ namespace GBDotNet.Core.Test
                 Assert.AreEqual((byte)(1 << (7 - i)), cpu.Registers.A, "Accumulator has incorrect value after rra instruction.");
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be cleared after rra instruction.");
                 AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+                Assert.AreEqual(4, cpu.CyclesLastTick);
                 cpu.Registers.PC--;
             }
 
@@ -110,6 +113,7 @@ namespace GBDotNet.Core.Test
             Assert.AreEqual(0, cpu.Registers.A, "Accumulator should be zero after a full right rotation.");
             Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), "Carry flag should be set again after a full right rotation.");
             AssertFlagsAreCleared(cpu, Flags.Zero | Flags.AddSubtract | Flags.HalfCarry);
+            Assert.AreEqual(4, cpu.CyclesLastTick);
         }
 
         [TestMethod]

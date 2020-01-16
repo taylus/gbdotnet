@@ -84,16 +84,19 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
             Assert.AreEqual(0x1A, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.DE}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
 
             cpu.Registers.PC = 0;
             cpu.Registers.DE = 1;
             cpu.Tick();
             Assert.AreEqual(0x01, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.DE}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
 
             cpu.Registers.PC = 0;
             cpu.Registers.DE = 2;
             cpu.Tick();
             Assert.AreEqual(0x02, cpu.Registers.A, $"Accumulator should be set to value at memory address {cpu.Registers.DE}.");
+            Assert.AreEqual(8, cpu.CyclesLastTick);
         }
 
         [TestMethod]

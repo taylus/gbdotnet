@@ -15,6 +15,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(addressOfJump, cpu.Registers.PC);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
@@ -27,6 +28,7 @@ namespace GBDotNet.Core.Test
             cpu.Tick();
 
             Assert.AreEqual(addressOfJump + 3, cpu.Registers.PC);
+            Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 
         [TestMethod]
