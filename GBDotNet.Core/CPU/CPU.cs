@@ -5072,6 +5072,6 @@ namespace GBDotNet.Core
             return newValue;
         }
 
-        public override string ToString() => Registers.ToString();
+        public override string ToString() => $"{Registers} T: {TotalElapsedCycles}";
     }
 }
