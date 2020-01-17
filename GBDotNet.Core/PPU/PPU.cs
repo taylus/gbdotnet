@@ -17,7 +17,7 @@ namespace GBDotNet.Core
         private int currentLineBeingDrawn;
         private int cyclesSinceLastModeChange;
 
-        public Registers Registers { get; private set; }
+        public PPURegisters Registers { get; private set; }
         public IMemory Memory { get; private set; }
 
         public PPU(IMemory memory)
