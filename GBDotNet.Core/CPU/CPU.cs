@@ -3748,7 +3748,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x80_Reset_Bit_0_Of_B()
         {
-            Registers.B = ClearBit(Registers.B, 0);
+            Registers.B = Common.ClearBit(Registers.B, 0);
         }
 
         /// <summary>
@@ -3756,7 +3756,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x81_Reset_Bit_0_Of_C()
         {
-            Registers.C = ClearBit(Registers.C, 0);
+            Registers.C = Common.ClearBit(Registers.C, 0);
         }
 
         /// <summary>
@@ -3764,7 +3764,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x82_Reset_Bit_0_Of_D()
         {
-            Registers.D = ClearBit(Registers.D, 0);
+            Registers.D = Common.ClearBit(Registers.D, 0);
         }
 
         /// <summary>
@@ -3772,7 +3772,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x83_Reset_Bit_0_Of_E()
         {
-            Registers.E = ClearBit(Registers.E, 0);
+            Registers.E = Common.ClearBit(Registers.E, 0);
         }
 
         /// <summary>
@@ -3780,7 +3780,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x84_Reset_Bit_0_Of_H()
         {
-            Registers.H = ClearBit(Registers.H, 0);
+            Registers.H = Common.ClearBit(Registers.H, 0);
         }
 
         /// <summary>
@@ -3788,7 +3788,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x85_Reset_Bit_0_Of_L()
         {
-            Registers.L = ClearBit(Registers.L, 0);
+            Registers.L = Common.ClearBit(Registers.L, 0);
         }
 
         /// <summary>
@@ -3796,7 +3796,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x86_Reset_Bit_0_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 0));
+            MemoryWrite(Registers.HL, Common.ClearBit(MemoryRead(Registers.HL), 0));
         }
 
         /// <summary>
@@ -3804,7 +3804,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x87_Reset_Bit_0_Of_A()
         {
-            Registers.A = ClearBit(Registers.A, 0);
+            Registers.A = Common.ClearBit(Registers.A, 0);
         }
 
         /// <summary>
@@ -3812,7 +3812,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x88_Reset_Bit_1_Of_B()
         {
-            Registers.B = ClearBit(Registers.B, 1);
+            Registers.B = Common.ClearBit(Registers.B, 1);
         }
 
         /// <summary>
@@ -3820,7 +3820,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x89_Reset_Bit_1_Of_C()
         {
-            Registers.C = ClearBit(Registers.C, 1);
+            Registers.C = Common.ClearBit(Registers.C, 1);
         }
 
         /// <summary>
@@ -3828,7 +3828,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x8A_Reset_Bit_1_Of_D()
         {
-            Registers.D = ClearBit(Registers.D, 1);
+            Registers.D = Common.ClearBit(Registers.D, 1);
         }
 
         /// <summary>
@@ -3836,7 +3836,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x8B_Reset_Bit_1_Of_E()
         {
-            Registers.E = ClearBit(Registers.E, 1);
+            Registers.E = Common.ClearBit(Registers.E, 1);
         }
 
         /// <summary>
@@ -3844,7 +3844,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x8C_Reset_Bit_1_Of_H()
         {
-            Registers.H = ClearBit(Registers.H, 1);
+            Registers.H = Common.ClearBit(Registers.H, 1);
         }
 
         /// <summary>
@@ -3852,7 +3852,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x8D_Reset_Bit_1_Of_L()
         {
-            Registers.L = ClearBit(Registers.L, 1);
+            Registers.L = Common.ClearBit(Registers.L, 1);
         }
 
         /// <summary>
@@ -3860,7 +3860,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x8E_Reset_Bit_1_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 1));
+            MemoryWrite(Registers.HL, Common.ClearBit(MemoryRead(Registers.HL), 1));
         }
 
         /// <summary>
@@ -3868,7 +3868,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x8F_Reset_Bit_1_Of_A()
         {
-            Registers.A = ClearBit(Registers.A, 1);
+            Registers.A = Common.ClearBit(Registers.A, 1);
         }
 
         /// <summary>
@@ -3876,7 +3876,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x90_Reset_Bit_2_Of_B()
         {
-            Registers.B = ClearBit(Registers.B, 2);
+            Registers.B = Common.ClearBit(Registers.B, 2);
         }
 
         /// <summary>
@@ -3884,7 +3884,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x91_Reset_Bit_2_Of_C()
         {
-            Registers.C = ClearBit(Registers.C, 2);
+            Registers.C = Common.ClearBit(Registers.C, 2);
         }
 
         /// <summary>
@@ -3892,7 +3892,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x92_Reset_Bit_2_Of_D()
         {
-            Registers.D = ClearBit(Registers.D, 2);
+            Registers.D = Common.ClearBit(Registers.D, 2);
         }
 
         /// <summary>
@@ -3900,7 +3900,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x93_Reset_Bit_2_Of_E()
         {
-            Registers.E = ClearBit(Registers.E, 2);
+            Registers.E = Common.ClearBit(Registers.E, 2);
         }
 
         /// <summary>
@@ -3908,7 +3908,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x94_Reset_Bit_2_Of_H()
         {
-            Registers.H = ClearBit(Registers.H, 2);
+            Registers.H = Common.ClearBit(Registers.H, 2);
         }
 
         /// <summary>
@@ -3916,7 +3916,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x95_Reset_Bit_2_Of_L()
         {
-            Registers.L = ClearBit(Registers.L, 2);
+            Registers.L = Common.ClearBit(Registers.L, 2);
         }
 
         /// <summary>
@@ -3924,7 +3924,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x96_Reset_Bit_2_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 2));
+            MemoryWrite(Registers.HL, Common.ClearBit(MemoryRead(Registers.HL), 2));
         }
 
         /// <summary>
@@ -3932,7 +3932,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x97_Reset_Bit_2_Of_A()
         {
-            Registers.A = ClearBit(Registers.A, 2);
+            Registers.A = Common.ClearBit(Registers.A, 2);
         }
 
         /// <summary>
@@ -3940,7 +3940,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x98_Reset_Bit_3_Of_B()
         {
-            Registers.B = ClearBit(Registers.B, 3);
+            Registers.B = Common.ClearBit(Registers.B, 3);
         }
 
         /// <summary>
@@ -3948,7 +3948,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x99_Reset_Bit_3_Of_C()
         {
-            Registers.C = ClearBit(Registers.C, 3);
+            Registers.C = Common.ClearBit(Registers.C, 3);
         }
 
         /// <summary>
@@ -3956,7 +3956,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x9A_Reset_Bit_3_Of_D()
         {
-            Registers.D = ClearBit(Registers.D, 3);
+            Registers.D = Common.ClearBit(Registers.D, 3);
         }
 
         /// <summary>
@@ -3964,7 +3964,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x9B_Reset_Bit_3_Of_E()
         {
-            Registers.E = ClearBit(Registers.E, 3);
+            Registers.E = Common.ClearBit(Registers.E, 3);
         }
 
         /// <summary>
@@ -3972,7 +3972,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x9C_Reset_Bit_3_Of_H()
         {
-            Registers.H = ClearBit(Registers.H, 3);
+            Registers.H = Common.ClearBit(Registers.H, 3);
         }
 
         /// <summary>
@@ -3980,7 +3980,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x9D_Reset_Bit_3_Of_L()
         {
-            Registers.L = ClearBit(Registers.L, 3);
+            Registers.L = Common.ClearBit(Registers.L, 3);
         }
 
         /// <summary>
@@ -3988,7 +3988,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x9E_Reset_Bit_3_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 3));
+            MemoryWrite(Registers.HL, Common.ClearBit(MemoryRead(Registers.HL), 3));
         }
 
         /// <summary>
@@ -3996,7 +3996,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0x9F_Reset_Bit_3_Of_A()
         {
-            Registers.A = ClearBit(Registers.A, 3);
+            Registers.A = Common.ClearBit(Registers.A, 3);
         }
 
         /// <summary>
@@ -4004,7 +4004,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA0_Reset_Bit_4_Of_B()
         {
-            Registers.B = ClearBit(Registers.B, 4);
+            Registers.B = Common.ClearBit(Registers.B, 4);
         }
 
         /// <summary>
@@ -4012,7 +4012,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA1_Reset_Bit_4_Of_C()
         {
-            Registers.C = ClearBit(Registers.C, 4);
+            Registers.C = Common.ClearBit(Registers.C, 4);
         }
 
         /// <summary>
@@ -4020,7 +4020,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA2_Reset_Bit_4_Of_D()
         {
-            Registers.D = ClearBit(Registers.D, 4);
+            Registers.D = Common.ClearBit(Registers.D, 4);
         }
 
         /// <summary>
@@ -4028,7 +4028,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA3_Reset_Bit_4_Of_E()
         {
-            Registers.E = ClearBit(Registers.E, 4);
+            Registers.E = Common.ClearBit(Registers.E, 4);
         }
 
         /// <summary>
@@ -4036,7 +4036,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA4_Reset_Bit_4_Of_H()
         {
-            Registers.H = ClearBit(Registers.H, 4);
+            Registers.H = Common.ClearBit(Registers.H, 4);
         }
 
         /// <summary>
@@ -4044,7 +4044,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA5_Reset_Bit_4_Of_L()
         {
-            Registers.L = ClearBit(Registers.L, 4);
+            Registers.L = Common.ClearBit(Registers.L, 4);
         }
 
         /// <summary>
@@ -4052,7 +4052,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA6_Reset_Bit_4_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 4));
+            MemoryWrite(Registers.HL, Common.ClearBit(MemoryRead(Registers.HL), 4));
         }
 
         /// <summary>
@@ -4060,7 +4060,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA7_Reset_Bit_4_Of_A()
         {
-            Registers.A = ClearBit(Registers.A, 4);
+            Registers.A = Common.ClearBit(Registers.A, 4);
         }
 
         /// <summary>
@@ -4068,7 +4068,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA8_Reset_Bit_5_Of_B()
         {
-            Registers.B = ClearBit(Registers.B, 5);
+            Registers.B = Common.ClearBit(Registers.B, 5);
         }
 
         /// <summary>
@@ -4076,7 +4076,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xA9_Reset_Bit_5_Of_C()
         {
-            Registers.C = ClearBit(Registers.C, 5);
+            Registers.C = Common.ClearBit(Registers.C, 5);
         }
 
         /// <summary>
@@ -4084,7 +4084,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xAA_Reset_Bit_5_Of_D()
         {
-            Registers.D = ClearBit(Registers.D, 5);
+            Registers.D = Common.ClearBit(Registers.D, 5);
         }
 
         /// <summary>
@@ -4092,7 +4092,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xAB_Reset_Bit_5_Of_E()
         {
-            Registers.E = ClearBit(Registers.E, 5);
+            Registers.E = Common.ClearBit(Registers.E, 5);
         }
 
         /// <summary>
@@ -4100,7 +4100,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xAC_Reset_Bit_5_Of_H()
         {
-            Registers.H = ClearBit(Registers.H, 5);
+            Registers.H = Common.ClearBit(Registers.H, 5);
         }
 
         /// <summary>
@@ -4108,7 +4108,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xAD_Reset_Bit_5_Of_L()
         {
-            Registers.L = ClearBit(Registers.L, 5);
+            Registers.L = Common.ClearBit(Registers.L, 5);
         }
 
         /// <summary>
@@ -4116,7 +4116,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xAE_Reset_Bit_5_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 5));
+            MemoryWrite(Registers.HL, Common.ClearBit(MemoryRead(Registers.HL), 5));
         }
 
         /// <summary>
@@ -4124,7 +4124,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xAF_Reset_Bit_5_Of_A()
         {
-            Registers.A = ClearBit(Registers.A, 5);
+            Registers.A = Common.ClearBit(Registers.A, 5);
         }
 
         /// <summary>
@@ -4132,7 +4132,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB0_Reset_Bit_6_Of_B()
         {
-            Registers.B = ClearBit(Registers.B, 6);
+            Registers.B = Common.ClearBit(Registers.B, 6);
         }
 
         /// <summary>
@@ -4140,7 +4140,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB1_Reset_Bit_6_Of_C()
         {
-            Registers.C = ClearBit(Registers.C, 6);
+            Registers.C = Common.ClearBit(Registers.C, 6);
         }
 
         /// <summary>
@@ -4148,7 +4148,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB2_Reset_Bit_6_Of_D()
         {
-            Registers.D = ClearBit(Registers.D, 6);
+            Registers.D = Common.ClearBit(Registers.D, 6);
         }
 
         /// <summary>
@@ -4156,7 +4156,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB3_Reset_Bit_6_Of_E()
         {
-            Registers.E = ClearBit(Registers.E, 6);
+            Registers.E = Common.ClearBit(Registers.E, 6);
         }
 
         /// <summary>
@@ -4164,7 +4164,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB4_Reset_Bit_6_Of_H()
         {
-            Registers.H = ClearBit(Registers.H, 6);
+            Registers.H = Common.ClearBit(Registers.H, 6);
         }
 
         /// <summary>
@@ -4172,7 +4172,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB5_Reset_Bit_6_Of_L()
         {
-            Registers.L = ClearBit(Registers.L, 6);
+            Registers.L = Common.ClearBit(Registers.L, 6);
         }
 
         /// <summary>
@@ -4180,7 +4180,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB6_Reset_Bit_6_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 6));
+            MemoryWrite(Registers.HL, Common.ClearBit(MemoryRead(Registers.HL), 6));
         }
 
         /// <summary>
@@ -4188,7 +4188,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB7_Reset_Bit_6_Of_A()
         {
-            Registers.A = ClearBit(Registers.A, 6);
+            Registers.A = Common.ClearBit(Registers.A, 6);
         }
 
         /// <summary>
@@ -4196,7 +4196,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB8_Reset_Bit_7_Of_B()
         {
-            Registers.B = ClearBit(Registers.B, 7);
+            Registers.B = Common.ClearBit(Registers.B, 7);
         }
 
         /// <summary>
@@ -4204,7 +4204,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xB9_Reset_Bit_7_Of_C()
         {
-            Registers.C = ClearBit(Registers.C, 7);
+            Registers.C = Common.ClearBit(Registers.C, 7);
         }
 
         /// <summary>
@@ -4212,7 +4212,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xBA_Reset_Bit_7_Of_D()
         {
-            Registers.D = ClearBit(Registers.D, 7);
+            Registers.D = Common.ClearBit(Registers.D, 7);
         }
 
         /// <summary>
@@ -4220,7 +4220,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xBB_Reset_Bit_7_Of_E()
         {
-            Registers.E = ClearBit(Registers.E, 7);
+            Registers.E = Common.ClearBit(Registers.E, 7);
         }
 
         /// <summary>
@@ -4228,7 +4228,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xBC_Reset_Bit_7_Of_H()
         {
-            Registers.H = ClearBit(Registers.H, 7);
+            Registers.H = Common.ClearBit(Registers.H, 7);
         }
 
         /// <summary>
@@ -4236,7 +4236,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xBD_Reset_Bit_7_Of_L()
         {
-            Registers.L = ClearBit(Registers.L, 7);
+            Registers.L = Common.ClearBit(Registers.L, 7);
         }
 
         /// <summary>
@@ -4244,7 +4244,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xBE_Reset_Bit_7_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, ClearBit(MemoryRead(Registers.HL), 7));
+            MemoryWrite(Registers.HL, Common.ClearBit(MemoryRead(Registers.HL), 7));
         }
 
         /// <summary>
@@ -4252,7 +4252,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xBF_Reset_Bit_7_Of_A()
         {
-            Registers.A = ClearBit(Registers.A, 7);
+            Registers.A = Common.ClearBit(Registers.A, 7);
         }
 
         /// <summary>
@@ -4260,7 +4260,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC0_Set_Bit_0_Of_B()
         {
-            Registers.B = SetBit(Registers.B, 0);
+            Registers.B = Common.SetBit(Registers.B, 0);
         }
 
         /// <summary>
@@ -4268,7 +4268,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC1_Set_Bit_0_Of_C()
         {
-            Registers.C = SetBit(Registers.C, 0);
+            Registers.C = Common.SetBit(Registers.C, 0);
         }
 
         /// <summary>
@@ -4276,7 +4276,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC2_Set_Bit_0_Of_D()
         {
-            Registers.D = SetBit(Registers.D, 0);
+            Registers.D = Common.SetBit(Registers.D, 0);
         }
 
         /// <summary>
@@ -4284,7 +4284,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC3_Set_Bit_0_Of_E()
         {
-            Registers.E = SetBit(Registers.E, 0);
+            Registers.E = Common.SetBit(Registers.E, 0);
         }
 
         /// <summary>
@@ -4292,7 +4292,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC4_Set_Bit_0_Of_H()
         {
-            Registers.H = SetBit(Registers.H, 0);
+            Registers.H = Common.SetBit(Registers.H, 0);
         }
 
         /// <summary>
@@ -4300,7 +4300,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC5_Set_Bit_0_Of_L()
         {
-            Registers.L = SetBit(Registers.L, 0);
+            Registers.L = Common.SetBit(Registers.L, 0);
         }
 
         /// <summary>
@@ -4308,7 +4308,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC6_Set_Bit_0_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 0));
+            MemoryWrite(Registers.HL, Common.SetBit(MemoryRead(Registers.HL), 0));
         }
 
         /// <summary>
@@ -4316,7 +4316,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC7_Set_Bit_0_Of_A()
         {
-            Registers.A = SetBit(Registers.A, 0);
+            Registers.A = Common.SetBit(Registers.A, 0);
         }
 
         /// <summary>
@@ -4324,7 +4324,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC8_Set_Bit_1_Of_B()
         {
-            Registers.B = SetBit(Registers.B, 1);
+            Registers.B = Common.SetBit(Registers.B, 1);
         }
 
         /// <summary>
@@ -4332,7 +4332,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xC9_Set_Bit_1_Of_C()
         {
-            Registers.C = SetBit(Registers.C, 1);
+            Registers.C = Common.SetBit(Registers.C, 1);
         }
 
         /// <summary>
@@ -4340,7 +4340,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xCA_Set_Bit_1_Of_D()
         {
-            Registers.D = SetBit(Registers.D, 1);
+            Registers.D = Common.SetBit(Registers.D, 1);
         }
 
         /// <summary>
@@ -4348,7 +4348,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xCB_Set_Bit_1_Of_E()
         {
-            Registers.E = SetBit(Registers.E, 1);
+            Registers.E = Common.SetBit(Registers.E, 1);
         }
 
         /// <summary>
@@ -4356,7 +4356,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xCC_Set_Bit_1_Of_H()
         {
-            Registers.H = SetBit(Registers.H, 1);
+            Registers.H = Common.SetBit(Registers.H, 1);
         }
 
         /// <summary>
@@ -4364,7 +4364,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xCD_Set_Bit_1_Of_L()
         {
-            Registers.L = SetBit(Registers.L, 1);
+            Registers.L = Common.SetBit(Registers.L, 1);
         }
 
         /// <summary>
@@ -4372,7 +4372,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xCE_Set_Bit_1_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 1));
+            MemoryWrite(Registers.HL, Common.SetBit(MemoryRead(Registers.HL), 1));
         }
 
         /// <summary>
@@ -4380,7 +4380,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xCF_Set_Bit_1_Of_A()
         {
-            Registers.A = SetBit(Registers.A, 1);
+            Registers.A = Common.SetBit(Registers.A, 1);
         }
 
         /// <summary>
@@ -4388,7 +4388,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD0_Set_Bit_2_Of_B()
         {
-            Registers.B = SetBit(Registers.B, 2);
+            Registers.B = Common.SetBit(Registers.B, 2);
         }
 
         /// <summary>
@@ -4396,7 +4396,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD1_Set_Bit_2_Of_C()
         {
-            Registers.C = SetBit(Registers.C, 2);
+            Registers.C = Common.SetBit(Registers.C, 2);
         }
 
         /// <summary>
@@ -4404,7 +4404,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD2_Set_Bit_2_Of_D()
         {
-            Registers.D = SetBit(Registers.D, 2);
+            Registers.D = Common.SetBit(Registers.D, 2);
         }
 
         /// <summary>
@@ -4412,7 +4412,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD3_Set_Bit_2_Of_E()
         {
-            Registers.E = SetBit(Registers.E, 2);
+            Registers.E = Common.SetBit(Registers.E, 2);
         }
 
         /// <summary>
@@ -4420,7 +4420,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD4_Set_Bit_2_Of_H()
         {
-            Registers.H = SetBit(Registers.H, 2);
+            Registers.H = Common.SetBit(Registers.H, 2);
         }
 
         /// <summary>
@@ -4428,7 +4428,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD5_Set_Bit_2_Of_L()
         {
-            Registers.L = SetBit(Registers.L, 2);
+            Registers.L = Common.SetBit(Registers.L, 2);
         }
 
         /// <summary>
@@ -4436,7 +4436,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD6_Set_Bit_2_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 2));
+            MemoryWrite(Registers.HL, Common.SetBit(MemoryRead(Registers.HL), 2));
         }
 
         /// <summary>
@@ -4444,7 +4444,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD7_Set_Bit_2_Of_A()
         {
-            Registers.A = SetBit(Registers.A, 2);
+            Registers.A = Common.SetBit(Registers.A, 2);
         }
 
         /// <summary>
@@ -4452,7 +4452,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD8_Set_Bit_3_Of_B()
         {
-            Registers.B = SetBit(Registers.B, 3);
+            Registers.B = Common.SetBit(Registers.B, 3);
         }
 
         /// <summary>
@@ -4460,7 +4460,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xD9_Set_Bit_3_Of_C()
         {
-            Registers.C = SetBit(Registers.C, 3);
+            Registers.C = Common.SetBit(Registers.C, 3);
         }
 
         /// <summary>
@@ -4468,7 +4468,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xDA_Set_Bit_3_Of_D()
         {
-            Registers.D = SetBit(Registers.D, 3);
+            Registers.D = Common.SetBit(Registers.D, 3);
         }
 
         /// <summary>
@@ -4476,7 +4476,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xDB_Set_Bit_3_Of_E()
         {
-            Registers.E = SetBit(Registers.E, 3);
+            Registers.E = Common.SetBit(Registers.E, 3);
         }
 
         /// <summary>
@@ -4484,7 +4484,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xDC_Set_Bit_3_Of_H()
         {
-            Registers.H = SetBit(Registers.H, 3);
+            Registers.H = Common.SetBit(Registers.H, 3);
         }
 
         /// <summary>
@@ -4492,7 +4492,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xDD_Set_Bit_3_Of_L()
         {
-            Registers.L = SetBit(Registers.L, 3);
+            Registers.L = Common.SetBit(Registers.L, 3);
         }
 
         /// <summary>
@@ -4500,7 +4500,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xDE_Set_Bit_3_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 3));
+            MemoryWrite(Registers.HL, Common.SetBit(MemoryRead(Registers.HL), 3));
         }
 
         /// <summary>
@@ -4508,7 +4508,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xDF_Set_Bit_3_Of_A()
         {
-            Registers.A = SetBit(Registers.A, 3);
+            Registers.A = Common.SetBit(Registers.A, 3);
         }
 
         /// <summary>
@@ -4516,7 +4516,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE0_Set_Bit_4_Of_B()
         {
-            Registers.B = SetBit(Registers.B, 4);
+            Registers.B = Common.SetBit(Registers.B, 4);
         }
 
         /// <summary>
@@ -4524,7 +4524,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE1_Set_Bit_4_Of_C()
         {
-            Registers.C = SetBit(Registers.C, 4);
+            Registers.C = Common.SetBit(Registers.C, 4);
         }
 
         /// <summary>
@@ -4532,7 +4532,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE2_Set_Bit_4_Of_D()
         {
-            Registers.D = SetBit(Registers.D, 4);
+            Registers.D = Common.SetBit(Registers.D, 4);
         }
 
         /// <summary>
@@ -4540,7 +4540,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE3_Set_Bit_4_Of_E()
         {
-            Registers.E = SetBit(Registers.E, 4);
+            Registers.E = Common.SetBit(Registers.E, 4);
         }
 
         /// <summary>
@@ -4548,7 +4548,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE4_Set_Bit_4_Of_H()
         {
-            Registers.H = SetBit(Registers.H, 4);
+            Registers.H = Common.SetBit(Registers.H, 4);
         }
 
         /// <summary>
@@ -4556,7 +4556,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE5_Set_Bit_4_Of_L()
         {
-            Registers.L = SetBit(Registers.L, 4);
+            Registers.L = Common.SetBit(Registers.L, 4);
         }
 
         /// <summary>
@@ -4564,7 +4564,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE6_Set_Bit_4_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 4));
+            MemoryWrite(Registers.HL, Common.SetBit(MemoryRead(Registers.HL), 4));
         }
 
         /// <summary>
@@ -4572,7 +4572,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE7_Set_Bit_4_Of_A()
         {
-            Registers.A = SetBit(Registers.A, 4);
+            Registers.A = Common.SetBit(Registers.A, 4);
         }
 
         /// <summary>
@@ -4580,7 +4580,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE8_Set_Bit_5_Of_B()
         {
-            Registers.B = SetBit(Registers.B, 5);
+            Registers.B = Common.SetBit(Registers.B, 5);
         }
 
         /// <summary>
@@ -4588,7 +4588,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xE9_Set_Bit_5_Of_C()
         {
-            Registers.C = SetBit(Registers.C, 5);
+            Registers.C = Common.SetBit(Registers.C, 5);
         }
 
         /// <summary>
@@ -4596,7 +4596,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xEA_Set_Bit_5_Of_D()
         {
-            Registers.D = SetBit(Registers.D, 5);
+            Registers.D = Common.SetBit(Registers.D, 5);
         }
 
         /// <summary>
@@ -4604,7 +4604,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xEB_Set_Bit_5_Of_E()
         {
-            Registers.E = SetBit(Registers.E, 5);
+            Registers.E = Common.SetBit(Registers.E, 5);
         }
 
         /// <summary>
@@ -4612,7 +4612,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xEC_Set_Bit_5_Of_H()
         {
-            Registers.H = SetBit(Registers.H, 5);
+            Registers.H = Common.SetBit(Registers.H, 5);
         }
 
         /// <summary>
@@ -4620,7 +4620,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xED_Set_Bit_5_Of_L()
         {
-            Registers.L = SetBit(Registers.L, 5);
+            Registers.L = Common.SetBit(Registers.L, 5);
         }
 
         /// <summary>
@@ -4628,7 +4628,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xEE_Set_Bit_5_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 5));
+            MemoryWrite(Registers.HL, Common.SetBit(MemoryRead(Registers.HL), 5));
         }
 
         /// <summary>
@@ -4636,7 +4636,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xEF_Set_Bit_5_Of_A()
         {
-            Registers.A = SetBit(Registers.A, 5);
+            Registers.A = Common.SetBit(Registers.A, 5);
         }
 
         /// <summary>
@@ -4644,7 +4644,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF0_Set_Bit_6_Of_B()
         {
-            Registers.B = SetBit(Registers.B, 6);
+            Registers.B = Common.SetBit(Registers.B, 6);
         }
 
         /// <summary>
@@ -4652,7 +4652,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF1_Set_Bit_6_Of_C()
         {
-            Registers.C = SetBit(Registers.C, 6);
+            Registers.C = Common.SetBit(Registers.C, 6);
         }
 
         /// <summary>
@@ -4660,7 +4660,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF2_Set_Bit_6_Of_D()
         {
-            Registers.D = SetBit(Registers.D, 6);
+            Registers.D = Common.SetBit(Registers.D, 6);
         }
 
         /// <summary>
@@ -4668,7 +4668,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF3_Set_Bit_6_Of_E()
         {
-            Registers.E = SetBit(Registers.E, 6);
+            Registers.E = Common.SetBit(Registers.E, 6);
         }
 
         /// <summary>
@@ -4676,7 +4676,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF4_Set_Bit_6_Of_H()
         {
-            Registers.H = SetBit(Registers.H, 6);
+            Registers.H = Common.SetBit(Registers.H, 6);
         }
 
         /// <summary>
@@ -4684,7 +4684,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF5_Set_Bit_6_Of_L()
         {
-            Registers.L = SetBit(Registers.L, 6);
+            Registers.L = Common.SetBit(Registers.L, 6);
         }
 
         /// <summary>
@@ -4692,7 +4692,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF6_Set_Bit_6_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 6));
+            MemoryWrite(Registers.HL, Common.SetBit(MemoryRead(Registers.HL), 6));
         }
 
         /// <summary>
@@ -4700,7 +4700,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF7_Set_Bit_6_Of_A()
         {
-            Registers.A = SetBit(Registers.A, 6);
+            Registers.A = Common.SetBit(Registers.A, 6);
         }
 
         /// <summary>
@@ -4708,7 +4708,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF8_Set_Bit_7_Of_B()
         {
-            Registers.B = SetBit(Registers.B, 7);
+            Registers.B = Common.SetBit(Registers.B, 7);
         }
 
         /// <summary>
@@ -4716,7 +4716,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xF9_Set_Bit_7_Of_C()
         {
-            Registers.C = SetBit(Registers.C, 7);
+            Registers.C = Common.SetBit(Registers.C, 7);
         }
 
         /// <summary>
@@ -4724,7 +4724,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xFA_Set_Bit_7_Of_D()
         {
-            Registers.D = SetBit(Registers.D, 7);
+            Registers.D = Common.SetBit(Registers.D, 7);
         }
 
         /// <summary>
@@ -4732,7 +4732,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xFB_Set_Bit_7_Of_E()
         {
-            Registers.E = SetBit(Registers.E, 7);
+            Registers.E = Common.SetBit(Registers.E, 7);
         }
 
         /// <summary>
@@ -4740,7 +4740,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xFC_Set_Bit_7_Of_H()
         {
-            Registers.H = SetBit(Registers.H, 7);
+            Registers.H = Common.SetBit(Registers.H, 7);
         }
 
         /// <summary>
@@ -4748,7 +4748,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xFD_Set_Bit_7_Of_L()
         {
-            Registers.L = SetBit(Registers.L, 7);
+            Registers.L = Common.SetBit(Registers.L, 7);
         }
 
         /// <summary>
@@ -4756,7 +4756,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xFE_Set_Bit_7_Of_Address_Pointed_To_By_HL()
         {
-            MemoryWrite(Registers.HL, SetBit(MemoryRead(Registers.HL), 7));
+            MemoryWrite(Registers.HL, Common.SetBit(MemoryRead(Registers.HL), 7));
         }
 
         /// <summary>
@@ -4764,23 +4764,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xCB_0xFF_Set_Bit_7_Of_A()
         {
-            Registers.A = SetBit(Registers.A, 7);
-        }
-
-        /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#RES_u3,r8
-        /// </summary>
-        private byte ClearBit(byte value, int bitToClear)
-        {
-            return (byte)(value & ~(1 << bitToClear));
-        }
-
-        /// <summary>
-        /// https://rednex.github.io/rgbds/gbz80.7.html#SET_u3,r8
-        /// </summary>
-        private byte SetBit(byte value, int bitToSet)
-        {
-            return (byte)(value | (1 << bitToSet));
+            Registers.A = Common.SetBit(Registers.A, 7);
         }
 
         /// <summary>

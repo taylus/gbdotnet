@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GBDotNet.Core
+﻿namespace GBDotNet.Core
 {
     /// <summary>
     /// Implement's the Game Boy's Picture Processing Unit, which produces video
@@ -11,9 +9,13 @@ namespace GBDotNet.Core
     /// in each state. Timing w/ the CPU is implemented by counting cycles.
     /// </remarks>
     /// <see cref="https://mgba-emu.github.io/gbdoc/#ppu"/>
-    public partial class PPU
+    public class PPU
     {
-        private Mode currentMode;
+        private PPUMode currentMode
+        {
+            get => Registers.LCDStatus.ModeFlag;
+            set => Registers.LCDStatus.ModeFlag = value;
+        }
         private int currentLineBeingDrawn;
         private int cyclesSinceLastModeChange;
 
@@ -33,19 +35,19 @@ namespace GBDotNet.Core
             //http://bgb.bircd.org/pandocs.htm#lcdstatusregister
             //http://imrannazar.com/GameBoy-Emulation-in-JavaScript:-GPU-Timings
 
-            if (currentMode == Mode.HBlank)
+            if (currentMode == PPUMode.HBlank)
             {
 
             }
-            else if (currentMode == Mode.VBlank)
+            else if (currentMode == PPUMode.VBlank)
             {
 
             }
-            else if (currentMode == Mode.OamScan)
+            else if (currentMode == PPUMode.OamScan)
             {
 
             }
-            else if (currentMode == Mode.HDraw)
+            else if (currentMode == PPUMode.HDraw)
             {
 
             }
