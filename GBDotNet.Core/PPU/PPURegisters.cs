@@ -20,6 +20,7 @@
 
     /// <summary>
     /// $FF40 http://bgb.bircd.org/pandocs.htm#lcdcontrolregister
+    /// aka LCDC or LCDCONT
     /// </summary>
     public class LCDControlRegister
     {
@@ -29,12 +30,13 @@
         public bool WindowDisplayEnabled => Data.IsBitSet(5);
         /// <summary>
         /// Which two of the three 128-tile "blocks" of tiles are the background
-        /// and window tile maps referencing? (sprites can access the last third)
+        /// and window tile maps referencing? (sprites always use $8000-$8FFF)
         /// </summary>
         /// <see cref="https://gbdev.gg8.se/wiki/articles/Video_Display#VRAM_Tile_Data"/>
         /// <see cref="https://github.com/taylus/gameboy-graphics/blob/master/building_a_rom.md#an-aside-about-game-boy-video-memory"/>
         public int BackgroundAndWindowTileDataStartAddress => Data.IsBitSet(4) ? 0x8000 : 0x8800;
-        public int BackgroundTileMapStartAddress => Data.IsBitSet(3) ? 0x9C00 : 0x9800;
+        public bool BackgroundAndWindowTileNumbersAreSigned => BackgroundAndWindowTileDataStartAddress == 0x8800;
+        public int BackgroundTileMapBaseAddress => Data.IsBitSet(3) ? 0x9C00 : 0x9800;
         public bool AreSprites8x16 => Data.IsBitSet(2);
         public bool AreSprites8x8 => !AreSprites8x16;
         public bool SpriteDisplayEnabled => Data.IsBitSet(1);
@@ -43,6 +45,7 @@
 
     /// <summary>
     /// $FF41 http://bgb.bircd.org/pandocs.htm#lcdstatusregister
+    /// aka STAT or LCDSTAT
     /// </summary>
     public class LCDStatusRegister
     {
@@ -101,6 +104,9 @@
     public class Palette
     {
         public byte Data { get; set; }
-        //TODO: helper methods to interpret the byte of data
+        public int Color3 => (Data & 0b1100_0000) >> 6;
+        public int Color2 => (Data & 0b0011_0000) >> 4;
+        public int Color1 => (Data & 0b0000_1100) >> 2;
+        public int Color0 => (Data & 0b0000_0011);
     }
 }

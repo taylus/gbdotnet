@@ -1,4 +1,6 @@
-﻿namespace GBDotNet.Core
+﻿using System;
+
+namespace GBDotNet.Core
 {
     /// <summary>
     /// Tile maps are 32 x 32 (1K) blocks of tile numbers which define a background or window.
@@ -12,5 +14,13 @@
     public class TileMap
     {
         public const int Size = 1024;
+        public byte[] Tiles = new byte[Size];   //tile index numbers
+
+        private int baseAddress;    //either $9800 or $9C00 based on the LCD control register
+
+        public TileMap(int baseAddress)
+        {
+            this.baseAddress = baseAddress;
+        }
     }
 }
