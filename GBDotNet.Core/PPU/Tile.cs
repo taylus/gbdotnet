@@ -2,6 +2,11 @@
 
 namespace GBDotNet.Core
 {
+    /// <summary>
+    /// A single 8 x 8 pixel tile. At 2 bits per pixel, tiles are 16 bytes long,
+    /// with each consecutive pair of bytes being the low and high bits of a row, respectively.
+    /// </summary>
+    /// <see cref="https://www.huderlem.com/demos/gameboy2bpp.html"/>
     public class Tile
     {
         public const int Width = 8;

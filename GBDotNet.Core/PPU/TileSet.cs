@@ -3,14 +3,13 @@
 namespace GBDotNet.Core
 {
     /// <summary>
-    /// The tile set is a block of 3 x 128 (384) tiles which are 8 x 8 pixels each.
+    /// A block of 3 x 128 (384) tiles stored in VRAM at address range $8000 - $97FF.
     /// </summary>
     /// <remarks>
     /// The tile set is located at address range $8000 - $97FF.
     /// Each 16 bytes makes up one tile as each pixel is 2 bits (4 colors).
     /// </remarks>
     /// <see cref="http://gameboy.mongenel.com/dmg/asmmemmap.html"/>
-    /// <see cref="https://www.huderlem.com/demos/gameboy2bpp.html"/>
     public class TileSet
     {
         public const int BaseAddress = 0x8000;
