@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace GBDotNet.Core
+﻿namespace GBDotNet.Core
 {
     /// <summary>
     /// Implement's the Game Boy's Picture Processing Unit, which produces video
@@ -26,7 +24,7 @@ namespace GBDotNet.Core
         }
 
         private int cycleCounter;
-        private int[,] screen = new int[256, 256];  //pixels, palette index numbers 0-3
+        private int[,] backgroundMap = new int[256, 256];  //pixels, palette index numbers 0-3
 
         public const int TileWidthInPixels = 8;
         public const int TileHeightInPixels = 8;
@@ -42,19 +40,15 @@ namespace GBDotNet.Core
         public PPURegisters Registers { get; private set; }
         public IMemory Memory { get; private set; }
 
-        public PPU(IMemory memory)
+        public PPU(PPURegisters registers, IMemory memory)
         {
+            Registers = registers;
             Memory = memory;
         }
 
         public void Tick(int elapsedCycles)
         {
             cycleCounter += elapsedCycles;
-
-            //TODO: implement per:
-            //http://bgb.bircd.org/pandocs.htm#lcdstatusregister
-            //http://imrannazar.com/GameBoy-Emulation-in-JavaScript:-GPU-Timings
-
             if (currentMode == PPUMode.HBlank) HBlank();
             else if (currentMode == PPUMode.VBlank) VBlank();
             else if (currentMode == PPUMode.OamScan) OamScan();
@@ -110,46 +104,18 @@ namespace GBDotNet.Core
             {
                 cycleCounter = 0;
                 currentMode = PPUMode.HBlank;
-                RenderScanline(currentLine);
-            }
-        }
-
-        private void RenderScanline(int lineNumber)
-        {
-            // How to render a single line of background tiles on the screen:
-            // - Determine which tilemap we're using based on bit 3 of the LCD control register.
-            // - Find the tile index #s in the tilemap containing the line we're rendering based on lineNumber and the scroll registers.
-            // 
-            // Once we have the appropriate tile index numbers, we can look them up in the tileset to get their pixel data.
-            // Each tile corresponds to 16 consecutive bytes in the address range $8000 - $97FF, where the tile # is either
-            // an unsigned offset from $8000 or a signed offset from $9000 based on bit 4 of the LCD control register.
-            // Each pair of bytes is a single row in the tile, and each bit is a column, where the first byte is all the
-            // least significant bits of each pixel, and the second byte is all the most significant bits of each pixel.
-            //
-            // So, depending on the scroll registers, we may need to render up to 21 x 19 tiles, with only the bottom right
-            // corner pixel of the first tile being rendered, corresponding to only the LSBs of its last two bytes.
-            // 
-            // - Find the x, y pixel offsets into the tiles to render based on lineNumber and the scroll registers.
-            // - Read the appropriate bytes and bits and render them as numbers 0-3 representing pixels/palette colors.
-
-            int bgTilemapBaseAddress = Registers.LCDControl.BackgroundTileMapBaseAddress;
-
-            //determine where in the background map to start reading tile numbers
-            var tileY = (byte)(lineNumber + Registers.ScrollY) / TileHeightInPixels;
-            var tileX = Registers.ScrollX / TileWidthInPixels;
-            var bgTileStartAddress = bgTilemapBaseAddress + tileX + (tileY * BackgroundMapWidthInTiles);
-
-            int tileNumber = Memory[bgTileStartAddress];
-            if (Registers.LCDControl.BackgroundAndWindowTileNumbersAreSigned && tileNumber < 128) tileNumber += 256;
-
-            for (int x = 0; x < ScreenWidthInPixels; x++)
-            {
-                var pixelY = (byte)(currentLine + Registers.ScrollY) % TileHeightInPixels;
-                var pixelX = Registers.ScrollX % TileWidthInPixels;
+                //RenderScanline(currentLine);
             }
         }
 
         private void RenderScreen()
+        {
+            RenderBackgroundMap();
+            //TODO: render window
+            //TODO: render sprites
+        }
+
+        private void RenderBackgroundMap()
         {
 
         }
