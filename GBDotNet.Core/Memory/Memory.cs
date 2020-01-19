@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GBDotNet.Core
 {
@@ -10,18 +11,23 @@ namespace GBDotNet.Core
     public class Memory : IMemory
     {
         private const int size = ushort.MaxValue + 1;
-        private readonly byte[] memory;
+        protected readonly byte[] data;
 
         public Memory(params byte[] bytes)
         {
             Array.Resize(ref bytes, size);
-            memory = bytes;
+            data = bytes;
         }
 
-        public byte this[int i]
+        public Memory(string path)
         {
-            get => memory[i];
-            set => memory[i] = value;
+            data = File.ReadAllBytes(path);
+        }
+
+        public virtual byte this[int i]
+        {
+            get => data[i];
+            set => data[i] = value;
         }
 
         /// <summary>
@@ -29,7 +35,7 @@ namespace GBDotNet.Core
         /// </summary>
         public void HexDump(int bytesPerLine = 16, int? stopAfterBytes = null)
         {
-            HexDump(memory, bytesPerLine, stopAfterBytes);
+            HexDump(data, bytesPerLine, stopAfterBytes);
         }
 
         /// <summary>
@@ -45,14 +51,14 @@ namespace GBDotNet.Core
             }
         }
 
-        public IEnumerator<byte> GetEnumerator()
+        public virtual IEnumerator<byte> GetEnumerator()
         {
-            return ((IEnumerable<byte>)memory).GetEnumerator();
+            return ((IEnumerable<byte>)data).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<byte>)memory).GetEnumerator();
+            return ((IEnumerable<byte>)data).GetEnumerator();
         }
     }
 }
