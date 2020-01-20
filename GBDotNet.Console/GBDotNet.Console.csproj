@@ -10,4 +10,10 @@
     <ProjectReference Include="..\GBDotNet.Core\GBDotNet.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="input\tetris.vram.dump">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

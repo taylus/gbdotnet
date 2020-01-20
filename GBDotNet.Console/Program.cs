@@ -9,7 +9,7 @@ namespace GBDotNet.ConsoleApp
     public class Program
     {
         //TODO: load from command-line args
-        private const string vramDumpPath = @"C:\roms\gb\dev\tetris.vram.dump";
+        private const string vramDumpPath = @"input\tetris.vram.dump";
         private const string logPath = "gbdotnet.log";
         private const string pixelBufferPath = "tetris_tileset_pixels.bin";
         private static readonly int? TestCycleLimit = 1024 * 1024 * 4;
