@@ -9,16 +9,17 @@ namespace GBDotNet.Core
     /// <see cref="https://www.huderlem.com/demos/gameboy2bpp.html"/>
     public class Tile
     {
-        public const int Width = 8;
-        public const int Height = 8;
+        public const int WidthInPixels = 8;
+        public const int HeightInPixels = 8;
         public const int BytesPerTile = 16;
 
-        public int[] Pixels { get; } = new int[Width * Height];
+        public byte[] Pixels { get; } = new byte[WidthInPixels * HeightInPixels];
 
-        int this[int x, int y]
+        public byte this[int x, int y]
         {
-            get => Pixels[y * Width + x];
-            set => Pixels[y * Width + x] = value;
+            //use "row major order" (rows stored contiguously) since that's what MonoGame does
+            get => Pixels[y * WidthInPixels + x];
+            set => Pixels[y * WidthInPixels + x] = value;
         }
 
         public Tile(byte[] bytes)
@@ -27,7 +28,7 @@ namespace GBDotNet.Core
                 throw new ArgumentException($"Tile data must be {BytesPerTile} bytes.");
 
             //parse bytes into pixels one row (two bytes) at a time
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < HeightInPixels; y++)
             {
                 byte lowByte = bytes[2 * y];
                 byte highByte = bytes[2 * y + 1];
@@ -37,11 +38,11 @@ namespace GBDotNet.Core
                 //pixel 1 is the 6th bit of the high byte and the 6th bit of the low byte,
                 //...
                 //pixel 7 is the 0th bit of the high byte and the 0th bit of the low byte
-                for (int x = 0; x < Width; x++)
+                for (int x = 0; x < WidthInPixels; x++)
                 {
                     int highBit = (highByte & (0b10000000 >> x)) > 0 ? 1 : 0;
                     int lowBit = (lowByte & (0b10000000 >> x)) > 0 ? 1 : 0;
-                    this[x, y] = 2 * highBit + lowBit;
+                    this[x, y] = (byte)(2 * highBit + lowBit);
                 }
             }
         }

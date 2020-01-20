@@ -12,13 +12,20 @@ namespace GBDotNet.Core
     public class MemoryBus : IMemory
     {
         private RomFile rom;
-        private Memory wram = new Memory();
-        private Memory zram = new Memory();
+        private IMemory wram = new Memory();
+        private IMemory zram = new Memory();
         private byte interruptEnableFlag = 0;
+
+        public IMemory Vram { get; set; } = new Memory();
 
         public void LoadRom(RomFile rom)
         {
             this.rom = rom;
+        }
+
+        public void LoadVram(Memory vram)
+        {
+            Vram = vram;
         }
 
         public byte this[int index]
@@ -40,7 +47,7 @@ namespace GBDotNet.Core
                 else if (index < 0xA000)
                 {
                     //VRAM (8K)
-                    throw new NotImplementedException($"Unsupported read of address ${index:X4}: Video RAM is not yet implemented.");
+                    return Vram[index - 0x8000];
                 }
                 else if (index < 0xC000)
                 {
@@ -92,7 +99,7 @@ namespace GBDotNet.Core
                 if (index >= 0x8000 && index < 0xA000)
                 {
                     //VRAM (8K)
-                    throw new NotImplementedException($"Unsupported write to address ${index:X4}: Video RAM is not yet implemented.");
+                    Vram[index - 0x8000] = value;
                 }
                 else if (index < 0xC000)
                 {

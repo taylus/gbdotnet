@@ -1,4 +1,6 @@
-﻿namespace GBDotNet.Core
+﻿using System;
+
+namespace GBDotNet.Core
 {
     /// <summary>
     /// Implement's the Game Boy's Picture Processing Unit, which produces video
@@ -24,7 +26,6 @@
         }
 
         private int cycleCounter;
-        private int[,] backgroundMap = new int[256, 256];  //pixels, palette index numbers 0-3
 
         public const int TileWidthInPixels = 8;
         public const int TileHeightInPixels = 8;
@@ -66,7 +67,7 @@
                 if (currentLine == 143)
                 {
                     currentMode = PPUMode.VBlank;
-                    RenderScreen();
+                    //RenderScreen();
                 }
             }
         }
@@ -108,16 +109,15 @@
             }
         }
 
-        private void RenderScreen()
+        internal byte[] RenderBackgroundMap()
         {
-            RenderBackgroundMap();
-            //TODO: render window
-            //TODO: render sprites
+            throw new NotImplementedException();
         }
 
-        private void RenderBackgroundMap()
+        internal byte[] RenderTileSet()
         {
-
+            var tileset = new TileSet(Memory);
+            return tileset.Render();
         }
     }
 }
