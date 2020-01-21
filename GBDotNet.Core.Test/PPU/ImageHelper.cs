@@ -17,14 +17,16 @@ namespace GBDotNet.Core.Test
         /// </summary>
         public static byte[] LoadImageAsPaletteIndexedByteArray(string path)
         {
-            using var image = Image.Load<Rgba32>(path);
-            var palette = GetPalette(image);
-            if (palette.Count > maxPaletteColors)
+            using (var image = Image.Load<Rgba32>(path))
             {
-                throw new AssertFailedException($"Test setup error: {path} must be " +
-                    $"{maxPaletteColors} colors or less, but {palette.Count} colors were found.");
+                var palette = GetPalette(image);
+                if (palette.Count > maxPaletteColors)
+                {
+                    throw new AssertFailedException($"Test setup error: {path} must be " +
+                        $"{maxPaletteColors} colors or less, but {palette.Count} colors were found.");
+                }
+                return LoadImageAsPaletteIndexedByteArray(image, palette);
             }
-            return LoadImageAsPaletteIndexedByteArray(image, palette);
         }
 
         private static byte[] LoadImageAsPaletteIndexedByteArray(Image<Rgba32> image, IList<Rgba32> palette)
