@@ -24,6 +24,11 @@ namespace GBDotNet.Core
             data = File.ReadAllBytes(path);
         }
 
+        public static Memory FromFile(string path)
+        {
+            return new Memory(path);
+        }
+
         public virtual byte this[int i]
         {
             get => data[i];

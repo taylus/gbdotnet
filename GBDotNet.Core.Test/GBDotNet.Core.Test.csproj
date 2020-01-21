@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +19,19 @@
 
   <ItemGroup>
     <Folder Include="CPU\" />
+    <Folder Include="PPU\Expected\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="PPU\Expected\tetris.tileset.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="PPU\Input\tetris.tileset.dump">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="PPU\Input\tetris.vram.dump">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
