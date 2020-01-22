@@ -61,6 +61,17 @@ namespace GBDotNet.Core
                     int tileX = x / Tile.WidthInPixels;
                     int tileY = y / Tile.HeightInPixels;
                     byte tileNumber = this[tileX, tileY];
+                    //TODO: handle when tiles are unsigned
+                    //see LCDControlRegister.BackgroundAndWindowTileNumbersAreSigned
+                    //and comments re: LCDControlRegister.BackgroundAndWindowTileDataStartAddress
+                    //can handle this simply using something like this:
+                    // "If the tile data set in use is #1, the
+                    //  indices are signed; calculate a real tile offset
+                    //  if (GPU._bgtile == 1 && tile < 128) tile += 256;"
+                    // (source: http://imrannazar.com/GameBoy-Emulation-in-JavaScript:-Graphics)
+                    //Need to find a game/scene (or write one...) that uses signed background tile values! (Tetris title screen doesn't)
+                    //Have separate test cases for each once automated tests exist
+                    //Also need to test using this same logic to render the window layer
                     int tilePixelX = x % Tile.WidthInPixels;
                     int tilePixelY = y % Tile.HeightInPixels;
                     pixels[y * widthInPixels + x] = TileSet[tileNumber][tilePixelX, tilePixelY];
