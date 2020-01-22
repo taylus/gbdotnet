@@ -97,6 +97,11 @@
             }
         }
 
+        internal byte[] RenderSprites(TileSet tileset)
+        {
+            throw new System.NotImplementedException();
+        }
+
         internal byte[] RenderBackgroundMap(TileSet tileset)
         {
             var baseAddress = Registers.LCDControl.BackgroundTileMapBaseAddress;
