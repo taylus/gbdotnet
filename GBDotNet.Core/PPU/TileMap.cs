@@ -20,6 +20,17 @@ namespace GBDotNet.Core
         public int BaseAddress { get; private set; }    //either $9800 or $9C00 based on LCD control register
         public TileSet TileSet { get; private set; }
 
+        /// <summary>
+        /// Gets/sets the tileset tile # stored at the given tile coordinates.
+        /// </summary>
+        /// <param name="x">A tile x coordinate between 0-31 inclusive.</param>
+        /// <param name="y">A tile y coordinate between 0-31 inclusive.</param>
+        private byte this[int x, int y]
+        {
+            get => Tiles[y * WidthInTiles + x];
+            set => Tiles[y * WidthInTiles + x] = value;
+        }
+
         public TileMap(int baseAddress, TileSet tileset, IMemory vram)
         {
             BaseAddress = baseAddress;
@@ -49,7 +60,7 @@ namespace GBDotNet.Core
                 {
                     int tileX = x / Tile.WidthInPixels;
                     int tileY = y / Tile.HeightInPixels;
-                    byte tileNumber = Tiles[tileY * WidthInTiles + tileX];
+                    byte tileNumber = this[tileX, tileY];
                     int tilePixelX = x % Tile.WidthInPixels;
                     int tilePixelY = y % Tile.HeightInPixels;
                     pixels[y * widthInPixels + x] = TileSet[tileNumber][tilePixelX, tilePixelY];
