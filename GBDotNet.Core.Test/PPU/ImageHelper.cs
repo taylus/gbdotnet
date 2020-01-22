@@ -57,6 +57,11 @@ namespace GBDotNet.Core.Test
             return palette.ToList();
         }
 
+        /// <summary>
+        /// Sorts palette colors dark to light, so that color #0 is the darkest, color #1 is lighter, etc.
+        /// Corresponds to a background palette data register ($FF47) of 11100100.
+        /// </summary>
+        /// <see cref="http://bgb.bircd.org/pandocs.htm#lcdmonochromepalettes"/>
         private class DarkToLight : IComparer<Rgba32>
         {
             public int Compare(Rgba32 a, Rgba32 b)
