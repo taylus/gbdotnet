@@ -19,17 +19,19 @@
 
   <ItemGroup>
     <Folder Include="CPU\" />
-    <Folder Include="PPU\Expected\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="PPU\Expected\tetris.tileset.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="PPU\Expected\tetris_title_screen_expected_bgmap.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="PPU\Input\tetris.tileset.dump">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="PPU\Input\tetris.vram.dump">
+    <None Update="PPU\Input\tetris_title_screen.vram.dump">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
