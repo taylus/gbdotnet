@@ -17,22 +17,28 @@ namespace GBDotNet.Core
         public const int NumTiles = WidthInTiles * HeightInTiles;
         public Tile[] Tiles { get; private set; } = new Tile[NumTiles];
 
+        public Tile this[int i]
+        {
+            get => Tiles[i];
+            set => Tiles[i] = value;
+        }
+
         private Tile this[int x, int y]
         {
             get => Tiles[y * WidthInTiles + x];
             set => Tiles[y * WidthInTiles + x] = value;
         }
 
-        public TileSet(IMemory memory)
+        public TileSet(IMemory vram)
         {
-            UpdateFrom(memory);
+            UpdateFrom(vram);
         }
 
-        public void UpdateFrom(IMemory memory)
+        public void UpdateFrom(IMemory vram)
         {
             for (int i = 0; i < NumTiles; i++)
             {
-                var tileBytes = memory.Skip(Tile.BytesPerTile * i).Take(Tile.BytesPerTile);
+                var tileBytes = vram.Skip(Tile.BytesPerTile * i).Take(Tile.BytesPerTile);
                 Tiles[i] = new Tile(tileBytes.ToArray());
             }
         }

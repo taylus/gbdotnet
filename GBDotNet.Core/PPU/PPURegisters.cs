@@ -16,6 +16,15 @@
         public Palette SpritePalette1 { get; set; }
         public byte WindowY { get; set; }           //$ff4a, http://bgb.bircd.org/pandocs.htm#lcdpositionandscrolling
         public byte WindowX { get; set; }           //$ff4b, http://bgb.bircd.org/pandocs.htm#lcdpositionandscrolling
+
+        public PPURegisters()
+        {
+            LCDControl = new LCDControlRegister();
+            LCDStatus = new LCDStatusRegister();
+            BackgroundPalette = new Palette();
+            SpritePalette0 = new Palette();
+            SpritePalette1 = new Palette();
+        }
     }
 
     /// <summary>

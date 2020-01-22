@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GBDotNet.Core
+﻿namespace GBDotNet.Core
 {
     /// <summary>
     /// Implement's the Game Boy's Picture Processing Unit, which produces video
@@ -27,19 +25,9 @@ namespace GBDotNet.Core
 
         private int cycleCounter;
 
-        public const int TileWidthInPixels = 8;
-        public const int TileHeightInPixels = 8;
-        public const int ScreenWidthInTiles = 20;
-        public const int ScreenHeightInTiles = 18;
-        public const int BackgroundMapWidthInTiles = 32;
-        public const int BackgroundMapHeightInTiles = 32;
-        public const int ScreenWidthInPixels = ScreenWidthInTiles * TileWidthInPixels;
-        public const int ScreenHeightInPixels = ScreenHeightInTiles * TileHeightInPixels;
-        public const int BackgroundMapWidthInPixels = BackgroundMapWidthInTiles * TileWidthInPixels;
-        public const int BackgroundMapHeightInPixels = BackgroundMapHeightInTiles * TileHeightInPixels;
-
         public PPURegisters Registers { get; private set; }
-        public IMemory Memory { get; private set; }
+        public IMemory Memory { get; private set; } //VRAM
+        public TileSet TileSet { get => new TileSet(Memory); }
 
         public PPU(PPURegisters registers, IMemory memory)
         {
@@ -109,9 +97,11 @@ namespace GBDotNet.Core
             }
         }
 
-        internal byte[] RenderBackgroundMap()
+        internal byte[] RenderBackgroundMap(TileSet tileset)
         {
-            throw new NotImplementedException();
+            var baseAddress = Registers.LCDControl.BackgroundTileMapBaseAddress;
+            var tilemap = new TileMap(baseAddress, tileset, Memory);
+            return tilemap.Render();
         }
 
         internal byte[] RenderTileSet()

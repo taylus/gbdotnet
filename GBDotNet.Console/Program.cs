@@ -1,85 +1,29 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using GBDotNet.Core;
 
 namespace GBDotNet.ConsoleApp
 {
     public class Program
     {
-        //TODO: load from command-line args
         private const string vramDumpPath = @"input\tetris.vram.dump";
-        private const string logPath = "gbdotnet.log";
-        private const string pixelBufferPath = "tetris_tileset_pixels.bin";
-        private static readonly int? TestCycleLimit = 1024 * 1024 * 4;
+        private const string pixelBufferOutputPath = "tetris_bgmap_pixels.bin";
 
         public static void Main()
         {
-            var stderr = Console.Error; //capture stderr to log exceptions both to log file and console
-
-            using (var log = new StreamWriter(logPath))
-            {
-                //try
-                {
-                    Console.SetOut(log);
-                    var system = Start();
-                    //Run(system.CPU);
-                    var tilesetPixels = system.PPU.RenderTileSet();
-                    Console.WriteLine($"Writing {pixelBufferPath}...");
-                    File.WriteAllBytes(pixelBufferPath, tilesetPixels);
-                    OpenFile(pixelBufferPath);
-                    File.Copy(pixelBufferPath, Path.Combine(@"D:\GitHub\monogameboy\input", pixelBufferPath), overwrite: true);
-                }
-                /*
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                    stderr.WriteLine(ex);
-                }
-                finally
-                {
-                    //OpenFile(logPath);
-                }
-                */
-            }
+            var ppu = InitializePPU();
+            var bgMapPixels = ppu.RenderBackgroundMap(ppu.TileSet);
+            Console.WriteLine($"Writing {pixelBufferOutputPath}...");
+            File.WriteAllBytes(pixelBufferOutputPath, bgMapPixels);
+            OpenFile(pixelBufferOutputPath);
+            File.Copy(pixelBufferOutputPath, Path.Combine(@"D:\GitHub\monogameboy\input", pixelBufferOutputPath), overwrite: true);
         }
 
-        private static (CPU CPU, PPU PPU) Start()
+        private static PPU InitializePPU()
         {
-            var memoryBus = new MemoryBus();
-            var cpu = new CPU(new Registers(), memoryBus);
-            cpu.Boot();
-
-            var rom = CreateInfiniteLoopTestRom();
-            memoryBus.LoadRom(rom);
-
             var vram = new Memory(vramDumpPath);
-            memoryBus.LoadVram(vram);
-
-            var ppu = new PPU(new PPURegisters(), memoryBus.Vram);
-
-            return (cpu, ppu);
-        }
-
-        private static RomFile CreateInfiniteLoopTestRom()
-        {
-            var header = Enumerable.Repeat<byte>(0x00, 0x100);
-            var program = header.Concat(new byte[] { 0x18, 0xFE }); //jr, -2
-            return new RomFile(program.ToArray());
-        }
-
-        private static void Run(CPU cpu)
-        {
-            do
-            {
-                Console.WriteLine(cpu);
-                cpu.Tick();
-                if (cpu.TotalElapsedCycles >= TestCycleLimit)
-                    throw new EmulationException($"Test cycle limit of {TestCycleLimit} has been reached (possible infinite loop?)");
-            } while (!cpu.IsHalted);
-
-            Console.WriteLine("CPU halted.");
+            return new PPU(new PPURegisters(), vram);
         }
 
         private static void OpenFile(string path)
