@@ -11,6 +11,9 @@
     /// <see cref="https://mgba-emu.github.io/gbdoc/#ppu"/>
     public class PPU
     {
+        public const int ScreenWidthInPixels = 160;
+        public const int ScreenHeightInPixels = 144;
+
         private PPUMode currentMode
         {
             get => Registers.LCDStatus.ModeFlag;
@@ -26,13 +29,15 @@
         private int cycleCounter;
 
         public PPURegisters Registers { get; private set; }
-        public IMemory Memory { get; private set; } //VRAM
-        public TileSet TileSet { get => new TileSet(Memory); }
+        public IMemory VideoMemory { get; private set; } //VRAM
+        public IMemory ObjectAttributeMemory { get; private set; }  //OAM
+        public TileSet TileSet { get => new TileSet(VideoMemory); }
 
-        public PPU(PPURegisters registers, IMemory memory)
+        public PPU(PPURegisters registers, IMemory vram, IMemory oam)
         {
             Registers = registers;
-            Memory = memory;
+            VideoMemory = vram;
+            ObjectAttributeMemory = oam;
         }
 
         public void Tick(int elapsedCycles)
@@ -99,19 +104,35 @@
 
         internal byte[] RenderSprites(TileSet tileset)
         {
-            throw new System.NotImplementedException();
+            //TODO: make and move this into a class representing all 40 sprites in OAM?
+            var spriteLayer = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
+            const int oamSize = Sprite.BytesPerSprite * Sprite.TotalSprites;
+            for (int i = 0; i < oamSize; i += Sprite.BytesPerSprite)
+            {
+                var sprite = new Sprite(positionY: ObjectAttributeMemory[i],
+                    positionX: ObjectAttributeMemory[i + 1],
+                    tileNumber: ObjectAttributeMemory[i + 2],
+                    attributes: ObjectAttributeMemory[i + 3]);
+
+                if (!sprite.Visible) continue;
+
+                //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
+                sprite.Render(tileset, ref spriteLayer);
+            }
+
+            return spriteLayer;
         }
 
         internal byte[] RenderBackgroundMap(TileSet tileset)
         {
             var baseAddress = Registers.LCDControl.BackgroundTileMapBaseAddress;
-            var tilemap = new TileMap(baseAddress, tileset, Memory);
+            var tilemap = new TileMap(baseAddress, tileset, VideoMemory);
             return tilemap.Render();
         }
 
         internal byte[] RenderTileSet()
         {
-            var tileset = new TileSet(Memory);
+            var tileset = new TileSet(VideoMemory);
             return tileset.Render();
         }
     }

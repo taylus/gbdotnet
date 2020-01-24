@@ -14,7 +14,7 @@ namespace GBDotNet.Core.Test.Integration
         public void Generate_Expected_Tileset_Pixels_From_Known_VRAM_Dump()
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "tetris.tileset.dump"));
-            var ppu = new PPU(new PPURegisters(), vram);
+            var ppu = new PPU(new PPURegisters(), vram, oam: new Memory());
 
             var actualPixels = ppu.RenderTileSet();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris.tileset.png"));
@@ -26,7 +26,7 @@ namespace GBDotNet.Core.Test.Integration
         public void Generate_Expected_Background_Map_Pixels_From_Known_VRAM_Dump_Using_Unsigned_Tile_Numbers()
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.vram.dump"));
-            var ppu = new PPU(new PPURegisters(), vram);
+            var ppu = new PPU(new PPURegisters(), vram, oam: new Memory());
 
             var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris_title_screen_expected_bgmap.png"));
@@ -38,6 +38,21 @@ namespace GBDotNet.Core.Test.Integration
         public void Generate_Expected_Background_Map_Pixels_From_Known_VRAM_Dump_Using_Signed_Tile_Numbers()
         {
             //TODO: need to find (or create) a ROM that uses signed background tile numbers
+        }
+
+        [TestMethod]
+        public void Generate_Expected_Sprite_Pixels_From_Known_VRAM_And_OAM_Dumps()
+        {
+            //TODO: render additional sprites w/ the various attribute flag combinations
+            //      need to find (or create) a suitable ROM that does this + dump its memory
+            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.vram.dump"));
+            var oam = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.oam.dump"));
+            var ppu = new PPU(new PPURegisters(), vram, oam);
+
+            var actualPixels = ppu.RenderSprites(ppu.TileSet);
+            var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris_title_screen_expected_sprites.png"));
+
+            CollectionAssert.AreEqual(expectedPixels, actualPixels, "Rendered background map does not match expected image.");
         }
     }
 }
