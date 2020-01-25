@@ -16,6 +16,7 @@ namespace GBDotNet.ConsoleApp
         public static void Main()
         {
             var ppu = InitializePPU();
+            Console.WriteLine(ppu.Registers.LCDControl + Environment.NewLine);
 
             var tilesetPixels = ppu.RenderTileSet();
             var bgmapPixels = ppu.RenderBackgroundMap(ppu.TileSet);
@@ -30,7 +31,7 @@ namespace GBDotNet.ConsoleApp
         {
             var vram = new Memory(vramDumpPath);
             var oam = new Memory(oamDumpPath);
-            return new PPU(new PPURegisters(), vram, oam);
+            return new PPU(new PPURegisters(lcdc: 0xE3), vram, oam);
         }
 
         private static void WriteFile(byte[] data, string outputPath)

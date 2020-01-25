@@ -11,6 +11,13 @@ namespace GBDotNet.Core.Test.Integration
         // Maybe write my own pixel array comparison routine that does this, instead of using CollectionAssert.AreEqual()...?
 
         [TestMethod]
+        public void Generate_Blank_Screen_When_LCD_Is_Disabled()
+        {
+            //LCDC bit 7
+            Assert.Inconclusive("Test not yet implemented.");
+        }
+
+        [TestMethod]
         public void Generate_Expected_Tileset_Pixels_From_Known_VRAM_Dump()
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "tetris.tileset.dump"));
@@ -26,7 +33,7 @@ namespace GBDotNet.Core.Test.Integration
         public void Generate_Expected_Background_Map_Pixels_From_Known_VRAM_Dump_Using_Unsigned_Tile_Numbers()
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.vram.dump"));
-            var ppu = new PPU(new PPURegisters(), vram, oam: new Memory());
+            var ppu = new PPU(new PPURegisters(lcdc: 0x10), vram, oam: new Memory());
 
             var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris_title_screen_expected_bgmap.png"));
@@ -37,7 +44,34 @@ namespace GBDotNet.Core.Test.Integration
         [TestMethod]
         public void Generate_Expected_Background_Map_Pixels_From_Known_VRAM_Dump_Using_Signed_Tile_Numbers()
         {
-            //TODO: need to find (or create) a ROM that uses signed background tile numbers
+            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room_vram.dump"));
+            var ppu = new PPU(new PPURegisters(lcdc: 0xE3), vram, oam: new Memory());
+
+            var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
+            var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_bgmap.png"));
+
+            CollectionAssert.AreEqual(expectedPixels, actualPixels, "Rendered background map does not match expected image.");
+        }
+
+        public void Generate_Blank_Background_Map_Pixels_When_Background_Map_Drawing_Is_Disabled()
+        {
+            //LCDC bit 0
+            Assert.Inconclusive("Test not yet implemented.");
+        }
+
+        [TestMethod]
+        public void Generate_Expected_Window_Pixels_From_Known_VRAM_Dump()
+        {
+            //TODO: signed/unsigned test variants?
+            //other variants? (see LCDC flags)
+            Assert.Inconclusive("Test not yet implemented.");
+        }
+
+        [TestMethod]
+        public void Generate_Blank_Window_Pixels_When_Window_Drawing_Is_Disabled()
+        {
+            //LCDC bit 5
+            Assert.Inconclusive("Test not yet implemented.");
         }
 
         [TestMethod]
@@ -56,19 +90,25 @@ namespace GBDotNet.Core.Test.Integration
         [TestMethod]
         public void Generate_Expected_Sprite_Pixels_From_Known_VRAM_And_OAM_Dumps_With_Horizontally_Flipped_Sprites()
         {
-
+            Assert.Inconclusive("Test not yet implemented.");
         }
 
         [TestMethod]
         public void Generate_Expected_Sprite_Pixels_From_Known_VRAM_And_OAM_Dumps_With_Vertically_Flipped_Sprites()
         {
-
+            Assert.Inconclusive("Test not yet implemented.");
         }
 
         [TestMethod]
         public void Generate_Expected_Sprite_Pixels_From_Known_VRAM_And_OAM_Dumps_With_Sprites_Behind_Background()
         {
-
+            Assert.Inconclusive("Test not yet implemented.");
+        }
+        
+        public void Generate_Blank_Sprite_Pixels_When_Sprite_Drawing_Is_Disabled()
+        {
+            //LCDC bit 1
+            Assert.Inconclusive("Test not yet implemented.");
         }
     }
 }

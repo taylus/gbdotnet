@@ -125,8 +125,7 @@
 
         internal byte[] RenderBackgroundMap(TileSet tileset)
         {
-            var baseAddress = Registers.LCDControl.BackgroundTileMapBaseAddress;
-            var tilemap = new TileMap(baseAddress, tileset, VideoMemory);
+            var tilemap = new TileMap(Registers, tileset, VideoMemory);
             return tilemap.Render();
         }
 

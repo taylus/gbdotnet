@@ -1,4 +1,6 @@
-﻿namespace GBDotNet.Core
+﻿using System;
+
+namespace GBDotNet.Core
 {
     /// <summary>
     /// Future design notes: <see cref="MemoryBus"/> should direct reads/writes to the appropriate addresses here.
@@ -17,9 +19,9 @@
         public byte WindowY { get; set; }           //$ff4a, http://bgb.bircd.org/pandocs.htm#lcdpositionandscrolling
         public byte WindowX { get; set; }           //$ff4b, http://bgb.bircd.org/pandocs.htm#lcdpositionandscrolling
 
-        public PPURegisters()
+        public PPURegisters(byte lcdc = 0)
         {
-            LCDControl = new LCDControlRegister();
+            LCDControl = new LCDControlRegister() { Data = lcdc };
             LCDStatus = new LCDStatusRegister();
             BackgroundPalette = new Palette();
             SpritePalette0 = new Palette();
@@ -35,7 +37,7 @@
     {
         public byte Data { get; set; }
         public bool Enabled => Data.IsBitSet(7);
-        public int WindowTileMapStartAddress => Data.IsBitSet(6) ? 0x9C00 : 0x9800;
+        public int WindowTileMapBaseAddress => Data.IsBitSet(6) ? 0x9C00 : 0x9800;
         public bool WindowDisplayEnabled => Data.IsBitSet(5);
         /// <summary>
         /// Which two of the three 128-tile "blocks" of tiles are the background
@@ -43,13 +45,27 @@
         /// </summary>
         /// <see cref="https://gbdev.gg8.se/wiki/articles/Video_Display#VRAM_Tile_Data"/>
         /// <see cref="https://github.com/taylus/gameboy-graphics/blob/master/building_a_rom.md#an-aside-about-game-boy-video-memory"/>
-        public int BackgroundAndWindowTileDataStartAddress => Data.IsBitSet(4) ? 0x8000 : 0x8800;
-        public bool BackgroundAndWindowTileNumbersAreSigned => BackgroundAndWindowTileDataStartAddress == 0x8800;
+        public int BackgroundAndWindowTileDataBaseAddress => Data.IsBitSet(4) ? 0x8000 : 0x8800;
+        public bool AreBackgroundAndWindowTileNumbersSigned => BackgroundAndWindowTileDataBaseAddress == 0x8800;
         public int BackgroundTileMapBaseAddress => Data.IsBitSet(3) ? 0x9C00 : 0x9800;
         public bool AreSprites8x16 => Data.IsBitSet(2);
         public bool AreSprites8x8 => !AreSprites8x16;
         public bool SpriteDisplayEnabled => Data.IsBitSet(1);
         public bool BackgroundDisplayEnabled => Data.IsBitSet(0);
+
+        public override string ToString()
+        {
+            return $"LCD Control: {Data:X2}" + Environment.NewLine +
+                   $"  Bit 7 is {(Data.IsBitSet(7) ? 1 : 0)} => LCD is {(Enabled ? "ON" : "OFF")}" + Environment.NewLine +
+                   $"  Bit 6 is {(Data.IsBitSet(6) ? 1 : 0)} => Window tilemap base address is ${WindowTileMapBaseAddress:X4}" + Environment.NewLine +
+                   $"  Bit 5 is {(Data.IsBitSet(5) ? 1 : 0)} => Window display is {(WindowDisplayEnabled ? "ON" : "OFF")}" + Environment.NewLine +
+                   $"  Bit 4 is {(Data.IsBitSet(4) ? 1 : 0)} => Background and window tileset base address is ${BackgroundAndWindowTileDataBaseAddress:X4}" +
+                   $" (tile numbers are {(AreBackgroundAndWindowTileNumbersSigned ? "signed" : "unsigned")})" + Environment.NewLine +
+                   $"  Bit 3 is {(Data.IsBitSet(3) ? 1 : 0)} => Background tilemap base address is ${BackgroundTileMapBaseAddress:X4}" + Environment.NewLine +
+                   $"  Bit 2 is {(Data.IsBitSet(2) ? 1 : 0)} => Sprites are {(AreSprites8x16 ? "8x16" : "8x8")}" + Environment.NewLine +
+                   $"  Bit 1 is {(Data.IsBitSet(1) ? 1 : 0)} => Sprite display is {(SpriteDisplayEnabled ? "ON" : "OFF")}" + Environment.NewLine +
+                   $"  Bit 0 is {(Data.IsBitSet(0) ? 1 : 0)} => Background display is {(BackgroundDisplayEnabled ? "ON" : "OFF")}";
+        }
     }
 
     /// <summary>
