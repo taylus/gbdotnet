@@ -11,10 +11,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="input\tetris.oam.dump">
+    <None Update="input\pokemon_reds_room_oam.dump">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="input\tetris.vram.dump">
+    <None Update="input\pokemon_reds_room_vram.dump">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="input\tetris_title_screen.oam.dump">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="input\tetris_title_screen.vram.dump">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

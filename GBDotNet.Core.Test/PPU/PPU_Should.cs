@@ -43,8 +43,6 @@ namespace GBDotNet.Core.Test.Integration
         [TestMethod]
         public void Generate_Expected_Sprite_Pixels_From_Known_VRAM_And_OAM_Dumps()
         {
-            //TODO: render additional sprites w/ the various attribute flag combinations
-            //      need to find (or create) a suitable ROM that does this + dump its memory
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.vram.dump"));
             var oam = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.oam.dump"));
             var ppu = new PPU(new PPURegisters(), vram, oam);
@@ -53,6 +51,24 @@ namespace GBDotNet.Core.Test.Integration
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris_title_screen_expected_sprites.png"));
 
             CollectionAssert.AreEqual(expectedPixels, actualPixels, "Rendered background map does not match expected image.");
+        }
+
+        [TestMethod]
+        public void Generate_Expected_Sprite_Pixels_From_Known_VRAM_And_OAM_Dumps_With_Horizontally_Flipped_Sprites()
+        {
+
+        }
+
+        [TestMethod]
+        public void Generate_Expected_Sprite_Pixels_From_Known_VRAM_And_OAM_Dumps_With_Vertically_Flipped_Sprites()
+        {
+
+        }
+
+        [TestMethod]
+        public void Generate_Expected_Sprite_Pixels_From_Known_VRAM_And_OAM_Dumps_With_Sprites_Behind_Background()
+        {
+
         }
     }
 }

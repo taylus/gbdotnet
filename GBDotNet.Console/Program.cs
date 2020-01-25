@@ -7,18 +7,23 @@ namespace GBDotNet.ConsoleApp
 {
     public class Program
     {
-        private const string vramDumpPath = @"input\tetris.vram.dump";
-        private const string oamDumpPath = @"input\tetris.oam.dump";
-        private const string pixelBufferOutputPath = "tetris_sprite_pixels.bin";
+        private const string vramDumpPath = @"input\pokemon_reds_room_vram.dump";
+        private const string oamDumpPath = @"input\pokemon_reds_room_oam.dump";
+        private const string tilesetPixelsOutputPath = "pokemon_reds_room_tileset.bin";
+        private const string bgMapPixelsOutputPath = "pokemon_reds_room_bgmap.bin";
+        private const string spritePixelsOutputPath = "pokemon_reds_room_sprites.bin";
 
         public static void Main()
         {
             var ppu = InitializePPU();
+
+            var tilesetPixels = ppu.RenderTileSet();
+            var bgmapPixels = ppu.RenderBackgroundMap(ppu.TileSet);
             var spritePixels = ppu.RenderSprites(ppu.TileSet);
-            Console.WriteLine($"Writing {pixelBufferOutputPath}...");
-            File.WriteAllBytes(pixelBufferOutputPath, spritePixels);
-            OpenFile(pixelBufferOutputPath);
-            //File.Copy(pixelBufferOutputPath, Path.Combine(@"D:\GitHub\monogameboy\input", pixelBufferOutputPath), overwrite: true);
+
+            WriteFile(tilesetPixels, tilesetPixelsOutputPath);
+            WriteFile(bgmapPixels, bgMapPixelsOutputPath);
+            WriteFile(spritePixels, spritePixelsOutputPath);
         }
 
         private static PPU InitializePPU()
@@ -26,6 +31,15 @@ namespace GBDotNet.ConsoleApp
             var vram = new Memory(vramDumpPath);
             var oam = new Memory(oamDumpPath);
             return new PPU(new PPURegisters(), vram, oam);
+        }
+
+        private static void WriteFile(byte[] data, string outputPath)
+        {
+            Console.WriteLine($"Writing {outputPath}...");
+            File.WriteAllBytes(outputPath, data);
+            //OpenFile(pixelBufferOutputPath);
+            string pathRoot = Environment.ExpandEnvironmentVariables("%userprofile%");
+            File.Copy(outputPath, Path.Combine(pathRoot, "GitHub", "monogameboy", "input", outputPath), overwrite: true);
         }
 
         private static void OpenFile(string path)
