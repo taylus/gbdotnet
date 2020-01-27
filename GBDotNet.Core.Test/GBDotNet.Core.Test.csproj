@@ -25,6 +25,9 @@
     <None Update="PPU\Expected\pokemon_reds_room_expected_bgmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="PPU\Expected\pokemon_reds_room_expected_sprites.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="PPU\Expected\tetris.tileset.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

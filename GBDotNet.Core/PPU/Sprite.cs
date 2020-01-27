@@ -48,7 +48,7 @@
             Attributes = attributes;
         }
 
-        internal void Render(TileSet tileset, ref byte[] spriteLayer)
+        public void Render(TileSet tileset, ref byte[] spriteLayer)
         {
             if (!Visible) return;
             var tile = tileset[TileNumber];
@@ -56,16 +56,21 @@
             {
                 for (int x = 0; x < Tile.WidthInPixels; x++)
                 {
-                    byte spritePixel = tile[x, y];
+                    byte spritePixel = GetPixel(tile, x, y);
                     if (spritePixel == 0) continue; //transparency
                     var pixelPosition = (x: TruePositionX + x, y: TruePositionY + y);
                     spriteLayer[pixelPosition.y * PPU.ScreenWidthInPixels + pixelPosition.x] = spritePixel;
                     //TODO: map spritePixel value through appropriate palette
                     //TODO: IsBehindBackground
-                    //TODO: IsFlippedVertically
-                    //TODO: IsFlippedHorizontally
                 }
             }
+        }
+
+        private byte GetPixel(Tile tile, int x, int y)
+        {
+            if (IsFlippedHorizontally) x = Tile.WidthInPixels - x - 1;
+            if (IsFlippedVertically) y = Tile.HeightInPixels - y - 1;
+            return tile[x, y];
         }
     }
 }
