@@ -44,7 +44,7 @@ namespace GBDotNet.Core.Test.Integration
         [TestMethod]
         public void Generate_Expected_Background_Map_Pixels_From_Known_VRAM_Dump_Using_Signed_Tile_Numbers()
         {
-            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room_vram.dump"));
+            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.vram.dump"));
             var ppu = new PPU(new PPURegisters(lcdc: 0xE3), vram, oam: new Memory());
 
             var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
@@ -90,8 +90,9 @@ namespace GBDotNet.Core.Test.Integration
         [TestMethod]
         public void Generate_Expected_Sprite_Pixels_From_Known_VRAM_And_OAM_Dumps_With_Horizontally_Flipped_Sprites()
         {
-            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room_vram.dump"));
-            var ppu = new PPU(new PPURegisters(lcdc: 0xE3), vram, oam: new Memory());
+            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.vram.dump"));
+            var oam = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.oam.dump"));
+            var ppu = new PPU(new PPURegisters(lcdc: 0xE3), vram, oam);
 
             var actualPixels = ppu.RenderSprites(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_sprites.png"));
