@@ -1,0 +1,38 @@
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace GBDotNet.Core.Test.Integration
+{
+    public partial class PPU_Should
+    {
+        [TestMethod]
+        public void Generate_Expected_Background_Map_Pixels_From_Known_VRAM_Dump_Using_Unsigned_Tile_Numbers()
+        {
+            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.vram.dump"));
+            var ppu = new PPU(new PPURegisters(lcdc: 0x10), vram, oam: new Memory());
+
+            var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
+            var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris_title_screen_expected_bgmap.png"));
+
+            CollectionAssert.AreEqual(expectedPixels, actualPixels, "Rendered background map does not match expected image.");
+        }
+
+        [TestMethod]
+        public void Generate_Expected_Background_Map_Pixels_From_Known_VRAM_Dump_Using_Signed_Tile_Numbers()
+        {
+            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.vram.dump"));
+            var ppu = new PPU(new PPURegisters(lcdc: 0xE3), vram, oam: new Memory());
+
+            var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
+            var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_bgmap.png"));
+
+            CollectionAssert.AreEqual(expectedPixels, actualPixels, "Rendered background map does not match expected image.");
+        }
+
+        public void Generate_Blank_Background_Map_Pixels_When_Background_Map_Drawing_Is_Disabled()
+        {
+            //LCDC bit 0
+            Assert.Inconclusive("Test not yet implemented.");
+        }
+    }
+}
