@@ -14,7 +14,7 @@ namespace GBDotNet.Core.Test.Integration
             var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris_title_screen_expected_bgmap.png"));
 
-            CollectionAssert.AreEqual(expectedPixels, actualPixels, "Rendered background map does not match expected image.");
+            AssertPixelsMatch(expectedPixels, actualPixels, width: 256);
         }
 
         [TestMethod]
@@ -26,7 +26,7 @@ namespace GBDotNet.Core.Test.Integration
             var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_bgmap.png"));
 
-            CollectionAssert.AreEqual(expectedPixels, actualPixels, "Rendered background map does not match expected image.");
+            AssertPixelsMatch(expectedPixels, actualPixels, width: 256);
         }
 
         public void Generate_Blank_Background_Map_Pixels_When_Background_Map_Drawing_Is_Disabled()

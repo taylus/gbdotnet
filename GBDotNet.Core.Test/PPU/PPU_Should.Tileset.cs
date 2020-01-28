@@ -14,7 +14,7 @@ namespace GBDotNet.Core.Test.Integration
             var actualPixels = ppu.RenderTileSet();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris.tileset.png"));
 
-            CollectionAssert.AreEqual(expectedPixels, actualPixels, "Rendered tileset does not match expected image.");
+            AssertPixelsMatch(expectedPixels, actualPixels, width: 128);
         }
     }
 }
