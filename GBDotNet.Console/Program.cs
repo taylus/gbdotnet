@@ -12,6 +12,7 @@ namespace GBDotNet.ConsoleApp
         private const string tilesetPixelsOutputPath = "pokemon_reds_room_tileset.bin";
         private const string bgMapPixelsOutputPath = "pokemon_reds_room_bgmap.bin";
         private const string spritePixelsOutputPath = "pokemon_reds_room_sprites.bin";
+        private const string screenPixelsOutputPath = "pokemon_reds_room_screen.bin";
 
         public static void Main()
         {
@@ -21,17 +22,29 @@ namespace GBDotNet.ConsoleApp
             var tilesetPixels = ppu.RenderTileSet();
             var bgmapPixels = ppu.RenderBackgroundMap(ppu.TileSet);
             var spritePixels = ppu.RenderSprites(ppu.TileSet);
+            var screenPixels = RenderScreen(ppu);
 
             WriteFile(tilesetPixels, tilesetPixelsOutputPath);
             WriteFile(bgmapPixels, bgMapPixelsOutputPath);
             WriteFile(spritePixels, spritePixelsOutputPath);
+            WriteFile(screenPixels, screenPixelsOutputPath);
         }
 
         private static PPU InitializePPU()
         {
             var vram = new Memory(vramDumpPath);
             var oam = new Memory(oamDumpPath);
-            return new PPU(new PPURegisters(lcdc: 0xE3), vram, oam);
+            return new PPU(new PPURegisters(lcdc: 0xE3, scrollY: 0xD0), vram, oam);
+        }
+
+        private static byte[] RenderScreen(PPU ppu)
+        {
+            for (int i = 0; i < PPU.ScreenHeightInPixels; i++)
+            {
+                ppu.RenderScanline();
+                ppu.CurrentLine++;
+            }
+            return ppu.RenderScreen();
         }
 
         private static void WriteFile(byte[] data, string outputPath)

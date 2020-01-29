@@ -19,13 +19,15 @@ namespace GBDotNet.Core
         public byte WindowY { get; set; }           //$ff4a, http://bgb.bircd.org/pandocs.htm#lcdpositionandscrolling
         public byte WindowX { get; set; }           //$ff4b, http://bgb.bircd.org/pandocs.htm#lcdpositionandscrolling
 
-        public PPURegisters(byte lcdc = 0)
+        public PPURegisters(byte lcdc = 0, byte scrollX = 0, byte scrollY = 0)
         {
             LCDControl = new LCDControlRegister() { Data = lcdc };
             LCDStatus = new LCDStatusRegister();
             BackgroundPalette = new Palette();
             SpritePalette0 = new Palette();
             SpritePalette1 = new Palette();
+            ScrollX = scrollX;
+            ScrollY = scrollY;
         }
     }
 

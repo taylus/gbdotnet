@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace GBDotNet.Core
 {
@@ -59,20 +60,28 @@ namespace GBDotNet.Core
             {
                 for (int y = 0; y < heightInPixels; y++)
                 {
-                    int tileX = x / Tile.WidthInPixels;
-                    int tileY = y / Tile.HeightInPixels;
-                    int tileNumber = this[tileX, tileY];
-                    if (Registers.LCDControl.AreBackgroundAndWindowTileNumbersSigned && tileNumber < 128)
-                    {
-                        tileNumber += 256;
-                    }
-                    int tilePixelX = x % Tile.WidthInPixels;
-                    int tilePixelY = y % Tile.HeightInPixels;
-                    pixels[y * widthInPixels + x] = TileSet[tileNumber][tilePixelX, tilePixelY];
+                    pixels[y * widthInPixels + x] = GetPixelAt(x, y);
                 }
             }
 
             return pixels;
+        }
+
+        /// <summary>
+        /// Gets the color (0-3) at the given pixel coordinates.
+        /// </summary>
+        public byte GetPixelAt(int x, int y)
+        {
+            int tileX = x / Tile.WidthInPixels;
+            int tileY = y / Tile.HeightInPixels;
+            int tileNumber = this[tileX, tileY];
+            if (Registers.LCDControl.AreBackgroundAndWindowTileNumbersSigned && tileNumber < 128)
+            {
+                tileNumber += 256;
+            }
+            int tilePixelX = x % Tile.WidthInPixels;
+            int tilePixelY = y % Tile.HeightInPixels;
+            return TileSet[tileNumber][tilePixelX, tilePixelY];
         }
     }
 }

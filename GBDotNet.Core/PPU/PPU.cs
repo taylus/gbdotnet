@@ -1,4 +1,6 @@
-﻿namespace GBDotNet.Core
+﻿using System;
+
+namespace GBDotNet.Core
 {
     /// <summary>
     /// Implement's the Game Boy's Picture Processing Unit, which produces video
@@ -20,12 +22,13 @@
             set => Registers.LCDStatus.ModeFlag = value;
         }
 
-        private byte CurrentLine
+        internal byte CurrentLine
         {
             get => Registers.CurrentScanline;
             set => Registers.CurrentScanline = value;
         }
 
+        private byte[] screenPixels = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
         private int cycleCounter;
 
         public PPURegisters Registers { get; private set; }
@@ -60,7 +63,7 @@
                 if (CurrentLine == 143)
                 {
                     CurrentMode = PPUMode.VBlank;
-                    //RenderScreen();
+                    RenderScreen();
                 }
             }
         }
@@ -98,7 +101,7 @@
             {
                 cycleCounter = 0;
                 CurrentMode = PPUMode.HBlank;
-                //RenderScanline(currentLine);
+                RenderScanline();
             }
         }
 
@@ -133,6 +136,34 @@
         {
             var tileset = new TileSet(VideoMemory);
             return tileset.Render();
+        }
+
+        internal byte[] RenderWindow()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal byte[] RenderScanline()
+        {
+            //cache and update these as needed instead of new-ing up every scanline?
+            var tileSet = new TileSet(VideoMemory);
+            var tileMap = new TileMap(Registers, tileSet, VideoMemory);
+
+            var tileMapY = (byte)(CurrentLine + Registers.ScrollY);
+            for (int x = 0; x < ScreenWidthInPixels; x++)
+            {
+                var tileMapX = (byte)(x + Registers.ScrollX);
+                screenPixels[CurrentLine * ScreenWidthInPixels + x] = tileMap.GetPixelAt(tileMapX, tileMapY);
+                //TODO: sprites
+                //TODO: window
+            }
+
+            return screenPixels;
+        }
+
+        internal byte[] RenderScreen()
+        {
+            return screenPixels;
         }
     }
 }
