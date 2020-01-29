@@ -17,6 +17,7 @@ namespace GBDotNet.Core
         private byte interruptEnableFlag = 0;
 
         public IMemory Vram { get; set; } = new Memory();
+        public PPURegisters PPURegisters { get; set; }
 
         public void LoadRom(RomFile rom)
         {
@@ -77,6 +78,17 @@ namespace GBDotNet.Core
                 else if (index < 0xFF80)
                 {
                     //various hardware I/O registers (PPU, APU, joypad, etc)
+                    if (index == 0xFF40) return PPURegisters.LCDControl.Data;
+                    else if (index == 0xFF41) return PPURegisters.LCDStatus.Data;
+                    else if (index == 0xFF42) return PPURegisters.ScrollY;
+                    else if (index == 0xFF43) return PPURegisters.ScrollX;
+                    else if (index == 0xFF44) return PPURegisters.CurrentScanline;
+                    else if (index == 0xFF45) return PPURegisters.CompareScanline;
+                    else if (index == 0xFF47) return PPURegisters.BackgroundPalette.Data;
+                    else if (index == 0xFF48) return PPURegisters.SpritePalette0.Data;
+                    else if (index == 0xFF49) return PPURegisters.SpritePalette1.Data;
+                    else if (index == 0xFF4A) return PPURegisters.WindowY;
+                    else if (index == 0xFF4B) return PPURegisters.WindowX;
                     throw new NotImplementedException($"Unsupported read of address ${index:X4}: Hardware I/O registers are not yet implemented.");
                 }
                 else if (index < 0xFFFF)
@@ -124,6 +136,17 @@ namespace GBDotNet.Core
                 else if (index < 0xFF80)
                 {
                     //various hardware I/O registers (PPU, APU, joypad, etc)
+                    if (index == 0xFF40) PPURegisters.LCDControl.Data = value;
+                    else if (index == 0xFF41) PPURegisters.LCDStatus.Data = value;
+                    else if (index == 0xFF42) PPURegisters.ScrollY = value;
+                    else if (index == 0xFF43) PPURegisters.ScrollX = value;
+                    else if (index == 0xFF44) PPURegisters.CurrentScanline = value;
+                    else if (index == 0xFF45) PPURegisters.CompareScanline = value;
+                    else if (index == 0xFF47) PPURegisters.BackgroundPalette.Data = value;
+                    else if (index == 0xFF48) PPURegisters.SpritePalette0.Data = value;
+                    else if (index == 0xFF49) PPURegisters.SpritePalette1.Data = value;
+                    else if (index == 0xFF4A) PPURegisters.WindowY = value;
+                    else if (index == 0xFF4B) PPURegisters.WindowX = value;
                     throw new NotImplementedException($"Unsupported write to address ${index:X4}: Hardware I/O registers are not yet implemented.");
                 }
                 else if (index < 0xFFFF)
