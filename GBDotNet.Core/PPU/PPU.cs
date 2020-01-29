@@ -14,13 +14,13 @@
         public const int ScreenWidthInPixels = 160;
         public const int ScreenHeightInPixels = 144;
 
-        private PPUMode currentMode
+        private PPUMode CurrentMode
         {
             get => Registers.LCDStatus.ModeFlag;
             set => Registers.LCDStatus.ModeFlag = value;
         }
 
-        private byte currentLine
+        private byte CurrentLine
         {
             get => Registers.CurrentScanline;
             set => Registers.CurrentScanline = value;
@@ -43,10 +43,10 @@
         public void Tick(int elapsedCycles)
         {
             cycleCounter += elapsedCycles;
-            if (currentMode == PPUMode.HBlank) HBlank();
-            else if (currentMode == PPUMode.VBlank) VBlank();
-            else if (currentMode == PPUMode.OamScan) OamScan();
-            else if (currentMode == PPUMode.HDraw) HDraw();
+            if (CurrentMode == PPUMode.HBlank) HBlank();
+            else if (CurrentMode == PPUMode.VBlank) VBlank();
+            else if (CurrentMode == PPUMode.OamScan) OamScan();
+            else if (CurrentMode == PPUMode.HDraw) HDraw();
         }
 
         private void HBlank()
@@ -55,11 +55,11 @@
             if (cycleCounter >= 204)
             {
                 cycleCounter = 0;
-                currentLine++;
+                CurrentLine++;
 
-                if (currentLine == 143)
+                if (CurrentLine == 143)
                 {
-                    currentMode = PPUMode.VBlank;
+                    CurrentMode = PPUMode.VBlank;
                     //RenderScreen();
                 }
             }
@@ -71,12 +71,12 @@
             if (cycleCounter >= 456)
             {
                 cycleCounter = 0;
-                currentLine++;
+                CurrentLine++;
 
-                if (currentLine > 153)
+                if (CurrentLine > 153)
                 {
-                    currentMode = PPUMode.OamScan;
-                    currentLine = 0;
+                    CurrentMode = PPUMode.OamScan;
+                    CurrentLine = 0;
                 }
             }
         }
@@ -87,7 +87,7 @@
             if (cycleCounter >= 80)
             {
                 cycleCounter = 0;
-                currentMode = PPUMode.HDraw;
+                CurrentMode = PPUMode.HDraw;
             }
         }
 
@@ -97,7 +97,7 @@
             if (cycleCounter >= 172)
             {
                 cycleCounter = 0;
-                currentMode = PPUMode.HBlank;
+                CurrentMode = PPUMode.HBlank;
                 //RenderScanline(currentLine);
             }
         }
