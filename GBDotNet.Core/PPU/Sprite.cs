@@ -58,14 +58,34 @@
                 {
                     byte spritePixel = GetPixel(tile, x, y);
                     if (spritePixel == 0) continue; //transparency
-                    var pixelPosition = (x: TruePositionX + x, y: TruePositionY + y);
-                    spriteLayer[pixelPosition.y * PPU.ScreenWidthInPixels + pixelPosition.x] = spritePixel;
+                    var screenCoordinates = LocalToScreenCoordinates(x, y);
+                    spriteLayer[screenCoordinates.y * PPU.ScreenWidthInPixels + screenCoordinates.x] = spritePixel;
                     //TODO: map spritePixel value through appropriate palette
                     //TODO: IsBehindBackground
                 }
             }
         }
 
+        public bool OverlapsColumn(int x) => (x >= TruePositionX) && (x < (TruePositionX + Tile.WidthInPixels));
+        public bool OverlapsScanline(int y) => (y >= TruePositionY) && (y < (TruePositionY + Tile.HeightInPixels));
+        public bool OverlapsCoordinates(int x, int y) => OverlapsColumn(x) && OverlapsScanline(y);
+
+        /// <summary>
+        /// Returns the pixel color (0-3) at the given screen coordinates.
+        /// </summary>
+        public byte GetPixel(TileSet tileset, int x, int y)
+        {
+            var tile = tileset[TileNumber];
+            (x, y) = ScreenToLocalCoordinates(x, y);
+            return GetPixel(tile, x, y);
+        }
+
+        private (int x, int y) LocalToScreenCoordinates(int x, int y) => (x + TruePositionX, y + TruePositionY);
+        private (int x, int y) ScreenToLocalCoordinates(int x, int y) => (x - TruePositionX, y - TruePositionY);
+
+        /// <summary>
+        /// Returns the pixel color (0-3) at the given sprite-local coordinates.
+        /// </summary>
         private byte GetPixel(Tile tile, int x, int y)
         {
             if (IsFlippedHorizontally) x = Tile.WidthInPixels - x - 1;

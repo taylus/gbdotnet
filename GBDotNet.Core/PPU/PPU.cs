@@ -154,11 +154,33 @@ namespace GBDotNet.Core
             {
                 var tileMapX = (byte)(x + Registers.ScrollX);
                 screenPixels[CurrentLine * ScreenWidthInPixels + x] = tileMap.GetPixelAt(tileMapX, tileMapY);
-                //TODO: sprites
-                //TODO: window
+                DrawSpritesOntoScanline(tileSet, ref screenPixels, x);
+                //TODO: render window
             }
 
             return screenPixels;
+        }
+
+        private void DrawSpritesOntoScanline(TileSet tileset, ref byte[] screenPixels, int x)
+        {
+            //TODO: move this into a class representing all sprites in OAM which has
+            //      methods to render all sprites (for debugging) + a single scanline?
+            const int oamSize = Sprite.BytesPerSprite * Sprite.TotalSprites;
+            for (int i = 0; i < oamSize; i += Sprite.BytesPerSprite)
+            {
+                var sprite = new Sprite(positionY: ObjectAttributeMemory[i],
+                    positionX: ObjectAttributeMemory[i + 1],
+                    tileNumber: ObjectAttributeMemory[i + 2],
+                    attributes: ObjectAttributeMemory[i + 3]);
+
+                if (!sprite.OverlapsCoordinates(x, y: CurrentLine)) continue;
+
+                //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
+                //TODO: 10 sprites per scanline limit?
+                var spritePixel = sprite.GetPixel(tileset, x, y: CurrentLine);
+                if (spritePixel == 0) continue;
+                screenPixels[CurrentLine * ScreenWidthInPixels + x] = spritePixel;
+            }
         }
 
         internal byte[] RenderScreen()
