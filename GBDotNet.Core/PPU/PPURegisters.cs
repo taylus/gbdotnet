@@ -19,13 +19,14 @@ namespace GBDotNet.Core
         public byte WindowY { get; set; }           //$ff4a, http://bgb.bircd.org/pandocs.htm#lcdpositionandscrolling
         public byte WindowX { get; set; }           //$ff4b, http://bgb.bircd.org/pandocs.htm#lcdpositionandscrolling
 
-        public PPURegisters(byte lcdc = 0, byte scrollX = 0, byte scrollY = 0)
+        public PPURegisters(byte lcdc = 0, byte lcdstat = 0, byte scrollX = 0, byte scrollY = 0,
+            byte bgPalette = 0, byte spritePalette0 = 0, byte spritePalette1 = 0)
         {
             LCDControl = new LCDControlRegister() { Data = lcdc };
-            LCDStatus = new LCDStatusRegister();
-            BackgroundPalette = new Palette();
-            SpritePalette0 = new Palette();
-            SpritePalette1 = new Palette();
+            LCDStatus = new LCDStatusRegister() { Data = lcdstat };
+            BackgroundPalette = new Palette() { Data = bgPalette };
+            SpritePalette0 = new Palette() { Data = spritePalette0 };
+            SpritePalette1 = new Palette() { Data = spritePalette1 };
             ScrollX = scrollX;
             ScrollY = scrollY;
         }
@@ -131,9 +132,20 @@ namespace GBDotNet.Core
     public class Palette
     {
         public byte Data { get; set; }
-        public int Color3 => (Data & 0b1100_0000) >> 6;
-        public int Color2 => (Data & 0b0011_0000) >> 4;
-        public int Color1 => (Data & 0b0000_1100) >> 2;
-        public int Color0 => (Data & 0b0000_0011);
+        public byte Color3 => (byte)((Data & 0b1100_0000) >> 6);
+        public byte Color2 => (byte)((Data & 0b0011_0000) >> 4);
+        public byte Color1 => (byte)((Data & 0b0000_1100) >> 2);
+        public byte Color0 => (byte)(Data & 0b0000_0011);
+        public byte this[int i]
+        {
+            get
+            {
+                if (i == 0) return Color0;
+                if (i == 1) return Color1;
+                if (i == 2) return Color2;
+                if (i == 3) return Color3;
+                throw new ArgumentOutOfRangeException(nameof(i), $"Invalid palette index {i}. Palettes are 4 colors (0-3).");
+            }
+        }
     }
 }

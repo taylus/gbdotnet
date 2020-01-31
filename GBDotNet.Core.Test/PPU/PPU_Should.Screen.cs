@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test.Integration
 {
@@ -7,8 +8,16 @@ namespace GBDotNet.Core.Test.Integration
         [TestMethod]
         public void Generate_Expected_Screen_Pixels_From_Known_VRAM_And_OAM_Dumps()
         {
-            //TODO: variants for different scroll register values
-            Assert.Inconclusive("Test not yet implemented.");
+            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.vram.dump"));
+            var oam = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.oam.dump"));
+            //magic numbers in PPU registers collected from bgb at the point the above memory dumps were captured
+            var regs = new PPURegisters(lcdc: 0xE3, scrollY: 0xD0, bgPalette: 0xE4, spritePalette0: 0xD0, spritePalette1: 0xE0);
+            var ppu = new PPU(regs, vram, oam);
+
+            var actualPixels = ppu.ForceRenderScreen();
+            var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_screen.png"));
+
+            AssertPixelsMatch(expectedPixels, actualPixels, width: 160);
         }
     }
 }

@@ -40,12 +40,16 @@
         public int PaletteNumber => Attributes.IsBitSet(4) ? 1 : 0;
         //bits 3-0 of the Attributes byte are only used in Game Boy Color mode, so they are ignored here
 
-        public Sprite(byte positionY, byte positionX, byte tileNumber, byte attributes)
+        public PPURegisters PPURegisters { get; private set; }
+        public Palette Palette => PaletteNumber == 0 ? PPURegisters.SpritePalette0 : PPURegisters.SpritePalette1;
+
+        public Sprite(byte positionY, byte positionX, byte tileNumber, byte attributes, PPURegisters ppuRegisters)
         {
             PositionY = positionY;
             PositionX = positionX;
             TileNumber = tileNumber;
             Attributes = attributes;
+            PPURegisters = ppuRegisters;
         }
 
         public void Render(TileSet tileset, ref byte[] spriteLayer)
@@ -56,12 +60,11 @@
             {
                 for (int x = 0; x < Tile.WidthInPixels; x++)
                 {
-                    byte spritePixel = GetPixel(tile, x, y);
-                    if (spritePixel == 0) continue; //transparency
+                    byte? spritePixel = GetPixel(tile, x, y);
+                    if (!spritePixel.HasValue) continue; //transparency
                     var screenCoordinates = LocalToScreenCoordinates(x, y);
-                    spriteLayer[screenCoordinates.y * PPU.ScreenWidthInPixels + screenCoordinates.x] = spritePixel;
-                    //TODO: map spritePixel value through appropriate palette
-                    //TODO: IsBehindBackground
+                    spriteLayer[screenCoordinates.y * PPU.ScreenWidthInPixels + screenCoordinates.x] = spritePixel.Value;
+                    //TODO: implement IsBehindBackground attribute flag
                 }
             }
         }
@@ -73,7 +76,7 @@
         /// <summary>
         /// Returns the pixel color (0-3) at the given screen coordinates.
         /// </summary>
-        public byte GetPixel(TileSet tileset, int x, int y)
+        public byte? GetPixel(TileSet tileset, int x, int y)
         {
             var tile = tileset[TileNumber];
             (x, y) = ScreenToLocalCoordinates(x, y);
@@ -86,11 +89,13 @@
         /// <summary>
         /// Returns the pixel color (0-3) at the given sprite-local coordinates.
         /// </summary>
-        private byte GetPixel(Tile tile, int x, int y)
+        private byte? GetPixel(Tile tile, int x, int y)
         {
             if (IsFlippedHorizontally) x = Tile.WidthInPixels - x - 1;
             if (IsFlippedVertically) y = Tile.HeightInPixels - y - 1;
-            return tile[x, y];
+            var paletteIndex = tile[x, y];
+            if (paletteIndex == 0) return null;
+            return Palette[paletteIndex];
         }
     }
 }

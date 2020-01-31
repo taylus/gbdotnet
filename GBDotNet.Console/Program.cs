@@ -22,7 +22,7 @@ namespace GBDotNet.ConsoleApp
             var tilesetPixels = ppu.RenderTileSet();
             var bgmapPixels = ppu.RenderBackgroundMap(ppu.TileSet);
             var spritePixels = ppu.RenderSprites(ppu.TileSet);
-            var screenPixels = RenderScreen(ppu);
+            var screenPixels = ppu.ForceRenderScreen();
 
             WriteFile(tilesetPixels, tilesetPixelsOutputPath);
             WriteFile(bgmapPixels, bgMapPixelsOutputPath);
@@ -34,17 +34,9 @@ namespace GBDotNet.ConsoleApp
         {
             var vram = new Memory(vramDumpPath);
             var oam = new Memory(oamDumpPath);
-            return new PPU(new PPURegisters(lcdc: 0xE3, scrollY: 0xD0), vram, oam);
-        }
-
-        private static byte[] RenderScreen(PPU ppu)
-        {
-            for (int i = 0; i < PPU.ScreenHeightInPixels; i++)
-            {
-                ppu.RenderScanline();
-                ppu.CurrentLine++;
-            }
-            return ppu.RenderScreen();
+            //magic numbers coming from bgb at the point the above memory dumps were captured
+            var regs = new PPURegisters(lcdc: 0xE3, scrollY: 0xD0, bgPalette: 0xE4, spritePalette0: 0xD0, spritePalette1: 0xE0);
+            return new PPU(regs, vram, oam);
         }
 
         private static void WriteFile(byte[] data, string outputPath)

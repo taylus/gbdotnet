@@ -115,7 +115,8 @@ namespace GBDotNet.Core
                 var sprite = new Sprite(positionY: ObjectAttributeMemory[i],
                     positionX: ObjectAttributeMemory[i + 1],
                     tileNumber: ObjectAttributeMemory[i + 2],
-                    attributes: ObjectAttributeMemory[i + 3]);
+                    attributes: ObjectAttributeMemory[i + 3],
+                    Registers);
 
                 if (!sprite.Visible) continue;
 
@@ -171,21 +172,32 @@ namespace GBDotNet.Core
                 var sprite = new Sprite(positionY: ObjectAttributeMemory[i],
                     positionX: ObjectAttributeMemory[i + 1],
                     tileNumber: ObjectAttributeMemory[i + 2],
-                    attributes: ObjectAttributeMemory[i + 3]);
+                    attributes: ObjectAttributeMemory[i + 3],
+                    Registers);
 
                 if (!sprite.OverlapsCoordinates(x, y: CurrentLine)) continue;
 
                 //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
                 //TODO: 10 sprites per scanline limit?
-                var spritePixel = sprite.GetPixel(tileset, x, y: CurrentLine);
-                if (spritePixel == 0) continue;
-                screenPixels[CurrentLine * ScreenWidthInPixels + x] = spritePixel;
+                byte? spritePixel = sprite.GetPixel(tileset, x, y: CurrentLine);
+                if (!spritePixel.HasValue) continue;    //transparency
+                screenPixels[CurrentLine * ScreenWidthInPixels + x] = spritePixel.Value;
             }
         }
 
         internal byte[] RenderScreen()
         {
             return screenPixels;
+        }
+
+        internal byte[] ForceRenderScreen()
+        {
+            for (int i = 0; i < ScreenHeightInPixels; i++)
+            {
+                RenderScanline();
+                CurrentLine++;
+            }
+            return RenderScreen();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace GBDotNet.Core.Test.Integration
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.vram.dump"));
             var oam = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.oam.dump"));
-            var ppu = new PPU(new PPURegisters(), vram, oam);
+            var ppu = new PPU(new PPURegisters(spritePalette0: 0xFF, spritePalette1:0xFF), vram, oam);
 
             var actualPixels = ppu.RenderSprites(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris_title_screen_expected_sprites.png"));
@@ -23,7 +23,7 @@ namespace GBDotNet.Core.Test.Integration
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.vram.dump"));
             var oam = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.oam.dump"));
-            var ppu = new PPU(new PPURegisters(lcdc: 0xE3), vram, oam);
+            var ppu = new PPU(new PPURegisters(lcdc: 0xE3, spritePalette0: 0xE4, spritePalette1: 0xE4), vram, oam);
 
             var actualPixels = ppu.RenderSprites(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_sprites.png"));
