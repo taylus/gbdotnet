@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace GBDotNet.Core
 {
@@ -12,14 +11,14 @@ namespace GBDotNet.Core
     /// <see cref="LCDControlRegister"/>, respectively.
     /// </remarks>
     /// <see cref="http://gameboy.mongenel.com/dmg/asmmemmap.html"/>
-    public class TileMap
+    public abstract class TileMap
     {
         public const int WidthInTiles = 32;
         public const int HeightInTiles = 32;
         public const int NumTiles = WidthInTiles * HeightInTiles;
         public PPURegisters Registers { get; private set; }
         public byte[] Tiles { get; private set; }       //tile index numbers
-        public int BaseAddress { get => Registers.LCDControl.BackgroundTileMapBaseAddress; }
+        public abstract int BaseAddress { get; }
         public TileSet TileSet { get; private set; }
 
         /// <summary>
@@ -27,7 +26,7 @@ namespace GBDotNet.Core
         /// </summary>
         /// <param name="x">A tile x coordinate between 0-31 inclusive.</param>
         /// <param name="y">A tile y coordinate between 0-31 inclusive.</param>
-        private byte this[int x, int y]
+        protected byte this[int x, int y]
         {
             get => Tiles[y * WidthInTiles + x];
             set => Tiles[y * WidthInTiles + x] = value;

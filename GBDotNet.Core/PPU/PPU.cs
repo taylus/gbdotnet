@@ -129,8 +129,8 @@ namespace GBDotNet.Core
 
         internal byte[] RenderBackgroundMap(TileSet tileset)
         {
-            var tilemap = new TileMap(Registers, tileset, VideoMemory);
-            return tilemap.Render();
+            var bgMap = new BackgroundMap(Registers, tileset, VideoMemory);
+            return bgMap.Render();
         }
 
         internal byte[] RenderTileSet()
@@ -141,21 +141,22 @@ namespace GBDotNet.Core
 
         internal byte[] RenderWindow(TileSet tileset)
         {
-            throw new NotImplementedException();
+            var window = new Window(Registers, tileset, VideoMemory);
+            return window.Render();
         }
 
         internal byte[] RenderScanline()
         {
             //cache and update these as needed instead of new-ing up every scanline?
-            var tileSet = new TileSet(VideoMemory);
-            var tileMap = new TileMap(Registers, tileSet, VideoMemory);
+            var tileset = new TileSet(VideoMemory);
+            var bgMap = new BackgroundMap(Registers, tileset, VideoMemory);
 
             var tileMapY = (byte)(CurrentLine + Registers.ScrollY);
             for (int x = 0; x < ScreenWidthInPixels; x++)
             {
                 var tileMapX = (byte)(x + Registers.ScrollX);
-                screenPixels[CurrentLine * ScreenWidthInPixels + x] = tileMap.GetPixelAt(tileMapX, tileMapY);
-                DrawSpritesOntoScanline(tileSet, ref screenPixels, x);
+                screenPixels[CurrentLine * ScreenWidthInPixels + x] = bgMap.GetPixelAt(tileMapX, tileMapY);
+                DrawSpritesOntoScanline(tileset, ref screenPixels, x);
                 //TODO: render window
             }
 

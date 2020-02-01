@@ -15,7 +15,7 @@ namespace GBDotNet.Core.Test.Integration
         public void Generate_Expected_Window_Pixels_From_Known_VRAM_Dump_Using_Signed_Tile_Numbers()
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "links_awakening_you_are_on_koholint_island.vram.dump"));
-            var ppu = new PPU(new PPURegisters(lcdc: 0x10), vram, oam: new Memory());
+            var ppu = new PPU(new PPURegisters(lcdc: 0xE7, bgPalette: 0xE4), vram, oam: new Memory());
 
             var actualPixels = ppu.RenderWindow(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "links_awakening_you_are_on_koholint_island_expected_window.png"));

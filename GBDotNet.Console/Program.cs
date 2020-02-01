@@ -6,12 +6,14 @@ namespace GBDotNet.ConsoleApp
 {
     public class Program
     {
-        private const string vramDumpPath = @"input\links_awakening_you_are_on_koholint_island.vram.dump";
-        private const string oamDumpPath = @"input\links_awakening_you_are_on_koholint_island.oam.dump";
-        private const string tilesetPixelsOutputPath = "links_awakening_you_are_on_koholint_island.tileset.bin";
-        private const string bgMapPixelsOutputPath = "links_awakening_you_are_on_koholint_island.bgmap.bin";
-        private const string spritePixelsOutputPath = "links_awakening_you_are_on_koholint_island.sprites.bin";
-        private const string screenPixelsOutputPath = "links_awakening_you_are_on_koholint_island.screen.bin";
+        private const string sceneName = "links_awakening_you_are_on_koholint_island";
+        private const string vramDumpPath = @"input\" + sceneName + ".vram.dump";
+        private const string oamDumpPath = @"input\" + sceneName + ".oam.dump";
+        private const string tilesetPixelsOutputPath = sceneName + ".tileset.bin";
+        private const string bgMapPixelsOutputPath = sceneName + ".bgmap.bin";
+        private const string windowPixelsOutputPath = sceneName + ".window.bin";
+        private const string spritePixelsOutputPath = sceneName + ".sprites.bin";
+        private const string screenPixelsOutputPath = sceneName + ".screen.bin";
 
         public static void Main()
         {
@@ -20,14 +22,17 @@ namespace GBDotNet.ConsoleApp
 
             var tilesetPixels = ppu.RenderTileSet();
             var bgmapPixels = ppu.RenderBackgroundMap(ppu.TileSet);
+            var windowPixels = ppu.RenderWindow(ppu.TileSet);
             var spritePixels = ppu.RenderSprites(ppu.TileSet);
             var screenPixels = ppu.ForceRenderScreen();
 
-            string pathRoot = Environment.ExpandEnvironmentVariables("%userprofile%");
-            WriteFile(tilesetPixels, Path.Combine(pathRoot, "GitHub", "monogameboy", "input", tilesetPixelsOutputPath));
-            WriteFile(bgmapPixels, Path.Combine(pathRoot, "GitHub", "monogameboy", "input", bgMapPixelsOutputPath));
-            WriteFile(spritePixels, Path.Combine(pathRoot, "GitHub", "monogameboy", "input", spritePixelsOutputPath));
-            WriteFile(screenPixels, Path.Combine(pathRoot, "GitHub", "monogameboy", "input", screenPixelsOutputPath));
+            string userprofileDir = Environment.ExpandEnvironmentVariables("%userprofile%");
+            string pathRoot = Path.Combine(userprofileDir, "GitHub", "monogameboy", "input");
+            WriteFile(tilesetPixels, Path.Combine(pathRoot, tilesetPixelsOutputPath));
+            WriteFile(bgmapPixels, Path.Combine(pathRoot, bgMapPixelsOutputPath));
+            WriteFile(windowPixels, Path.Combine(pathRoot, windowPixelsOutputPath));
+            WriteFile(spritePixels, Path.Combine(pathRoot, spritePixelsOutputPath));
+            WriteFile(screenPixels, Path.Combine(pathRoot, screenPixelsOutputPath));
         }
 
         private static PPU InitializePPU()
