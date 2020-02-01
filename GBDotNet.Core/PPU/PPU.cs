@@ -139,7 +139,7 @@ namespace GBDotNet.Core
             return tileset.Render();
         }
 
-        internal byte[] RenderWindow()
+        internal byte[] RenderWindow(TileSet tileset)
         {
             throw new NotImplementedException();
         }

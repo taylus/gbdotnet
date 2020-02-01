@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using GBDotNet.Core;
 
@@ -7,12 +6,12 @@ namespace GBDotNet.ConsoleApp
 {
     public class Program
     {
-        private const string vramDumpPath = @"input\pokemon_reds_room_vram.dump";
-        private const string oamDumpPath = @"input\pokemon_reds_room_oam.dump";
-        private const string tilesetPixelsOutputPath = "pokemon_reds_room_tileset.bin";
-        private const string bgMapPixelsOutputPath = "pokemon_reds_room_bgmap.bin";
-        private const string spritePixelsOutputPath = "pokemon_reds_room_sprites.bin";
-        private const string screenPixelsOutputPath = "pokemon_reds_room_screen.bin";
+        private const string vramDumpPath = @"input\links_awakening_you_are_on_koholint_island.vram.dump";
+        private const string oamDumpPath = @"input\links_awakening_you_are_on_koholint_island.oam.dump";
+        private const string tilesetPixelsOutputPath = "links_awakening_you_are_on_koholint_island.tileset.bin";
+        private const string bgMapPixelsOutputPath = "links_awakening_you_are_on_koholint_island.bgmap.bin";
+        private const string spritePixelsOutputPath = "links_awakening_you_are_on_koholint_island.sprites.bin";
+        private const string screenPixelsOutputPath = "links_awakening_you_are_on_koholint_island.screen.bin";
 
         public static void Main()
         {
@@ -24,18 +23,19 @@ namespace GBDotNet.ConsoleApp
             var spritePixels = ppu.RenderSprites(ppu.TileSet);
             var screenPixels = ppu.ForceRenderScreen();
 
-            WriteFile(tilesetPixels, tilesetPixelsOutputPath);
-            WriteFile(bgmapPixels, bgMapPixelsOutputPath);
-            WriteFile(spritePixels, spritePixelsOutputPath);
-            WriteFile(screenPixels, screenPixelsOutputPath);
+            string pathRoot = Environment.ExpandEnvironmentVariables("%userprofile%");
+            WriteFile(tilesetPixels, Path.Combine(pathRoot, "GitHub", "monogameboy", "input", tilesetPixelsOutputPath));
+            WriteFile(bgmapPixels, Path.Combine(pathRoot, "GitHub", "monogameboy", "input", bgMapPixelsOutputPath));
+            WriteFile(spritePixels, Path.Combine(pathRoot, "GitHub", "monogameboy", "input", spritePixelsOutputPath));
+            WriteFile(screenPixels, Path.Combine(pathRoot, "GitHub", "monogameboy", "input", screenPixelsOutputPath));
         }
 
         private static PPU InitializePPU()
         {
             var vram = new Memory(vramDumpPath);
             var oam = new Memory(oamDumpPath);
-            //magic numbers coming from bgb at the point the above memory dumps were captured
-            var regs = new PPURegisters(lcdc: 0xE3, scrollY: 0xD0, bgPalette: 0xE4, spritePalette0: 0xD0, spritePalette1: 0xE0);
+            //magic numbers in registers captured from bgb at the same point the memory dumps were saved
+            var regs = new PPURegisters(lcdc: 0xE7, bgPalette: 0xE4, spritePalette0: 0x1C, spritePalette1: 0xE4);
             return new PPU(regs, vram, oam);
         }
 
@@ -43,14 +43,6 @@ namespace GBDotNet.ConsoleApp
         {
             Console.WriteLine($"Writing {outputPath}...");
             File.WriteAllBytes(outputPath, data);
-            //OpenFile(pixelBufferOutputPath);
-            string pathRoot = Environment.ExpandEnvironmentVariables("%userprofile%");
-            File.Copy(outputPath, Path.Combine(pathRoot, "GitHub", "monogameboy", "input", outputPath), overwrite: true);
-        }
-
-        private static void OpenFile(string path)
-        {
-            Process.Start(new ProcessStartInfo() { FileName = path, UseShellExecute = true });
         }
     }
 }

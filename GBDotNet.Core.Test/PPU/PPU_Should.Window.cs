@@ -1,15 +1,26 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test.Integration
 {
     public partial class PPU_Should
     {
         [TestMethod]
-        public void Generate_Expected_Window_Pixels_From_Known_VRAM_Dump()
+        public void Generate_Expected_Window_Pixels_From_Known_VRAM_Dump_Using_Unsigned_Tile_Numbers()
         {
-            //TODO: signed/unsigned test variants?
-            //other variants? (see LCDC flags)
             Assert.Inconclusive("Test not yet implemented.");
+        }
+
+        [TestMethod]
+        public void Generate_Expected_Window_Pixels_From_Known_VRAM_Dump_Using_Signed_Tile_Numbers()
+        {
+            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "links_awakening_you_are_on_koholint_island.vram.dump"));
+            var ppu = new PPU(new PPURegisters(lcdc: 0x10), vram, oam: new Memory());
+
+            var actualPixels = ppu.RenderWindow(ppu.TileSet);
+            var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "links_awakening_you_are_on_koholint_island_expected_window.png"));
+
+            AssertPixelsMatch(expectedPixels, actualPixels, width: 256);
         }
 
         [TestMethod]

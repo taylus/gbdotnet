@@ -19,6 +19,16 @@ namespace GBDotNet.Core
         public byte WindowY { get; set; }           //$ff4a, http://bgb.bircd.org/pandocs.htm#lcdpositionandscrolling
         public byte WindowX { get; set; }           //$ff4b, http://bgb.bircd.org/pandocs.htm#lcdpositionandscrolling
 
+        /// <summary>
+        /// Initialize a set of PPU registers with the given values.
+        /// </summary>
+        /// <param name="lcdc">The contents of the LCD Control register ($FF40)</param>
+        /// <param name="lcdstat">The contents of the LCD Status register ($FF41)</param>
+        /// <param name="scrollX">The contents of the SCX register ($FF43)</param>
+        /// <param name="scrollY">The contents of the SCY register ($FF42)</param>
+        /// <param name="bgPalette">The contents of the Background Palette register ($FF47)</param>
+        /// <param name="spritePalette0">The contents of the Object Palette 0 register ($FF48)</param>
+        /// <param name="spritePalette1">The contents of the Object Palette 1 register ($FF49)</param>
         public PPURegisters(byte lcdc = 0, byte lcdstat = 0, byte scrollX = 0, byte scrollY = 0,
             byte bgPalette = 0, byte spritePalette0 = 0, byte spritePalette1 = 0)
         {

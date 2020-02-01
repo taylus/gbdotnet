@@ -11,10 +11,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="input\pokemon_reds_room_oam.dump">
+    <None Update="input\links_awakening_you_are_on_koholint_island.oam.dump">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="input\pokemon_reds_room_vram.dump">
+    <None Update="input\links_awakening_you_are_on_koholint_island.vram.dump">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="input\pokemon_reds_room.oam.dump">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="input\pokemon_reds_room.vram.dump">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="input\tetris_title_screen.oam.dump">
