@@ -150,14 +150,16 @@ namespace GBDotNet.Core
             //cache and update these as needed instead of new-ing up every scanline?
             var tileset = new TileSet(VideoMemory);
             var bgMap = new BackgroundMap(Registers, tileset, VideoMemory);
+            var window = new Window(Registers, tileset, VideoMemory);
+            //var sprites = new SpriteSet(Registers, tileset, VideoMemory)?
 
-            var tileMapY = (byte)(CurrentLine + Registers.ScrollY);
+            var bgMapY = (byte)(CurrentLine + Registers.ScrollY);
             for (int x = 0; x < ScreenWidthInPixels; x++)
             {
-                var tileMapX = (byte)(x + Registers.ScrollX);
-                screenPixels[CurrentLine * ScreenWidthInPixels + x] = bgMap.GetPixelAt(tileMapX, tileMapY);
+                var bgMapX = (byte)(x + Registers.ScrollX);
+                screenPixels[CurrentLine * ScreenWidthInPixels + x] = bgMap.GetPixelAt(bgMapX, bgMapY);
                 DrawSpritesOntoScanline(tileset, ref screenPixels, x);
-                //TODO: render window
+                window.DrawOntoScanline(ref screenPixels, x, y: CurrentLine);
             }
 
             return screenPixels;

@@ -40,7 +40,7 @@ namespace GBDotNet.ConsoleApp
             var vram = new Memory(vramDumpPath);
             var oam = new Memory(oamDumpPath);
             //magic numbers in registers captured from bgb at the same point the memory dumps were saved
-            var regs = new PPURegisters(lcdc: 0xE7, bgPalette: 0xE4, spritePalette0: 0x1C, spritePalette1: 0xE4);
+            var regs = new PPURegisters(lcdc: 0xE7, windowX: 0x06, windowY: 0x80, bgPalette: 0xE4, spritePalette0: 0x1C, spritePalette1: 0xE4);
             return new PPU(regs, vram, oam);
         }
 

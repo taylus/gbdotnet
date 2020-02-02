@@ -26,11 +26,13 @@ namespace GBDotNet.Core
         /// <param name="lcdstat">The contents of the LCD Status register ($FF41)</param>
         /// <param name="scrollX">The contents of the SCX register ($FF43)</param>
         /// <param name="scrollY">The contents of the SCY register ($FF42)</param>
+        /// <param name="windowX">The contents of the WX register ($FF4B)</param>
+        /// <param name="windowY">The contents of the WY register ($FF4A)</param>
         /// <param name="bgPalette">The contents of the Background Palette register ($FF47)</param>
         /// <param name="spritePalette0">The contents of the Object Palette 0 register ($FF48)</param>
         /// <param name="spritePalette1">The contents of the Object Palette 1 register ($FF49)</param>
-        public PPURegisters(byte lcdc = 0, byte lcdstat = 0, byte scrollX = 0, byte scrollY = 0,
-            byte bgPalette = 0, byte spritePalette0 = 0, byte spritePalette1 = 0)
+        public PPURegisters(byte lcdc = 0, byte lcdstat = 0, byte scrollX = 0, byte scrollY = 0, byte windowX = 0,
+            byte windowY = 0, byte bgPalette = 0, byte spritePalette0 = 0, byte spritePalette1 = 0)
         {
             LCDControl = new LCDControlRegister() { Data = lcdc };
             LCDStatus = new LCDStatusRegister() { Data = lcdstat };
@@ -39,6 +41,8 @@ namespace GBDotNet.Core
             SpritePalette1 = new Palette() { Data = spritePalette1 };
             ScrollX = scrollX;
             ScrollY = scrollY;
+            WindowX = windowX;
+            WindowY = windowY;
         }
     }
 

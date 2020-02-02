@@ -42,7 +42,8 @@ namespace GBDotNet.Core.Test.Integration
         {
             Assert.Inconclusive("Test not yet implemented.");
         }
-        
+
+        [TestMethod]
         public void Generate_Blank_Sprite_Pixels_When_Sprite_Drawing_Is_Disabled()
         {
             //LCDC bit 1
