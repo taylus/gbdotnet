@@ -23,7 +23,7 @@
         {
             if (!Registers.LCDControl.WindowDisplayEnabled) return;
             if (!OverlapsCoordinates(x, y)) return;
-            var windowX = (byte)(x + Registers.WindowX - OffsetX);
+            var windowX = (byte)(x - Registers.WindowX + OffsetX);
             var windowY = (byte)(y + Registers.WindowY);
             screenPixels[y * PPU.ScreenWidthInPixels + x] = GetPixelAt(windowX, windowY);
         }
