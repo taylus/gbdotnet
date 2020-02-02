@@ -16,6 +16,9 @@ namespace GBDotNet.Core
         public const int WidthInTiles = 32;
         public const int HeightInTiles = 32;
         public const int NumTiles = WidthInTiles * HeightInTiles;
+        public const int WidthInPixels = WidthInTiles * Tile.WidthInPixels;
+        public const int HeightInPixels = HeightInTiles * Tile.HeightInPixels;
+
         public PPURegisters Registers { get; private set; }
         public byte[] Tiles { get; private set; }       //tile index numbers
         public abstract int BaseAddress { get; }
@@ -48,18 +51,15 @@ namespace GBDotNet.Core
         /// Returns a 256 x 256 pixel (32 x 32 tile) image of the tilemap built
         /// by indexing tile numbers into the current tileset.
         /// </summary>
-        public byte[] Render()
+        public virtual byte[] Render()
         {
-            const int widthInPixels = WidthInTiles * Tile.WidthInPixels;
-            const int heightInPixels = HeightInTiles * Tile.HeightInPixels;
+            var pixels = new byte[WidthInPixels * HeightInPixels];
 
-            var pixels = new byte[widthInPixels * heightInPixels];
-
-            for (int x = 0; x < widthInPixels; x++)
+            for (int x = 0; x < WidthInPixels; x++)
             {
-                for (int y = 0; y < heightInPixels; y++)
+                for (int y = 0; y < HeightInPixels; y++)
                 {
-                    pixels[y * widthInPixels + x] = GetPixelAt(x, y);
+                    pixels[y * WidthInPixels + x] = GetPixelAt(x, y);
                 }
             }
 

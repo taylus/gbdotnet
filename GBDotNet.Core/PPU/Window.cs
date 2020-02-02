@@ -8,5 +8,13 @@
         {
 
         }
+
+        public override byte[] Render()
+        {
+            if (!Registers.LCDControl.WindowDisplayEnabled)
+                return new byte[WidthInPixels * HeightInPixels];
+
+            return base.Render();
+        }
     }
 }
