@@ -42,6 +42,8 @@
 
         public PPURegisters PPURegisters { get; private set; }
         public Palette Palette => PaletteNumber == 0 ? PPURegisters.SpritePalette0 : PPURegisters.SpritePalette1;
+        public int HeightInPixels => PPURegisters.LCDControl.AreSprites8x16 ? Tile.HeightInPixels * 2 : Tile.HeightInPixels;
+        public int WidthInPixels => Tile.WidthInPixels;
 
         public Sprite(byte positionY, byte positionX, byte tileNumber, byte attributes, PPURegisters ppuRegisters)
         {
@@ -55,12 +57,12 @@
         public void Render(TileSet tileset, ref byte[] spriteLayer)
         {
             if (!Visible) return;
-            var tile = tileset[TileNumber];
-            for (int y = 0; y < Tile.HeightInPixels; y++)
+            var tiles = GetTiles(tileset);
+            for (int y = 0; y < HeightInPixels; y++)
             {
-                for (int x = 0; x < Tile.WidthInPixels; x++)
+                for (int x = 0; x < WidthInPixels; x++)
                 {
-                    byte? spritePixel = GetPixel(tile, x, y);
+                    byte? spritePixel = GetPixel(tiles[y / Tile.HeightInPixels], x, y % Tile.HeightInPixels);
                     if (!spritePixel.HasValue) continue; //transparency
                     var screenCoordinates = LocalToScreenCoordinates(x, y);
                     spriteLayer[screenCoordinates.y * PPU.ScreenWidthInPixels + screenCoordinates.x] = spritePixel.Value;
@@ -69,8 +71,26 @@
             }
         }
 
-        public bool OverlapsColumn(int x) => (x >= TruePositionX) && (x < (TruePositionX + Tile.WidthInPixels));
-        public bool OverlapsScanline(int y) => (y >= TruePositionY) && (y < (TruePositionY + Tile.HeightInPixels));
+        /// <summary>
+        /// Returns the two tiles used by this sprite in 8x16 mode (the first should be drawn above the second).
+        /// If the sprite is in 8x8 mode, returns the sprite's single tile.
+        /// </summary>
+        /// <see cref="http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam"/>
+        private Tile[] GetTiles(TileSet tileset)
+        {
+            if (PPURegisters.LCDControl.AreSprites8x8)
+            {
+                return new Tile[] { tileset[TileNumber] };
+            }
+            else
+            {
+                //clear and set the 0 bit so each pair is always even on top, odd on bottom
+                return new Tile[] { tileset[TileNumber & 0xFE], tileset[TileNumber | 0x01] };
+            }
+        }
+
+        public bool OverlapsColumn(int x) => (x >= TruePositionX) && (x < (TruePositionX + WidthInPixels));
+        public bool OverlapsScanline(int y) => (y >= TruePositionY) && (y < (TruePositionY + HeightInPixels));
         public bool OverlapsCoordinates(int x, int y) => OverlapsColumn(x) && OverlapsScanline(y);
 
         /// <summary>
@@ -78,9 +98,9 @@
         /// </summary>
         public byte? GetPixel(TileSet tileset, int x, int y)
         {
-            var tile = tileset[TileNumber];
+            var tiles = GetTiles(tileset);
             (x, y) = ScreenToLocalCoordinates(x, y);
-            return GetPixel(tile, x, y);
+            return GetPixel(tiles[y / Tile.HeightInPixels], x, y);
         }
 
         private (int x, int y) LocalToScreenCoordinates(int x, int y) => (x + TruePositionX, y + TruePositionY);
@@ -91,6 +111,7 @@
         /// </summary>
         private byte? GetPixel(Tile tile, int x, int y)
         {
+            y %= Tile.HeightInPixels;
             if (IsFlippedHorizontally) x = Tile.WidthInPixels - x - 1;
             if (IsFlippedVertically) y = Tile.HeightInPixels - y - 1;
             var paletteIndex = tile[x, y];
