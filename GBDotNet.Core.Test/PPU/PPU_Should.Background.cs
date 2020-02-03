@@ -9,7 +9,7 @@ namespace GBDotNet.Core.Test.Integration
         public void Generate_Expected_Background_Map_Pixels_From_Known_VRAM_Dump_Using_Unsigned_Tile_Numbers()
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.vram.dump"));
-            var ppu = new PPU(new PPURegisters(lcdc: 0xD3), vram, oam: new Memory());
+            var ppu = new PPU(new PPURegisters(lcdc: 0xD3, bgPalette: 0xE4), vram, oam: new Memory());
 
             var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris_title_screen_expected_bgmap.png"));
@@ -21,7 +21,7 @@ namespace GBDotNet.Core.Test.Integration
         public void Generate_Expected_Background_Map_Pixels_From_Known_VRAM_Dump_Using_Signed_Tile_Numbers()
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.vram.dump"));
-            var ppu = new PPU(new PPURegisters(lcdc: 0xE3), vram, oam: new Memory());
+            var ppu = new PPU(new PPURegisters(lcdc: 0xE3, bgPalette: 0xE4), vram, oam: new Memory());
 
             var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_bgmap.png"));

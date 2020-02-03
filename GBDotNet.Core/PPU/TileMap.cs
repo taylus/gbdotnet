@@ -80,7 +80,8 @@ namespace GBDotNet.Core
             }
             int tilePixelX = x % Tile.WidthInPixels;
             int tilePixelY = y % Tile.HeightInPixels;
-            return TileSet[tileNumber][tilePixelX, tilePixelY];
+            var paletteIndex = TileSet[tileNumber][tilePixelX, tilePixelY];
+            return Registers.BackgroundPalette[paletteIndex];
         }
     }
 }

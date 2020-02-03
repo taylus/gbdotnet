@@ -46,5 +46,22 @@ namespace GBDotNet.Core.Test.Integration
 
             AssertPixelsMatch(expectedPixels, actualPixels, width: 160);
         }
+
+        [TestMethod]
+        public void Generate_Expected_Screen_Pixels_From_Known_Memory_Dump_With_Nonstandard_Background_Palette()
+        {
+            //most games use a background palette of 0xE4, which maps the background colors 1:1
+            //(e.g. color #3 is 11 => black, color #2 is 10 => dark gray, color #1 is 01 => light gray, color #0 is 00 => white)
+            //so they appear correct even without using the background color palette
+            //Donkey Kong Land 2 is one game that uses a different background palette, so test that it renders as expected
+
+            byte[] allMemory = File.ReadAllBytes(Path.Combine("PPU", "Input", "donkey_kong_land_2_level_1.dump"));
+            var ppu = new PPU(allMemory);
+
+            var actualPixels = ppu.ForceRenderScreen();
+            var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "donkey_kong_land_2_level_1_expected_screen.png"));
+
+            AssertPixelsMatch(expectedPixels, actualPixels, width: 160);
+        }
     }
 }
