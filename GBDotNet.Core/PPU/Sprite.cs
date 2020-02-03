@@ -111,6 +111,7 @@
         /// </summary>
         private byte? GetPixel(Tile tile, int x, int y)
         {
+            if (!Visible) return null;
             y %= Tile.HeightInPixels;
             if (IsFlippedHorizontally) x = Tile.WidthInPixels - x - 1;
             if (IsFlippedVertically) y = Tile.HeightInPixels - y - 1;

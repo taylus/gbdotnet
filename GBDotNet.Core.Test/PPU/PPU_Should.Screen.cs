@@ -78,10 +78,19 @@ namespace GBDotNet.Core.Test.Integration
         }
 
         [TestMethod]
-        public void Generate_Expected_Screen_Pixels_From_Known_Memory_Dump_When_Sprite_Drawing_Is_Disabled()
+        public void Generate_Expected_Screen_Pixels_From_Known_Memory_Dump_When_Sprite_Drawing_Is_Disabled_But_Background_Drawing_Is_Enabled()
         {
-            //test that background still renders when LCDC bit 1 is 0 but bit 0 is 1
-            Assert.Inconclusive("Test not yet implemented.");
+            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.vram.dump"));
+            var oam = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.oam.dump"));
+            //magic numbers in PPU registers collected from bgb at the point the above memory dumps were captured
+            var regs = new PPURegisters(lcdc: 0xE3, scrollY: 0xD0, windowX: 0x07, windowY: 0x90, bgPalette: 0xE4, spritePalette0: 0xD0, spritePalette1: 0xE0);
+            var ppu = new PPU(regs, vram, oam);
+
+            ppu.Registers.LCDControl.SpriteDisplayEnabled = false;
+            var actualPixels = ppu.ForceRenderScreen();
+            var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_screen_wo_sprites.png"));
+
+            AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
         }
     }
 }
