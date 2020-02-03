@@ -81,7 +81,11 @@ namespace GBDotNet.Core
     public class LCDControlRegister
     {
         public byte Data { get; set; }
-        public bool Enabled => Data.IsBitSet(7);
+        public bool Enabled
+        {
+            get => Data.IsBitSet(7);
+            set => Data = Data.SetBitTo(7, value);
+        }
         public int WindowTileMapBaseAddress => Data.IsBitSet(6) ? 0x9C00 : 0x9800;
         public bool WindowDisplayEnabled => Data.IsBitSet(5);
         /// <summary>

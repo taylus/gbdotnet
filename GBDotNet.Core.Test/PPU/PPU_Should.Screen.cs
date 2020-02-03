@@ -6,6 +6,19 @@ namespace GBDotNet.Core.Test.Integration
     public partial class PPU_Should
     {
         [TestMethod]
+        public void Generate_Blank_Screen_When_LCD_Is_Disabled()
+        {
+            byte[] allMemory = File.ReadAllBytes(Path.Combine("PPU", "Input", "mario_land_level_1_paused.dump"));
+            var ppu = new PPU(allMemory);
+
+            ppu.Registers.LCDControl.Enabled = false;
+            var actualPixels = ppu.ForceRenderScreen();
+            var expectedPixels = new byte[PPU.ScreenWidthInPixels * PPU.ScreenHeightInPixels];
+
+            AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
+        }
+
+        [TestMethod]
         public void Generate_Expected_Screen_Pixels_From_Known_VRAM_And_OAM_Dumps_With_Background_And_Sprites()
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.vram.dump"));
@@ -17,7 +30,7 @@ namespace GBDotNet.Core.Test.Integration
             var actualPixels = ppu.ForceRenderScreen();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_screen.png"));
 
-            AssertPixelsMatch(expectedPixels, actualPixels, width: 160);
+            AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
         }
 
         [TestMethod]
@@ -32,7 +45,7 @@ namespace GBDotNet.Core.Test.Integration
             var actualPixels = ppu.ForceRenderScreen();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "links_awakening_you_are_on_koholint_island_expected_screen.png"));
 
-            AssertPixelsMatch(expectedPixels, actualPixels, width: 160);
+            AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
         }
 
         [TestMethod]
@@ -44,7 +57,7 @@ namespace GBDotNet.Core.Test.Integration
             var actualPixels = ppu.ForceRenderScreen();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "mario_land_level_1_paused_expected_screen.png"));
 
-            AssertPixelsMatch(expectedPixels, actualPixels, width: 160);
+            AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
         }
 
         [TestMethod]
@@ -61,7 +74,7 @@ namespace GBDotNet.Core.Test.Integration
             var actualPixels = ppu.ForceRenderScreen();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "donkey_kong_land_2_level_1_expected_screen.png"));
 
-            AssertPixelsMatch(expectedPixels, actualPixels, width: 160);
+            AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
         }
     }
 }

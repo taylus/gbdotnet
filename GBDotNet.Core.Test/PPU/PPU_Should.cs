@@ -5,13 +5,6 @@ namespace GBDotNet.Core.Test.Integration
     [TestClass]
     public partial class PPU_Should
     {
-        [TestMethod]
-        public void Generate_Blank_Screen_When_LCD_Is_Disabled()
-        {
-            //LCDC bit 7
-            Assert.Inconclusive("Test not yet implemented.");
-        }
-
         /// <summary>
         /// Like CollectionAssert.AreEqual(), but reports the 2D pixel coordinates of any difference.
         /// </summary>

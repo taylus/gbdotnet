@@ -157,6 +157,12 @@ namespace GBDotNet.Core
 
         internal byte[] RenderScanline()
         {
+            if (!Registers.LCDControl.Enabled)
+            {
+                RenderBlankLine();
+                return screenPixels;
+            }
+
             //cache and update these as needed instead of new-ing up every scanline?
             var tileset = new TileSet(VideoMemory);
             var bgMap = new BackgroundMap(Registers, tileset, VideoMemory);
@@ -168,14 +174,22 @@ namespace GBDotNet.Core
             {
                 var bgMapX = (byte)(x + Registers.ScrollX);
                 screenPixels[CurrentLine * ScreenWidthInPixels + x] = bgMap.GetPixelAt(bgMapX, bgMapY);
-                DrawSpritesOntoScanline(tileset, ref screenPixels, x);
+                DrawSpritesOntoScanline(tileset, x);
                 window.DrawOntoScanline(ref screenPixels, x, CurrentLine);
             }
 
             return screenPixels;
         }
 
-        private void DrawSpritesOntoScanline(TileSet tileset, ref byte[] screenPixels, int x)
+        private void RenderBlankLine()
+        {
+            for (int x = 0; x < ScreenWidthInPixels; x++)
+            {
+                screenPixels[CurrentLine * ScreenWidthInPixels + x] = 0;
+            }
+        }
+
+        private void DrawSpritesOntoScanline(TileSet tileset, int x)
         {
             //TODO: move this into a class representing all sprites in OAM which has
             //      methods to render all sprites (for debugging) + a single scanline?
