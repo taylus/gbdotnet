@@ -92,5 +92,17 @@ namespace GBDotNet.Core.Test.Integration
 
             AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
         }
+
+        [TestMethod]
+        public void Generate_Expected_Screen_Pixels_From_Known_Memory_Dump_With_Sprites_On_Top_Of_Fullscreen_Window()
+        {
+            byte[] allMemory = File.ReadAllBytes(Path.Combine("PPU", "Input", "pokemon_reds_room_start_menu.dump"));
+            var ppu = new PPU(allMemory);
+
+            var actualPixels = ppu.ForceRenderScreen();
+            var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_start_menu_expected_screen.png"));
+
+            AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
+        }
     }
 }

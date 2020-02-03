@@ -174,8 +174,8 @@ namespace GBDotNet.Core
             {
                 var bgMapX = (byte)(x + Registers.ScrollX);
                 screenPixels[CurrentLine * ScreenWidthInPixels + x] = bgMap.GetPixelAt(bgMapX, bgMapY);
-                DrawSpritesOntoScanline(tileset, x);
                 window.DrawOntoScanline(ref screenPixels, x, CurrentLine);
+                DrawSpritesOntoScanline(tileset, x);
             }
 
             return screenPixels;
