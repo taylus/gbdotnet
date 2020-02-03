@@ -10,12 +10,12 @@ namespace GBDotNet.Core.Test.Integration
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.vram.dump"));
             var oam = Memory.FromFile(Path.Combine("PPU", "Input", "tetris_title_screen.oam.dump"));
-            var ppu = new PPU(new PPURegisters(spritePalette0: 0xFF, spritePalette1:0xFF), vram, oam);
+            var ppu = new PPU(new PPURegisters(lcdc: 0xD3, spritePalette0: 0xFF, spritePalette1:0xFF), vram, oam);
 
             var actualPixels = ppu.RenderSprites(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris_title_screen_expected_sprites.png"));
 
-            AssertPixelsMatch(expectedPixels, actualPixels, width: 160);
+            AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
         }
 
         [TestMethod]
@@ -28,7 +28,7 @@ namespace GBDotNet.Core.Test.Integration
             var actualPixels = ppu.RenderSprites(ppu.TileSet);
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_sprites.png"));
 
-            AssertPixelsMatch(expectedPixels, actualPixels, width: 160);
+            AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
         }
 
         [TestMethod]
@@ -46,8 +46,15 @@ namespace GBDotNet.Core.Test.Integration
         [TestMethod]
         public void Generate_Blank_Sprite_Pixels_When_Sprite_Drawing_Is_Disabled()
         {
-            //LCDC bit 1
-            Assert.Inconclusive("Test not yet implemented.");
+            var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.vram.dump"));
+            var oam = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.oam.dump"));
+            var ppu = new PPU(new PPURegisters(lcdc: 0xE3, spritePalette0: 0xE4, spritePalette1: 0xE4), vram, oam);
+
+            ppu.Registers.LCDControl.SpriteDisplayEnabled = false;
+            var actualPixels = ppu.RenderSprites(ppu.TileSet);
+            var expectedPixels = new byte[PPU.ScreenWidthInPixels * PPU.ScreenHeightInPixels];
+
+            AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
         }
     }
 }

@@ -99,8 +99,16 @@ namespace GBDotNet.Core
         public int BackgroundTileMapBaseAddress => Data.IsBitSet(3) ? 0x9C00 : 0x9800;
         public bool AreSprites8x16 => Data.IsBitSet(2);
         public bool AreSprites8x8 => !AreSprites8x16;
-        public bool SpriteDisplayEnabled => Data.IsBitSet(1);
-        public bool BackgroundDisplayEnabled => Data.IsBitSet(0);
+        public bool SpriteDisplayEnabled
+        {
+            get => Data.IsBitSet(1);
+            set => Data = Data.SetBitTo(1, value);
+        }
+        public bool BackgroundDisplayEnabled
+        {
+            get => Data.IsBitSet(0);
+            set => Data = Data.SetBitTo(0, value);
+        }
 
         public override string ToString()
         {

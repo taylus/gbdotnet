@@ -76,5 +76,12 @@ namespace GBDotNet.Core.Test.Integration
 
             AssertPixelsMatch(expectedPixels, actualPixels, width: PPU.ScreenWidthInPixels);
         }
+
+        [TestMethod]
+        public void Generate_Expected_Screen_Pixels_From_Known_Memory_Dump_When_Sprite_Drawing_Is_Disabled()
+        {
+            //test that background still renders when LCDC bit 1 is 0 but bit 0 is 1
+            Assert.Inconclusive("Test not yet implemented.");
+        }
     }
 }

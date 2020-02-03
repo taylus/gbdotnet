@@ -28,7 +28,7 @@
             set => PositionX = (byte)(value + 8);
         }
 
-        public bool Visible => TruePositionX < PPU.ScreenWidthInPixels && TruePositionY < PPU.ScreenHeightInPixels;
+        public bool Visible => PPURegisters.LCDControl.SpriteDisplayEnabled && TruePositionX < PPU.ScreenWidthInPixels && TruePositionY < PPU.ScreenHeightInPixels;
 
         public byte TileNumber { get; set; }    //always unsigned and references tile data at $8000 - $8FFF (tile banks 0 and 1)
 
