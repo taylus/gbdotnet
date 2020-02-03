@@ -11,7 +11,7 @@ namespace GBDotNet.Core.Test.Integration
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.vram.dump"));
             var oam = Memory.FromFile(Path.Combine("PPU", "Input", "pokemon_reds_room.oam.dump"));
             //magic numbers in PPU registers collected from bgb at the point the above memory dumps were captured
-            var regs = new PPURegisters(lcdc: 0xE3, scrollY: 0xD0, windowX:0x07, windowY: 0x90, bgPalette: 0xE4, spritePalette0: 0xD0, spritePalette1: 0xE0);
+            var regs = new PPURegisters(lcdc: 0xE3, scrollY: 0xD0, windowX: 0x07, windowY: 0x90, bgPalette: 0xE4, spritePalette0: 0xD0, spritePalette1: 0xE0);
             var ppu = new PPU(regs, vram, oam);
 
             var actualPixels = ppu.ForceRenderScreen();
@@ -31,6 +31,18 @@ namespace GBDotNet.Core.Test.Integration
 
             var actualPixels = ppu.ForceRenderScreen();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "links_awakening_you_are_on_koholint_island_expected_screen.png"));
+
+            AssertPixelsMatch(expectedPixels, actualPixels, width: 160);
+        }
+
+        [TestMethod]
+        public void Generate_Expected_Screen_Pixels_From_Known_Memory_Dump_With_Horizontally_And_Vertically_Positioned_Window()
+        {
+            byte[] allMemory = File.ReadAllBytes(Path.Combine("PPU", "Input", "mario_land_level_1_paused.dump"));
+            var ppu = new PPU(allMemory);
+
+            var actualPixels = ppu.ForceRenderScreen();
+            var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "mario_land_level_1_paused_expected_screen.png"));
 
             AssertPixelsMatch(expectedPixels, actualPixels, width: 160);
         }

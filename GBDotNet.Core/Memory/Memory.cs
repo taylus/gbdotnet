@@ -10,12 +10,17 @@ namespace GBDotNet.Core
     /// </summary>
     public class Memory : IMemory
     {
-        private const int size = ushort.MaxValue + 1;
-        protected readonly byte[] data;
+        public const int Size = ushort.MaxValue + 1;
+        protected readonly IList<byte> data;
 
         public Memory(params byte[] bytes)
         {
-            Array.Resize(ref bytes, size);
+            Array.Resize(ref bytes, Size);
+            data = bytes;
+        }
+
+        public Memory(ArraySegment<byte> bytes)
+        {
             data = bytes;
         }
 
@@ -46,9 +51,9 @@ namespace GBDotNet.Core
         /// <summary>
         /// Prints the first N bytes of the given buffer to the console.
         /// </summary>
-        private static void HexDump(byte[] bytes, int bytesPerLine = 16, int? stopAfterBytes = null)
+        private static void HexDump(IList<byte> bytes, int bytesPerLine = 16, int? stopAfterBytes = null)
         {
-            int length = stopAfterBytes ?? bytes.Length;
+            int length = stopAfterBytes ?? bytes.Count;
             for (int i = 0; i < length; i++)
             {
                 Console.Write("{0:x2} ", bytes[i]);

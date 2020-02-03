@@ -43,6 +43,16 @@ namespace GBDotNet.Core
             ObjectAttributeMemory = oam;
         }
 
+        public PPU(byte[] memory)
+        {
+            if (memory.Length != Memory.Size)
+                throw new ArgumentException($"Expected entire {Memory.Size} byte memory map, but got {memory.Length} bytes.", nameof(memory));
+
+            Registers = new PPURegisters(new ArraySegment<byte>(memory, offset: 0xFF40, count: 12));
+            VideoMemory = new Memory(new ArraySegment<byte>(memory, offset: 0x8000, count: 8192));
+            ObjectAttributeMemory = new Memory(new ArraySegment<byte>(memory, offset: 0xFE00, count: 160));
+        }
+
         public void Tick(int elapsedCycles)
         {
             cycleCounter += elapsedCycles;
@@ -159,7 +169,7 @@ namespace GBDotNet.Core
                 var bgMapX = (byte)(x + Registers.ScrollX);
                 screenPixels[CurrentLine * ScreenWidthInPixels + x] = bgMap.GetPixelAt(bgMapX, bgMapY);
                 DrawSpritesOntoScanline(tileset, ref screenPixels, x);
-                window.DrawOntoScanline(ref screenPixels, x, y: CurrentLine);
+                window.DrawOntoScanline(ref screenPixels, x, CurrentLine);
             }
 
             return screenPixels;
@@ -178,7 +188,7 @@ namespace GBDotNet.Core
                     attributes: ObjectAttributeMemory[i + 3],
                     Registers);
 
-                if (!sprite.OverlapsCoordinates(x, y: CurrentLine)) continue;
+                if (!sprite.OverlapsCoordinates(x, CurrentLine)) continue;
 
                 //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
                 //TODO: 10 sprites per scanline limit?
@@ -195,6 +205,7 @@ namespace GBDotNet.Core
 
         internal byte[] ForceRenderScreen()
         {
+            CurrentLine = 0;
             for (int i = 0; i < ScreenHeightInPixels; i++)
             {
                 RenderScanline();

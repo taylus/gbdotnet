@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Linq;
 
 namespace GBDotNet.Core
 {
     public class RomFile : Memory, IMemory
     {
         public const int BankSize = 0x4000;
-        public int NumberOfBanks => Math.Max(1, data.Length / BankSize);
+        public int NumberOfBanks => Math.Max(1, data.Count / BankSize);
         public bool HasHeader { get; set; }
 
         /// <summary>
         /// Header section of the ROM containing metadata about the game.
         /// </summary>
-        public ArraySegment<byte> Header => new ArraySegment<byte>(data, offset: 0x104, count: 0x4C);
+        public ArraySegment<byte> Header => new ArraySegment<byte>(data.ToArray(), offset: 0x104, count: 0x4C);
 
         public override byte this[int index]
         {
@@ -50,7 +51,7 @@ namespace GBDotNet.Core
         public ArraySegment<byte> GetBank(int bankNumber)
         {
             if (bankNumber < NumberOfBanks) throw new ArgumentException("Bank number exceeds number of banks in ROM.", nameof(bankNumber));
-            return new ArraySegment<byte>(data, offset: bankNumber * BankSize, count: BankSize);
+            return new ArraySegment<byte>(data.ToArray(), offset: bankNumber * BankSize, count: BankSize);
         }
     }
 }

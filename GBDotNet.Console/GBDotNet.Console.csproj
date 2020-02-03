@@ -17,6 +17,9 @@
     <None Update="input\links_awakening_you_are_on_koholint_island.vram.dump">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="input\mario_land_level_1_paused.dump">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="input\pokemon_reds_room.oam.dump">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -28,6 +28,9 @@
     <None Update="PPU\Expected\links_awakening_you_are_on_koholint_island_expected_window.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="PPU\Expected\mario_land_level_1_paused_expected_screen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="PPU\Expected\pokemon_reds_room_expected_bgmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -50,6 +53,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="PPU\Input\links_awakening_you_are_on_koholint_island.vram.dump">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="PPU\Input\mario_land_level_1_paused.dump">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="PPU\Input\pokemon_reds_room.oam.dump">

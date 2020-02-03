@@ -24,25 +24,53 @@ namespace GBDotNet.Core
         /// </summary>
         /// <param name="lcdc">The contents of the LCD Control register ($FF40)</param>
         /// <param name="lcdstat">The contents of the LCD Status register ($FF41)</param>
-        /// <param name="scrollX">The contents of the SCX register ($FF43)</param>
         /// <param name="scrollY">The contents of the SCY register ($FF42)</param>
-        /// <param name="windowX">The contents of the WX register ($FF4B)</param>
-        /// <param name="windowY">The contents of the WY register ($FF4A)</param>
+        /// <param name="scrollX">The contents of the SCX register ($FF43)</param>
+        /// <param name="currentScanline">The contents of the CURLINE register ($FF44)</param>
+        /// <param name="compareScanline">The contents of the CMPLINE register ($FF45)</param>
         /// <param name="bgPalette">The contents of the Background Palette register ($FF47)</param>
         /// <param name="spritePalette0">The contents of the Object Palette 0 register ($FF48)</param>
         /// <param name="spritePalette1">The contents of the Object Palette 1 register ($FF49)</param>
-        public PPURegisters(byte lcdc = 0, byte lcdstat = 0, byte scrollX = 0, byte scrollY = 0, byte windowX = 0,
-            byte windowY = 0, byte bgPalette = 0, byte spritePalette0 = 0, byte spritePalette1 = 0)
+        /// <param name="windowY">The contents of the WY register ($FF4A)</param>
+        /// <param name="windowX">The contents of the WX register ($FF4B)</param>
+        /// <remarks>DMACONT register ($FF46) elided due to being write-only.</remarks>
+        public PPURegisters(byte lcdc = 0, byte lcdstat = 0, byte scrollY = 0, byte scrollX = 0, byte currentScanline = 0, byte compareScanline = 0,
+            byte bgPalette = 0, byte spritePalette0 = 0, byte spritePalette1 = 0, byte windowY = 0, byte windowX = 0)
         {
             LCDControl = new LCDControlRegister() { Data = lcdc };
             LCDStatus = new LCDStatusRegister() { Data = lcdstat };
+            ScrollY = scrollY;
+            ScrollX = scrollX;
+            CurrentScanline = currentScanline;
+            CompareScanline = compareScanline;
             BackgroundPalette = new Palette() { Data = bgPalette };
             SpritePalette0 = new Palette() { Data = spritePalette0 };
             SpritePalette1 = new Palette() { Data = spritePalette1 };
-            ScrollX = scrollX;
-            ScrollY = scrollY;
-            WindowX = windowX;
             WindowY = windowY;
+            WindowX = windowX;
+        }
+
+        /// <summary>
+        /// Initialize a set of PPU registers with the given segment of the Game Boy's
+        /// memory map starting at the PPU I/O register address $FF40.
+        /// </summary>
+        /// <remarks>The 7th byte, corresponding to the DMACONT register, is ignored.</remarks>
+        public PPURegisters(ArraySegment<byte> registerValues)
+        {
+            if (registerValues.Count < 12)
+                throw new ArgumentException($"Expected 12 bytes of PPU I/O registers but only got {registerValues.Count}.", nameof(registerValues));
+
+            LCDControl = new LCDControlRegister() { Data = registerValues[0] };
+            LCDStatus = new LCDStatusRegister() { Data = registerValues[1] };
+            ScrollY = registerValues[2];
+            ScrollX = registerValues[3];
+            CurrentScanline = registerValues[4];
+            CompareScanline = registerValues[5];
+            BackgroundPalette = new Palette() { Data = registerValues[7] };
+            SpritePalette0 = new Palette() { Data = registerValues[8] };
+            SpritePalette1 = new Palette() { Data = registerValues[9] };
+            WindowY = registerValues[10];
+            WindowX = registerValues[11];
         }
     }
 

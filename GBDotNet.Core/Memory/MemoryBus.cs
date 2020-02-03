@@ -12,8 +12,8 @@ namespace GBDotNet.Core
     public class MemoryBus : IMemory
     {
         private RomFile rom;
-        private IMemory wram = new Memory();
-        private IMemory zram = new Memory();
+        private readonly IMemory wram = new Memory();
+        private readonly IMemory zram = new Memory();
         private byte interruptEnableFlag = 0;
 
         public IMemory Vram { get; set; } = new Memory();
