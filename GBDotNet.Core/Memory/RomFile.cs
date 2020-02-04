@@ -1,29 +1,22 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 
 namespace GBDotNet.Core
 {
-    public class RomFile : IMemory
+    public class RomFile : Memory, IMemory
     {
-        /// <summary>
-        /// Raw bytes of entire ROM file. Contains both instructions and data.
-        /// </summary>
-        public byte[] Data { get; private set; }
-
         public const int BankSize = 0x4000;
-        public int NumberOfBanks => Math.Max(1, Data.Length / BankSize);
+        public int NumberOfBanks => Math.Max(1, data.Count / BankSize);
         public bool HasHeader { get; set; }
 
         /// <summary>
         /// Header section of the ROM containing metadata about the game.
         /// </summary>
-        public ArraySegment<byte> Header => new ArraySegment<byte>(Data, offset: 0x104, count: 0x4C);
+        public ArraySegment<byte> Header => new ArraySegment<byte>(data.ToArray(), offset: 0x104, count: 0x4C);
 
-        public byte this[int index]
+        public override byte this[int index]
         {
-            get => Data[index];
+            get => data[index];
             set => throw new NotImplementedException("Cannot write to read-only memory.");
         }
 
@@ -35,17 +28,17 @@ namespace GBDotNet.Core
         /// <summary>
         /// Loads a ROM from the given data.
         /// </summary>
-        public RomFile(byte[] data)
+        public RomFile(byte[] data) : base(data)
         {
-            Data = data;
+
         }
 
         /// <summary>
-        /// Loads a ROM from the file at the given path.
+        /// Loads a ROM file from the given path.
         /// </summary>
-        public RomFile(string path)
+        public RomFile(string path) : base(path)
         {
-            Data = File.ReadAllBytes(path);
+
         }
 
         /// <summary>
@@ -58,17 +51,7 @@ namespace GBDotNet.Core
         public ArraySegment<byte> GetBank(int bankNumber)
         {
             if (bankNumber < NumberOfBanks) throw new ArgumentException("Bank number exceeds number of banks in ROM.", nameof(bankNumber));
-            return new ArraySegment<byte>(Data, bankNumber * BankSize, BankSize);
-        }
-
-        public IEnumerator<byte> GetEnumerator()
-        {
-            return ((IEnumerable<byte>)Data).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable<byte>)Data).GetEnumerator();
+            return new ArraySegment<byte>(data.ToArray(), offset: bankNumber * BankSize, count: BankSize);
         }
     }
 }

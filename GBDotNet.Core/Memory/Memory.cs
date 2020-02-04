@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GBDotNet.Core
 {
@@ -9,19 +10,34 @@ namespace GBDotNet.Core
     /// </summary>
     public class Memory : IMemory
     {
-        private const int size = ushort.MaxValue + 1;
-        private readonly byte[] memory;
+        public const int Size = ushort.MaxValue + 1;
+        protected readonly IList<byte> data;
 
         public Memory(params byte[] bytes)
         {
-            Array.Resize(ref bytes, size);
-            memory = bytes;
+            Array.Resize(ref bytes, Size);
+            data = bytes;
         }
 
-        public byte this[int i]
+        public Memory(ArraySegment<byte> bytes)
         {
-            get => memory[i];
-            set => memory[i] = value;
+            data = bytes;
+        }
+
+        public Memory(string path)
+        {
+            data = File.ReadAllBytes(path);
+        }
+
+        public static Memory FromFile(string path)
+        {
+            return new Memory(path);
+        }
+
+        public virtual byte this[int i]
+        {
+            get => data[i];
+            set => data[i] = value;
         }
 
         /// <summary>
@@ -29,15 +45,15 @@ namespace GBDotNet.Core
         /// </summary>
         public void HexDump(int bytesPerLine = 16, int? stopAfterBytes = null)
         {
-            HexDump(memory, bytesPerLine, stopAfterBytes);
+            HexDump(data, bytesPerLine, stopAfterBytes);
         }
 
         /// <summary>
         /// Prints the first N bytes of the given buffer to the console.
         /// </summary>
-        private static void HexDump(byte[] bytes, int bytesPerLine = 16, int? stopAfterBytes = null)
+        private static void HexDump(IList<byte> bytes, int bytesPerLine = 16, int? stopAfterBytes = null)
         {
-            int length = stopAfterBytes ?? bytes.Length;
+            int length = stopAfterBytes ?? bytes.Count;
             for (int i = 0; i < length; i++)
             {
                 Console.Write("{0:x2} ", bytes[i]);
@@ -45,14 +61,14 @@ namespace GBDotNet.Core
             }
         }
 
-        public IEnumerator<byte> GetEnumerator()
+        public virtual IEnumerator<byte> GetEnumerator()
         {
-            return ((IEnumerable<byte>)memory).GetEnumerator();
+            return data.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<byte>)memory).GetEnumerator();
+            return data.GetEnumerator();
         }
     }
 }

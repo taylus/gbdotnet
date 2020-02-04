@@ -12,13 +12,21 @@ namespace GBDotNet.Core
     public class MemoryBus : IMemory
     {
         private RomFile rom;
-        private Memory wram = new Memory();
-        private Memory zram = new Memory();
+        private readonly IMemory wram = new Memory();
+        private readonly IMemory zram = new Memory();
         private byte interruptEnableFlag = 0;
+
+        public IMemory Vram { get; set; } = new Memory();
+        public PPURegisters PPURegisters { get; set; }
 
         public void LoadRom(RomFile rom)
         {
             this.rom = rom;
+        }
+
+        public void LoadVram(Memory vram)
+        {
+            Vram = vram;
         }
 
         public byte this[int index]
@@ -40,7 +48,7 @@ namespace GBDotNet.Core
                 else if (index < 0xA000)
                 {
                     //VRAM (8K)
-                    throw new NotImplementedException($"Unsupported read of address ${index:X4}: Video RAM is not yet implemented.");
+                    return Vram[index - 0x8000];
                 }
                 else if (index < 0xC000)
                 {
@@ -70,6 +78,17 @@ namespace GBDotNet.Core
                 else if (index < 0xFF80)
                 {
                     //various hardware I/O registers (PPU, APU, joypad, etc)
+                    if (index == 0xFF40) return PPURegisters.LCDControl.Data;
+                    else if (index == 0xFF41) return PPURegisters.LCDStatus.Data;
+                    else if (index == 0xFF42) return PPURegisters.ScrollY;
+                    else if (index == 0xFF43) return PPURegisters.ScrollX;
+                    else if (index == 0xFF44) return PPURegisters.CurrentScanline;
+                    else if (index == 0xFF45) return PPURegisters.CompareScanline;
+                    else if (index == 0xFF47) return PPURegisters.BackgroundPalette.Data;
+                    else if (index == 0xFF48) return PPURegisters.SpritePalette0.Data;
+                    else if (index == 0xFF49) return PPURegisters.SpritePalette1.Data;
+                    else if (index == 0xFF4A) return PPURegisters.WindowY;
+                    else if (index == 0xFF4B) return PPURegisters.WindowX;
                     throw new NotImplementedException($"Unsupported read of address ${index:X4}: Hardware I/O registers are not yet implemented.");
                 }
                 else if (index < 0xFFFF)
@@ -92,7 +111,7 @@ namespace GBDotNet.Core
                 if (index >= 0x8000 && index < 0xA000)
                 {
                     //VRAM (8K)
-                    throw new NotImplementedException($"Unsupported write to address ${index:X4}: Video RAM is not yet implemented.");
+                    Vram[index - 0x8000] = value;
                 }
                 else if (index < 0xC000)
                 {
@@ -117,6 +136,17 @@ namespace GBDotNet.Core
                 else if (index < 0xFF80)
                 {
                     //various hardware I/O registers (PPU, APU, joypad, etc)
+                    if (index == 0xFF40) PPURegisters.LCDControl.Data = value;
+                    else if (index == 0xFF41) PPURegisters.LCDStatus.Data = value;
+                    else if (index == 0xFF42) PPURegisters.ScrollY = value;
+                    else if (index == 0xFF43) PPURegisters.ScrollX = value;
+                    else if (index == 0xFF44) PPURegisters.CurrentScanline = value;
+                    else if (index == 0xFF45) PPURegisters.CompareScanline = value;
+                    else if (index == 0xFF47) PPURegisters.BackgroundPalette.Data = value;
+                    else if (index == 0xFF48) PPURegisters.SpritePalette0.Data = value;
+                    else if (index == 0xFF49) PPURegisters.SpritePalette1.Data = value;
+                    else if (index == 0xFF4A) PPURegisters.WindowY = value;
+                    else if (index == 0xFF4B) PPURegisters.WindowX = value;
                     throw new NotImplementedException($"Unsupported write to address ${index:X4}: Hardware I/O registers are not yet implemented.");
                 }
                 else if (index < 0xFFFF)
