@@ -6,7 +6,7 @@ namespace GBDotNet.ConsoleApp
 {
     public class Program
     {
-        private const string memoryDumpPath = @"input\pokemon_reds_room_start_menu.dump";
+        private const string memoryDumpPath = @"input\metroid_2.dump";
 
         public static void Main()
         {
