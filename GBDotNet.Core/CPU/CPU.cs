@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GBDotNet.Core
 {
@@ -13,7 +15,7 @@ namespace GBDotNet.Core
     /// </remarks>
     /// <see cref="http://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html"/>
     /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html"/>
-    public partial class CPU
+    public class CPU
     {
         public Registers Registers { get; private set; }
         public IMemory Memory { get; private set; }
@@ -21,6 +23,7 @@ namespace GBDotNet.Core
         public bool InterruptsEnabled { get; private set; }
         public int CyclesLastTick { get; private set; }
         public long TotalElapsedCycles { get; private set; }
+        public ISet<uint> Breakpoints { get; private set; } = new HashSet<uint>();
 
         private readonly Action[] instructionSet;
         private readonly Action[] prefixCBInstructions;
@@ -610,8 +613,13 @@ namespace GBDotNet.Core
         {
             if (IsHalted) return;
             CyclesLastTick = 0;
+
+            Registers.LastPC = Registers.PC;
+            if (Breakpoints.Contains(Registers.PC)) Debugger.Break();
+
             byte opcode = Fetch();
             Execute(opcode);
+
             TotalElapsedCycles += CyclesLastTick;
         }
 
