@@ -1,49 +1,68 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using GBDotNet.Core;
 
 namespace GBDotNet.ConsoleApp
 {
+    /// <summary>
+    /// This program runs the emulator core headlessly, executing instructions until
+    /// it either crashes or loops forever waiting for input, interrupts, or something
+    /// that isn't implemented yet.
+    /// </summary>
     public class Program
     {
-        private const string memoryDumpPath = @"input\metroid_2.dump";
+        //TODO: load from command-line args
+        private const string romPath = @"C:\roms\gb\Tetris (World) (Rev A).gb";
+        private const string logPath = "gbdotnet.log";
 
         public static void Main()
         {
-            var ppu = new PPU(File.ReadAllBytes(memoryDumpPath));
-            Console.WriteLine(ppu.Registers.LCDControl + Environment.NewLine);
+            var stderr = Console.Error; //capture stderr to log exceptions both to log file and console
 
-            var tilesetPixels = ppu.RenderTileSet();
-            var bgMapPixels = ppu.RenderBackgroundMap(ppu.TileSet);
-            var windowPixels = ppu.RenderWindow(ppu.TileSet);
-            var spritePixels = ppu.RenderSprites(ppu.TileSet);
-            var screenPixels = ppu.ForceRenderScreen();
-
-            WritePixelDataFiles(tilesetPixels, bgMapPixels, windowPixels, spritePixels, screenPixels);
+            using (var log = new StreamWriter(logPath))
+            {
+                try
+                {
+                    Console.SetOut(log);
+                    var cpu = Start(romPath);
+                    Run(cpu);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    stderr.WriteLine(ex);
+                }
+                finally
+                {
+                    Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
+                }
+            }
         }
 
-        private static void WritePixelDataFiles(byte[] tilesetPixels, byte[] bgMapPixels, byte[] windowPixels, byte[] spritePixels, byte[] screenPixels)
+        private static CPU Start(string romPath)
         {
-            string sceneName = Path.GetFileName(memoryDumpPath);
-            string tilesetPixelsOutputFile = Path.ChangeExtension(sceneName, ".tileset.bin");
-            string bgMapPixelsOutputFile = Path.ChangeExtension(sceneName, ".bgmap.bin");
-            string windowPixelsOutputFile = Path.ChangeExtension(sceneName, ".window.bin");
-            string spritePixelsOutputFile = Path.ChangeExtension(sceneName, ".sprites.bin");
-            string screenPixelsOutputFile = Path.ChangeExtension(sceneName, ".screen.bin");
+            var memoryBus = new MemoryBus();
+            var cpu = new CPU(new Registers(), memoryBus);
+            cpu.Boot();
 
-            string userprofileDir = Environment.ExpandEnvironmentVariables("%userprofile%");
-            string outputPath = Path.Combine(userprofileDir, "GitHub", "monogameboy", "input");
-            WriteFile(tilesetPixels, Path.Combine(outputPath, tilesetPixelsOutputFile));
-            WriteFile(bgMapPixels, Path.Combine(outputPath, bgMapPixelsOutputFile));
-            WriteFile(windowPixels, Path.Combine(outputPath, windowPixelsOutputFile));
-            WriteFile(spritePixels, Path.Combine(outputPath, spritePixelsOutputFile));
-            WriteFile(screenPixels, Path.Combine(outputPath, screenPixelsOutputFile));
+            var rom = new RomFile(romPath);
+            memoryBus.LoadRom(rom);
+
+            return cpu;
         }
 
-        private static void WriteFile(byte[] data, string outputPath)
+        private static void Run(CPU cpu)
         {
-            Console.WriteLine($"Writing {outputPath}...");
-            File.WriteAllBytes(outputPath, data);
+            do
+            {
+                Console.WriteLine(cpu);
+                //Console.WriteLine("Press enter to single step...");
+                cpu.Tick();
+                //Console.ReadLine();
+            } while (!cpu.IsHalted);
+
+            Console.WriteLine("CPU halted.");
         }
     }
 }
