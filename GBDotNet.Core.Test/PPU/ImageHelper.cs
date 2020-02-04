@@ -45,7 +45,7 @@ namespace GBDotNet.Core.Test
         {
             //TODO: take in a palette byte for ordering, but for now
             //just hardcode what the Tetris title screen uses: 11|10|01|00 => light-to-dark
-            //where each pair of bits are the colors numbered 3 - 0 (feels backwards, but that's how it ism)
+            //where each pair of bits are the colors numbered 3 - 0 (feels backwards, but that's how it is)
             //and the color values are: 00 = lightest, 01 = light, 10 = dark, 11 = darkest
             //see: http://bgb.bircd.org/pandocs.htm#lcdmonochromepalettes
             return new List<Rgba32>()

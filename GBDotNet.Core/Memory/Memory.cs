@@ -63,12 +63,12 @@ namespace GBDotNet.Core
 
         public virtual IEnumerator<byte> GetEnumerator()
         {
-            return ((IEnumerable<byte>)data).GetEnumerator();
+            return data.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<byte>)data).GetEnumerator();
+            return data.GetEnumerator();
         }
     }
 }
