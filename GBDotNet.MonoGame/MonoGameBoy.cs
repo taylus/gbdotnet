@@ -1,4 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using GBDotNet.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -7,13 +12,20 @@ namespace MonoGameBoy
 {
     public class MonoGameBoy : Game
     {
-        private GraphicsDeviceManager graphics;
+        private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private GameBoyScreen screen;
-        private GameBoyColorPalette palette = GameBoyColorPalette.Dmg;
+        private KeyboardState previousKeyboardState;
+        private KeyboardState currentKeyboardState;
+        private readonly CPU cpu;
+        private readonly PPU ppu;
+        private static readonly GameBoyColorPalette palette = GameBoyColorPalette.Dmg;
+        private bool paused = true;
 
-        public MonoGameBoy()
+        public MonoGameBoy(CPU cpu, PPU ppu)
         {
+            this.cpu = cpu;
+            this.ppu = ppu;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -22,59 +34,27 @@ namespace MonoGameBoy
         protected override void Initialize()
         {
             base.Initialize();
-            InitializeGraphics();
-            screen = new GameBoyScreen(GraphicsDevice);
-            screen.PutPixels(Enumerable.Repeat(palette[0], 160 * 144).ToArray());
-            DrawDemoSprite(new Point(74, 60));
+            currentKeyboardState = previousKeyboardState = Keyboard.GetState();
+            ShowScreen();
+
+            Task.Run(RunEmulator);
         }
 
-        private void DrawDemoSprite(Point offset)
+        private void RunEmulator()
         {
-            //demo: draw a coffee cup sprite (very inefficiently + not how the Game Boy itself does)
-            screen.PutPixel(palette[3], 2 + offset.X, 0 + offset.Y);
-            screen.PutPixel(palette[3], 3 + offset.X, 0 + offset.Y);
-            screen.PutPixel(palette[3], 4 + offset.X, 0 + offset.Y);
-            screen.PutPixel(palette[3], 1 + offset.X, 1 + offset.Y);
-            screen.PutPixel(palette[3], 5 + offset.X, 1 + offset.Y);
-            screen.PutPixel(palette[3], 0 + offset.X, 2 + offset.Y);
-            screen.PutPixel(palette[3], 2 + offset.X, 2 + offset.Y);
-            screen.PutPixel(palette[3], 3 + offset.X, 2 + offset.Y);
-            screen.PutPixel(palette[3], 4 + offset.X, 2 + offset.Y);
-            screen.PutPixel(palette[3], 6 + offset.X, 2 + offset.Y);
-            screen.PutPixel(palette[3], 0 + offset.X, 3 + offset.Y);
-            screen.PutPixel(palette[3], 2 + offset.X, 3 + offset.Y);
-            screen.PutPixel(palette[3], 3 + offset.X, 3 + offset.Y);
-            screen.PutPixel(palette[3], 4 + offset.X, 3 + offset.Y);
-            screen.PutPixel(palette[3], 6 + offset.X, 3 + offset.Y);
-            screen.PutPixel(palette[3], 7 + offset.X, 3 + offset.Y);
-            screen.PutPixel(palette[3], 0 + offset.X, 4 + offset.Y);
-            screen.PutPixel(palette[3], 7 + offset.X, 4 + offset.Y);
-            screen.PutPixel(palette[3], 0 + offset.X, 5 + offset.Y);
-            screen.PutPixel(palette[3], 5 + offset.X, 5 + offset.Y);
-            screen.PutPixel(palette[3], 7 + offset.X, 5 + offset.Y);
-            screen.PutPixel(palette[3], 1 + offset.X, 6 + offset.Y);
-            screen.PutPixel(palette[3], 5 + offset.X, 6 + offset.Y);
-            screen.PutPixel(palette[3], 6 + offset.X, 6 + offset.Y);
-            screen.PutPixel(palette[3], 2 + offset.X, 7 + offset.Y);
-            screen.PutPixel(palette[3], 3 + offset.X, 7 + offset.Y);
-            screen.PutPixel(palette[3], 4 + offset.X, 7 + offset.Y);
-
-            screen.PutPixel(palette[1], 1 + offset.X, 4 + offset.Y);
-            screen.PutPixel(palette[1], 5 + offset.X, 4 + offset.Y);
-            screen.PutPixel(palette[1], 6 + offset.X, 4 + offset.Y);
-            screen.PutPixel(palette[1], 1 + offset.X, 5 + offset.Y);
-            screen.PutPixel(palette[1], 2 + offset.X, 5 + offset.Y);
-            screen.PutPixel(palette[1], 3 + offset.X, 5 + offset.Y);
-            screen.PutPixel(palette[1], 4 + offset.X, 5 + offset.Y);
-            screen.PutPixel(palette[1], 2 + offset.X, 6 + offset.Y);
-            screen.PutPixel(palette[1], 3 + offset.X, 6 + offset.Y);
-            screen.PutPixel(palette[1], 4 + offset.X, 6 + offset.Y);
+            while (true)
+            {
+                if (paused) continue;
+                Console.WriteLine($"{cpu} {ppu}");
+                cpu.Tick();
+                ppu.Tick(cpu.CyclesLastTick);
+            }
         }
 
-        private void InitializeGraphics()
+        private void SetWindowSize(int width, int height)
         {
-            graphics.PreferredBackBufferWidth = GameBoyScreen.WidthInPixels * 4;
-            graphics.PreferredBackBufferHeight = GameBoyScreen.HeightInPixels * 4;
+            graphics.PreferredBackBufferWidth = width;
+            graphics.PreferredBackBufferHeight = height;
             graphics.ApplyChanges();
         }
 
@@ -85,23 +65,97 @@ namespace MonoGameBoy
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            currentKeyboardState = Keyboard.GetState();
 
-            if (Keyboard.GetState().GetPressedKeys().Any()) Exit();
+            if (currentKeyboardState.IsKeyDown(Keys.Escape)) Exit();
+            else if (WasJustPressed(Keys.Space)) ShowScreen();
+            if (WasJustPressed(Keys.T)) ShowTileSet();
+            else if (WasJustPressed(Keys.B)) ShowBackgroundMap();
+            else if (WasJustPressed(Keys.W)) ShowWindowLayer();
+            else if (WasJustPressed(Keys.S)) ShowSpriteLayer();
+            else if (WasJustPressed(Keys.P)) ShowPalettes();
+            else if (WasJustPressed(Keys.F1)) SaveMemoryDump(openAfterSaving: true);
 
+            previousKeyboardState = currentKeyboardState;
             base.Update(gameTime);
+        }
+
+        private bool WasJustPressed(Keys key)
+        {
+            return currentKeyboardState.IsKeyDown(key) && !previousKeyboardState.IsKeyDown(key);
+        }
+
+        private void ShowTileSet()
+        {
+            screen = new GameBoyScreen(GraphicsDevice, TileSet.WidthInPixels, TileSet.HeightInPixels);
+            screen.PutPixels(palette, ppu.RenderTileSet());
+            SetWindowSize(screen.Width * 4, screen.Height * 4);
+            Window.Title = "MonoGameBoy - Tileset";
+            paused = true;
+        }
+
+        private void ShowBackgroundMap()
+        {
+            screen = new GameBoyScreen(GraphicsDevice, TileMap.WidthInPixels, TileMap.HeightInPixels);
+            screen.PutPixels(palette, ppu.RenderBackgroundMap(ppu.TileSet));
+            SetWindowSize(screen.Width * 2, screen.Height * 2);
+            Window.Title = "MonoGameBoy - Background Map";
+            paused = true;
+        }
+
+        private void ShowWindowLayer()
+        {
+            screen = new GameBoyScreen(GraphicsDevice, TileMap.WidthInPixels, TileMap.HeightInPixels);
+            screen.PutPixels(palette, ppu.RenderWindow(ppu.TileSet));
+            SetWindowSize(screen.Width * 2, screen.Height * 2);
+            Window.Title = "MonoGameBoy - Window Layer";
+            paused = true;
+        }
+
+        private void ShowSpriteLayer()
+        {
+            screen = new GameBoyScreen(GraphicsDevice, PPU.ScreenWidthInPixels, PPU.ScreenHeightInPixels);
+            screen.PutPixels(palette, ppu.RenderSprites(ppu.TileSet));
+            SetWindowSize(screen.Width * 3, screen.Height * 3);
+            Window.Title = "MonoGameBoy - Sprites";
+            paused = true;
+        }
+
+        private void ShowPalettes()
+        {
+            //TODO: implement
+        }
+
+        private void ShowScreen()
+        {
+            screen = new GameBoyScreen(GraphicsDevice, PPU.ScreenWidthInPixels, PPU.ScreenHeightInPixels);
+            SetWindowSize(screen.Width * 3, screen.Height * 3);
+            screen.PutPixels(palette, ppu.RenderScreen());
+            Window.Title = "MonoGameBoy";
+            paused = false;
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            //GraphicsDevice.Clear(new Color(70, 70, 70));
+            if (!paused) screen.PutPixels(palette, ppu.RenderScreen());
 
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             screen.Draw(spriteBatch, GraphicsDevice.Viewport.Bounds);
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void SaveMemoryDump(bool openAfterSaving = false)
+        {
+            string path = Guid.NewGuid() + ".bin";
+            File.WriteAllBytes(path, cpu.Memory.Data.ToArray());
+            if (openAfterSaving) OpenFile(path);
+        }
+
+        protected static void OpenFile(string path)
+        {
+            Process.Start(new ProcessStartInfo() { FileName = path, UseShellExecute = true });
         }
     }
 }

@@ -12,6 +12,7 @@ namespace GBDotNet.Core
     {
         public const int Size = ushort.MaxValue + 1;
         protected readonly IList<byte> data;
+        public IEnumerable<byte> Data => data;
 
         public Memory(params byte[] bytes)
         {

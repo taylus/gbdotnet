@@ -14,6 +14,8 @@ namespace GBDotNet.Core
     {
         public const int WidthInTiles = 16;
         public const int HeightInTiles = 24;
+        public const int WidthInPixels = WidthInTiles * Tile.WidthInPixels;
+        public const int HeightInPixels = HeightInTiles * Tile.HeightInPixels;
         public const int NumTiles = WidthInTiles * HeightInTiles;
         public Tile[] Tiles { get; private set; } = new Tile[NumTiles];
 

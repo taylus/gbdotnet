@@ -32,15 +32,26 @@ namespace GBDotNet.Core
         private int cycleCounter;
 
         public PPURegisters Registers { get; private set; }
-        public IMemory VideoMemory { get; private set; } //VRAM
-        public IMemory ObjectAttributeMemory { get; private set; }  //OAM
+        public MemoryBus MemoryBus { get; private set; }
+
+        public IMemory VideoMemory
+        { 
+            get => MemoryBus.VideoMemory;
+            set => MemoryBus.VideoMemory = value;
+        } 
+
+        public IMemory ObjectAttributeMemory
+        { 
+            get => MemoryBus.ObjectAttributeMemory;
+            set => MemoryBus.ObjectAttributeMemory = value;
+        }
+
         public TileSet TileSet { get => new TileSet(VideoMemory); }
 
-        public PPU(PPURegisters registers, IMemory vram, IMemory oam)
+        public PPU(PPURegisters registers, MemoryBus memoryBus)
         {
             Registers = registers;
-            VideoMemory = vram;
-            ObjectAttributeMemory = oam;
+            MemoryBus = memoryBus;
         }
 
         public PPU(byte[] memory)
@@ -49,12 +60,28 @@ namespace GBDotNet.Core
                 throw new ArgumentException($"Expected entire {Memory.Size} byte memory map, but got {memory.Length} bytes.", nameof(memory));
 
             Registers = new PPURegisters(new ArraySegment<byte>(memory, offset: 0xFF40, count: 12));
+            MemoryBus = new MemoryBus(Registers);
             VideoMemory = new Memory(new ArraySegment<byte>(memory, offset: 0x8000, count: 8192));
             ObjectAttributeMemory = new Memory(new ArraySegment<byte>(memory, offset: 0xFE00, count: 160));
         }
 
+        /// <summary>
+        /// Initializes the PPU's internal state to what it would be immediately
+        /// after executing the boot ROM.
+        /// </summary>
+        /// <see cref="https://gbdev.gg8.se/wiki/articles/Gameboy_Bootstrap_ROM"/>
+        public void Boot()
+        {
+            Registers.LCDControl.Data = 0x91;
+            Registers.LCDStatus.Data = 0x85;
+            Registers.BackgroundPalette.Data = 0xFC;
+            Registers.SpritePalette0.Data = 0xFF;
+            Registers.SpritePalette1.Data = 0xFF;
+        }
+
         public void Tick(int elapsedCycles)
         {
+            if (!Registers.LCDControl.Enabled) return;
             cycleCounter += elapsedCycles;
             if (CurrentMode == PPUMode.HBlank) HBlank();
             else if (CurrentMode == PPUMode.VBlank) VBlank();
@@ -70,10 +97,15 @@ namespace GBDotNet.Core
                 cycleCounter = 0;
                 CurrentLine++;
 
-                if (CurrentLine == 143)
+                if (CurrentLine == 144)
                 {
                     CurrentMode = PPUMode.VBlank;
+                    MemoryBus.InterruptFlags.VBlankInterruptRequested = true;
                     RenderScreen();
+                }
+                else
+                {
+                    CurrentMode = PPUMode.OamScan;
                 }
             }
         }
@@ -115,7 +147,7 @@ namespace GBDotNet.Core
             }
         }
 
-        internal byte[] RenderSprites(TileSet tileset)
+        public byte[] RenderSprites(TileSet tileset)
         {
             //TODO: make and move this into a class representing all 40 sprites in OAM?
             var spriteLayer = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
@@ -137,25 +169,25 @@ namespace GBDotNet.Core
             return spriteLayer;
         }
 
-        internal byte[] RenderBackgroundMap(TileSet tileset)
+        public byte[] RenderBackgroundMap(TileSet tileset)
         {
             var bgMap = new BackgroundMap(Registers, tileset, VideoMemory);
             return bgMap.Render();
         }
 
-        internal byte[] RenderTileSet()
+        public byte[] RenderTileSet()
         {
             var tileset = new TileSet(VideoMemory);
             return tileset.Render();
         }
 
-        internal byte[] RenderWindow(TileSet tileset)
+        public byte[] RenderWindow(TileSet tileset)
         {
             var window = new Window(Registers, tileset, VideoMemory);
             return window.Render();
         }
 
-        internal byte[] RenderScanline()
+        public byte[] RenderScanline()
         {
             if (!Registers.LCDControl.Enabled)
             {
@@ -212,20 +244,20 @@ namespace GBDotNet.Core
             }
         }
 
-        internal byte[] RenderScreen()
+        public byte[] RenderScreen()
         {
             return screenPixels;
         }
 
-        internal byte[] ForceRenderScreen()
+        public byte[] ForceRenderScreen()
         {
-            CurrentLine = 0;
-            for (int i = 0; i < ScreenHeightInPixels; i++)
+            for (CurrentLine = 0; CurrentLine < ScreenHeightInPixels; CurrentLine++)
             {
                 RenderScanline();
-                CurrentLine++;
             }
             return RenderScreen();
         }
+
+        public override string ToString() => $"{CurrentMode} LY: {CurrentLine}";
     }
 }

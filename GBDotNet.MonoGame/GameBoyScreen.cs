@@ -1,16 +1,19 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.IO;
+using System.Linq;
+using GBDotNet.Core;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGameBoy
 {
     public class GameBoyScreen
     {
-        public const int WidthInPixels = 160;
-        public const int HeightInPixels = 144;
+        public int Width { get => renderTarget.Width; }
+        public int Height { get => renderTarget.Height; }
 
-        private RenderTarget2D renderTarget;
+        private readonly RenderTarget2D renderTarget;
 
-        public GameBoyScreen(GraphicsDevice graphicsDevice, int width = WidthInPixels, int height = HeightInPixels)
+        public GameBoyScreen(GraphicsDevice graphicsDevice, int width = PPU.ScreenWidthInPixels, int height = PPU.ScreenHeightInPixels)
         {
             renderTarget = new RenderTarget2D(graphicsDevice, width, height);
         }
@@ -23,14 +26,25 @@ namespace MonoGameBoy
             renderTarget.SetData(pixels);
         }
 
+        public void PutPixelsFromFile(GameBoyColorPalette palette, string path)
+        {
+            PutPixels(palette, File.ReadAllBytes(path));
+        }
+
+        public void PutPixels(GameBoyColorPalette palette, byte[] colors)
+        {
+            //map colors through the given palette
+            PutPixels(colors.Select(c => palette[c]).ToArray());
+        }
+
         public void PutPixels(Color[] color)
         {
             renderTarget.SetData(color);
         }
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle destinationRectangle)
+        public void Draw(SpriteBatch spriteBatch, Rectangle destinationRectangle, Rectangle? sourceRectangle = null)
         {
-            spriteBatch.Draw(renderTarget, destinationRectangle, Color.White);
+            spriteBatch.Draw(renderTarget, destinationRectangle, sourceRectangle, Color.White);
         }
     }
 }

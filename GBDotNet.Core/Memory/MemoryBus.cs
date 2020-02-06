@@ -14,8 +14,6 @@ namespace GBDotNet.Core
         private RomFile rom;
         private readonly IMemory wram = new Memory();
         private readonly IMemory zram = new Memory();
-        private readonly InterruptFlags interruptFlags = new InterruptFlags();
-        private readonly InterruptEnable interruptEnableFlag = new InterruptEnable();
 
         //TODO: joypad: http://bgb.bircd.org/pandocs.htm#joypadinput
         private byte joypadPort;        //$FF00
@@ -30,10 +28,47 @@ namespace GBDotNet.Core
         public IMemory VideoMemory { get; set; } = new Memory();
         public IMemory ObjectAttributeMemory { get; set; } = new Memory();
         public PPURegisters PPURegisters { get; set; }
+        public InterruptFlags InterruptFlags { get; } = new InterruptFlags();
+        public InterruptEnable InterruptEnable { get; } = new InterruptEnable();
+
+        public IEnumerable<byte> Data
+        {
+            get
+            {
+                var bytes = new byte[Memory.Size];
+                for(int i = 0; i < Memory.Size; i++)
+                {
+                    try
+                    {
+                        bytes[i] = this[i];
+                    }
+                    catch
+                    {
+                        //ignore non-implemented memory regions
+                        bytes[i] = 0xFF;
+                    }
+                }
+                return bytes;
+            }
+        }
+
+        private readonly Random random = new Random();
 
         public MemoryBus(PPURegisters ppuRegisters)
         {
             PPURegisters = ppuRegisters;
+            //Randomize(wram);
+            //Randomize(zram);
+            //Randomize(VideoMemory);
+            //Randomize(ObjectAttributeMemory);
+        }
+
+        private void Randomize(IMemory memory)
+        {
+            for(int i = 0; i < Memory.Size; i++)
+            {
+                memory[i] = (byte)random.Next();
+            }
         }
 
         public void LoadRom(RomFile rom)
@@ -98,7 +133,7 @@ namespace GBDotNet.Core
                     if (address == 0xFF00) return joypadPort;
                     else if (address == 0xFF01) return serialData;
                     else if (address == 0xFF02) return serialControl;
-                    else if (address == 0xFF0F) return interruptFlags.Data;
+                    else if (address == 0xFF0F) return InterruptFlags.Data;
                     else if (soundRegisters.MappedToAddress(address)) return soundRegisters[address];
                     else if (address == 0xFF40) return PPURegisters.LCDControl.Data;
                     else if (address == 0xFF41) return PPURegisters.LCDStatus.Data;
@@ -120,7 +155,7 @@ namespace GBDotNet.Core
                 }
                 else if (address == 0xFFFF)
                 {
-                    return interruptEnableFlag.Data;
+                    return InterruptEnable.Data;
                 }
                 else
                 {
@@ -176,7 +211,7 @@ namespace GBDotNet.Core
                     if (address == 0xFF00) joypadPort = value;
                     else if (address == 0xFF01) serialData = value;
                     else if (address == 0xFF02) serialControl = value;
-                    else if (address == 0xFF0F) interruptFlags.Data = value;
+                    else if (address == 0xFF0F) InterruptFlags.Data = value;
                     else if (soundRegisters.MappedToAddress(address)) soundRegisters[address] = value;
                     else if (address == 0xFF40) PPURegisters.LCDControl.Data = value;
                     else if (address == 0xFF41) PPURegisters.LCDStatus.Data = value;
@@ -198,7 +233,7 @@ namespace GBDotNet.Core
                 }
                 else if (address == 0xFFFF)
                 {
-                    interruptEnableFlag.Data = value;
+                    InterruptEnable.Data = value;
                 }
                 else
                 {

@@ -48,7 +48,7 @@ namespace GBDotNet.ConsoleApp
         {
             var ppuRegs = new PPURegisters();
             var memoryBus = new MemoryBus(ppuRegs);
-            ppu = new PPU(ppuRegs, memoryBus.VideoMemory, memoryBus.ObjectAttributeMemory);
+            ppu = new PPU(ppuRegs, memoryBus);
             cpu = new CPU(new Registers(), memoryBus);
             cpu.Boot();
 
