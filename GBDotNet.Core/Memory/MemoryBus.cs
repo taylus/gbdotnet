@@ -25,13 +25,17 @@ namespace GBDotNet.Core
         //TODO: audio
         private readonly SoundRegisters soundRegisters = new SoundRegisters();
 
+        //graphics
+        public TileSet TileSet { get; set; }
         public IMemory VideoMemory { get; set; } = new Memory();
         public IMemory ObjectAttributeMemory { get; set; } = new Memory();
         public PPURegisters PPURegisters { get; set; }
+        
+        //interrupts
         public InterruptFlags InterruptFlags { get; } = new InterruptFlags();
         public InterruptEnable InterruptEnable { get; } = new InterruptEnable();
 
-        public IEnumerable<byte> Data
+        public byte[] Data
         {
             get
             {
@@ -61,6 +65,7 @@ namespace GBDotNet.Core
             //Randomize(zram);
             //Randomize(VideoMemory);
             //Randomize(ObjectAttributeMemory);
+            TileSet = new TileSet(VideoMemory);
         }
 
         private void Randomize(IMemory memory)
@@ -178,7 +183,10 @@ namespace GBDotNet.Core
                 else if (address >= 0x8000 && address < 0xA000)
                 {
                     //VRAM (8K)
-                    VideoMemory[address - 0x8000] = value;
+                    var vramAddress = address - 0x8000;
+                    bool tilesetDirty = address < 0x9800 && VideoMemory[vramAddress] != value;
+                    VideoMemory[vramAddress] = value;
+                    if (tilesetDirty) TileSet.UpdateFromMemoryWrite(VideoMemory, vramAddress);
                 }
                 else if (address < 0xC000)
                 {

@@ -27,6 +27,7 @@ namespace GBDotNet.Core.Test.Integration
             var regs = new PPURegisters(lcdc: 0xE3, scrollY: 0xD0, windowX: 0x07, windowY: 0x90, bgPalette: 0xE4, spritePalette0: 0xD0, spritePalette1: 0xE0);
             var memBus = new MemoryBus(regs) { VideoMemory = vram, ObjectAttributeMemory = oam };
             var ppu = new PPU(regs, memBus);
+            ppu.TileSet.UpdateFrom(ppu.VideoMemory);
 
             var actualPixels = ppu.ForceRenderScreen();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_screen.png"));
@@ -43,6 +44,7 @@ namespace GBDotNet.Core.Test.Integration
             var regs = new PPURegisters(lcdc: 0xE7, windowX: 0x06, windowY: 0x80, bgPalette: 0xE4, spritePalette0: 0x1C, spritePalette1: 0xE4);
             var memBus = new MemoryBus(regs) { VideoMemory = vram, ObjectAttributeMemory = oam };
             var ppu = new PPU(regs, memBus);
+            ppu.TileSet.UpdateFrom(ppu.VideoMemory);
 
             var actualPixels = ppu.ForceRenderScreen();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "links_awakening_you_are_on_koholint_island_expected_screen.png"));
@@ -88,6 +90,7 @@ namespace GBDotNet.Core.Test.Integration
             var regs = new PPURegisters(lcdc: 0xE3, scrollY: 0xD0, windowX: 0x07, windowY: 0x90, bgPalette: 0xE4, spritePalette0: 0xD0, spritePalette1: 0xE0);
             var memBus = new MemoryBus(regs) { VideoMemory = vram, ObjectAttributeMemory = oam };
             var ppu = new PPU(regs, memBus);
+            ppu.TileSet.UpdateFrom(ppu.VideoMemory);
 
             ppu.Registers.LCDControl.SpriteDisplayEnabled = false;
             var actualPixels = ppu.ForceRenderScreen();

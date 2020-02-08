@@ -46,7 +46,7 @@ namespace GBDotNet.Core
             set => MemoryBus.ObjectAttributeMemory = value;
         }
 
-        public TileSet TileSet { get => new TileSet(VideoMemory); }
+        public TileSet TileSet => MemoryBus.TileSet;
 
         public PPU(PPURegisters registers, MemoryBus memoryBus)
         {
@@ -62,6 +62,7 @@ namespace GBDotNet.Core
             Registers = new PPURegisters(new ArraySegment<byte>(memory, offset: 0xFF40, count: 12));
             MemoryBus = new MemoryBus(Registers);
             VideoMemory = new Memory(new ArraySegment<byte>(memory, offset: 0x8000, count: 8192));
+            TileSet.UpdateFrom(VideoMemory);
             ObjectAttributeMemory = new Memory(new ArraySegment<byte>(memory, offset: 0xFE00, count: 160));
         }
 
@@ -147,7 +148,7 @@ namespace GBDotNet.Core
             }
         }
 
-        public byte[] RenderSprites(TileSet tileset)
+        public byte[] RenderSprites()
         {
             //TODO: make and move this into a class representing all 40 sprites in OAM?
             var spriteLayer = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
@@ -163,42 +164,36 @@ namespace GBDotNet.Core
                 if (!sprite.Visible) continue;
 
                 //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
-                sprite.Render(tileset, ref spriteLayer);
+                sprite.Render(TileSet, ref spriteLayer);
             }
 
             return spriteLayer;
         }
 
-        public byte[] RenderBackgroundMap(TileSet tileset)
+        public byte[] RenderBackgroundMap()
         {
-            var bgMap = new BackgroundMap(Registers, tileset, VideoMemory);
+            var bgMap = new BackgroundMap(this);
             return bgMap.Render();
         }
 
         public byte[] RenderTileSet()
         {
-            var tileset = new TileSet(VideoMemory);
-            return tileset.Render();
+            return TileSet.Render();
         }
 
-        public byte[] RenderWindow(TileSet tileset)
+        public byte[] RenderWindow()
         {
-            var window = new Window(Registers, tileset, VideoMemory);
+            var window = new Window(this);
             return window.Render();
         }
 
         public byte[] RenderScanline()
         {
-            if (!Registers.LCDControl.Enabled)
-            {
-                RenderBlankLine();
-                return screenPixels;
-            }
+            if (!Registers.LCDControl.Enabled) return screenPixels;
 
-            //cache and update these as needed instead of new-ing up every scanline?
-            var tileset = new TileSet(VideoMemory);
-            var bgMap = new BackgroundMap(Registers, tileset, VideoMemory);
-            var window = new Window(Registers, tileset, VideoMemory);
+            //TODO: cache and update these as needed instead of new-ing up every scanline?
+            var bgMap = new BackgroundMap(this);
+            var window = new Window(this);
             //var sprites = new SpriteSet(Registers, tileset, VideoMemory)?
 
             var bgMapY = (byte)(CurrentLine + Registers.ScrollY);
@@ -207,21 +202,13 @@ namespace GBDotNet.Core
                 var bgMapX = (byte)(x + Registers.ScrollX);
                 screenPixels[CurrentLine * ScreenWidthInPixels + x] = bgMap.GetPixelAt(bgMapX, bgMapY);
                 window.DrawOntoScanline(ref screenPixels, x, CurrentLine);
-                DrawSpritesOntoScanline(tileset, x);
+                DrawSpritesOntoScanline(x);
             }
 
             return screenPixels;
         }
 
-        private void RenderBlankLine()
-        {
-            for (int x = 0; x < ScreenWidthInPixels; x++)
-            {
-                screenPixels[CurrentLine * ScreenWidthInPixels + x] = 0;
-            }
-        }
-
-        private void DrawSpritesOntoScanline(TileSet tileset, int x)
+        private void DrawSpritesOntoScanline(int x)
         {
             //TODO: move this into a class representing all sprites in OAM which has
             //      methods to render all sprites (for debugging) + a single scanline?
@@ -238,7 +225,7 @@ namespace GBDotNet.Core
 
                 //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
                 //TODO: 10 sprites per scanline limit?
-                byte? spritePixel = sprite.GetPixel(tileset, x, y: CurrentLine);
+                byte? spritePixel = sprite.GetPixel(TileSet, x, y: CurrentLine);
                 if (!spritePixel.HasValue) continue;    //transparency
                 screenPixels[CurrentLine * ScreenWidthInPixels + x] = spritePixel.Value;
             }

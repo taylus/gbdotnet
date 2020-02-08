@@ -12,8 +12,9 @@ namespace GBDotNet.Core.Test.Integration
             var regs = new PPURegisters(lcdc: 0xD3, bgPalette: 0xE4);
             var memBus = new MemoryBus(regs) { VideoMemory = vram };
             var ppu = new PPU(regs, memBus);
+            ppu.TileSet.UpdateFrom(ppu.VideoMemory);
 
-            var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
+            var actualPixels = ppu.RenderBackgroundMap();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris_title_screen_expected_bgmap.png"));
 
             AssertPixelsMatch(expectedPixels, actualPixels, width: 256);
@@ -26,8 +27,9 @@ namespace GBDotNet.Core.Test.Integration
             var regs = new PPURegisters(lcdc: 0xE3, bgPalette: 0xE4);
             var memBus = new MemoryBus(regs) { VideoMemory = vram };
             var ppu = new PPU(regs, memBus);
+            ppu.TileSet.UpdateFrom(ppu.VideoMemory);
 
-            var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
+            var actualPixels = ppu.RenderBackgroundMap();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_bgmap.png"));
 
             AssertPixelsMatch(expectedPixels, actualPixels, width: 256);
@@ -43,7 +45,7 @@ namespace GBDotNet.Core.Test.Integration
 
             Assert.IsFalse(ppu.Registers.LCDControl.BackgroundDisplayEnabled);
 
-            var actualPixels = ppu.RenderBackgroundMap(ppu.TileSet);
+            var actualPixels = ppu.RenderBackgroundMap();
             var expectedPixels = new byte[TileMap.WidthInPixels * TileMap.HeightInPixels];
 
             AssertPixelsMatch(expectedPixels, actualPixels, width: 256);

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace GBDotNet.Core
 {
@@ -19,23 +20,17 @@ namespace GBDotNet.Core
         public const int NumTiles = WidthInTiles * HeightInTiles;
         public Tile[] Tiles { get; private set; } = new Tile[NumTiles];
 
-        public Tile this[int i]
-        {
-            get => Tiles[i];
-            set => Tiles[i] = value;
-        }
-
-        private Tile this[int x, int y]
-        {
-            get => Tiles[y * WidthInTiles + x];
-            set => Tiles[y * WidthInTiles + x] = value;
-        }
+        public Tile this[int i] => Tiles[i];
+        private Tile this[int x, int y] => Tiles[y * WidthInTiles + x];
 
         public TileSet(IMemory vram)
         {
             UpdateFrom(vram);
         }
 
+        /// <summary>
+        /// Loads the entire tileset from the given video memory.
+        /// </summary>
         public void UpdateFrom(IMemory vram)
         {
             for (int i = 0; i < NumTiles; i++)
@@ -43,6 +38,16 @@ namespace GBDotNet.Core
                 var tileBytes = vram.Skip(Tile.BytesPerTile * i).Take(Tile.BytesPerTile);
                 Tiles[i] = new Tile(tileBytes.ToArray());
             }
+        }
+
+        /// <summary>
+        /// Updates the (single) relevant tile for the given video memory update.
+        /// </summary>
+        public void UpdateFromMemoryWrite(IMemory vram, int vramAddress)
+        {
+            var updatedTileIndex = vramAddress / Tile.BytesPerTile;
+            var tileBytes = new ArraySegment<byte>(vram.Data, offset: Tile.BytesPerTile * updatedTileIndex, count: Tile.BytesPerTile);
+            Tiles[updatedTileIndex] = new Tile(tileBytes);  //TODO: would it be better to *update* the tile based only on this byte instead?
         }
 
         /// <summary>

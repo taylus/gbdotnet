@@ -18,9 +18,9 @@ namespace GBDotNet.ConsoleApp
             Console.WriteLine(ppu.Registers.LCDControl + Environment.NewLine);
 
             var tilesetPixels = ppu.RenderTileSet();
-            var bgMapPixels = ppu.RenderBackgroundMap(ppu.TileSet);
-            var windowPixels = ppu.RenderWindow(ppu.TileSet);
-            var spritePixels = ppu.RenderSprites(ppu.TileSet);
+            var bgMapPixels = ppu.RenderBackgroundMap();
+            var windowPixels = ppu.RenderWindow();
+            var spritePixels = ppu.RenderSprites();
             var screenPixels = ppu.ForceRenderScreen();
 
             WritePixelDataFiles(tilesetPixels, bgMapPixels, windowPixels, spritePixels, screenPixels);

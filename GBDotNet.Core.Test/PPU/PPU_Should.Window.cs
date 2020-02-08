@@ -18,8 +18,9 @@ namespace GBDotNet.Core.Test.Integration
             var regs = new PPURegisters(lcdc: 0xE7, bgPalette: 0xE4);
             var memBus = new MemoryBus(regs) { VideoMemory = vram };
             var ppu = new PPU(regs, memBus);
+            ppu.TileSet.UpdateFrom(ppu.VideoMemory);
 
-            var actualPixels = ppu.RenderWindow(ppu.TileSet);
+            var actualPixels = ppu.RenderWindow();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "links_awakening_you_are_on_koholint_island_expected_window.png"));
 
             AssertPixelsMatch(expectedPixels, actualPixels, width: 256);
@@ -35,7 +36,7 @@ namespace GBDotNet.Core.Test.Integration
 
             Assert.IsFalse(ppu.Registers.LCDControl.WindowDisplayEnabled);
 
-            var actualPixels = ppu.RenderWindow(ppu.TileSet);
+            var actualPixels = ppu.RenderWindow();
             var expectedPixels = new byte[TileMap.WidthInPixels * TileMap.HeightInPixels];
 
             AssertPixelsMatch(expectedPixels, actualPixels, width: 256);

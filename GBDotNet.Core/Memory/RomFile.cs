@@ -6,17 +6,17 @@ namespace GBDotNet.Core
     public class RomFile : Memory, IMemory
     {
         public const int BankSize = 0x4000;
-        public int NumberOfBanks => Math.Max(1, data.Count / BankSize);
+        public int NumberOfBanks => Math.Max(1, Data.Length / BankSize);
         public bool HasHeader { get; set; }
 
         /// <summary>
         /// Header section of the ROM containing metadata about the game.
         /// </summary>
-        public ArraySegment<byte> Header => new ArraySegment<byte>(data.ToArray(), offset: 0x104, count: 0x4C);
+        public ArraySegment<byte> Header => new ArraySegment<byte>(Data.ToArray(), offset: 0x104, count: 0x4C);
 
         public override byte this[int index]
         {
-            get => data[index];
+            get => Data[index];
             set => throw new NotImplementedException("Cannot write to read-only memory.");
         }
 
@@ -51,7 +51,7 @@ namespace GBDotNet.Core
         public ArraySegment<byte> GetBank(int bankNumber)
         {
             if (bankNumber < NumberOfBanks) throw new ArgumentException("Bank number exceeds number of banks in ROM.", nameof(bankNumber));
-            return new ArraySegment<byte>(data.ToArray(), offset: bankNumber * BankSize, count: BankSize);
+            return new ArraySegment<byte>(Data, offset: bankNumber * BankSize, count: BankSize);
         }
     }
 }

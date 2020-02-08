@@ -19,13 +19,17 @@ namespace MonoGameBoy
         private KeyboardState currentKeyboardState;
         private readonly CPU cpu;
         private readonly PPU ppu;
+        private readonly string romPath;
+        private string RomName => Path.GetFileName(romPath);
         private static readonly GameBoyColorPalette palette = GameBoyColorPalette.Dmg;
         private bool paused = true;
+        private readonly bool runInBackground = true;
 
-        public MonoGameBoy(CPU cpu, PPU ppu)
+        public MonoGameBoy(CPU cpu, PPU ppu, string romPath)
         {
             this.cpu = cpu;
             this.ppu = ppu;
+            this.romPath = romPath;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -36,8 +40,7 @@ namespace MonoGameBoy
             base.Initialize();
             currentKeyboardState = previousKeyboardState = Keyboard.GetState();
             ShowScreen();
-
-            Task.Run(RunEmulator);
+            if (runInBackground) Task.Run(RunEmulator);
         }
 
         private void RunEmulator()
@@ -76,6 +79,16 @@ namespace MonoGameBoy
             else if (WasJustPressed(Keys.P)) ShowPalettes();
             else if (WasJustPressed(Keys.F1)) SaveMemoryDump(openAfterSaving: true);
 
+            if (!runInBackground)
+            {
+                for (int i = 0; i < 1024; i++)
+                {
+                    Console.WriteLine($"{cpu} {ppu}");
+                    cpu.Tick();
+                    ppu.Tick(cpu.CyclesLastTick);
+                }
+            }
+
             previousKeyboardState = currentKeyboardState;
             base.Update(gameTime);
         }
@@ -90,34 +103,34 @@ namespace MonoGameBoy
             screen = new GameBoyScreen(GraphicsDevice, TileSet.WidthInPixels, TileSet.HeightInPixels);
             screen.PutPixels(palette, ppu.RenderTileSet());
             SetWindowSize(screen.Width * 4, screen.Height * 4);
-            Window.Title = "MonoGameBoy - Tileset";
+            Window.Title = $"MonoGameBoy - Tileset [{RomName}]";
             paused = true;
         }
 
         private void ShowBackgroundMap()
         {
             screen = new GameBoyScreen(GraphicsDevice, TileMap.WidthInPixels, TileMap.HeightInPixels);
-            screen.PutPixels(palette, ppu.RenderBackgroundMap(ppu.TileSet));
+            screen.PutPixels(palette, ppu.RenderBackgroundMap());
             SetWindowSize(screen.Width * 2, screen.Height * 2);
-            Window.Title = "MonoGameBoy - Background Map";
+            Window.Title = $"MonoGameBoy - Background Map [{RomName}]";
             paused = true;
         }
 
         private void ShowWindowLayer()
         {
             screen = new GameBoyScreen(GraphicsDevice, TileMap.WidthInPixels, TileMap.HeightInPixels);
-            screen.PutPixels(palette, ppu.RenderWindow(ppu.TileSet));
+            screen.PutPixels(palette, ppu.RenderWindow());
             SetWindowSize(screen.Width * 2, screen.Height * 2);
-            Window.Title = "MonoGameBoy - Window Layer";
+            Window.Title = $"MonoGameBoy - Window Layer [{RomName}]";
             paused = true;
         }
 
         private void ShowSpriteLayer()
         {
             screen = new GameBoyScreen(GraphicsDevice, PPU.ScreenWidthInPixels, PPU.ScreenHeightInPixels);
-            screen.PutPixels(palette, ppu.RenderSprites(ppu.TileSet));
+            screen.PutPixels(palette, ppu.RenderSprites());
             SetWindowSize(screen.Width * 3, screen.Height * 3);
-            Window.Title = "MonoGameBoy - Sprites";
+            Window.Title = $"MonoGameBoy - Sprites [{RomName}]";
             paused = true;
         }
 
@@ -131,7 +144,7 @@ namespace MonoGameBoy
             screen = new GameBoyScreen(GraphicsDevice, PPU.ScreenWidthInPixels, PPU.ScreenHeightInPixels);
             SetWindowSize(screen.Width * 3, screen.Height * 3);
             screen.PutPixels(palette, ppu.RenderScreen());
-            Window.Title = "MonoGameBoy";
+            Window.Title = $"MonoGameBoy [{RomName}]";
             paused = false;
         }
 

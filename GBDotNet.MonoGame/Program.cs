@@ -12,7 +12,7 @@ namespace MonoGameBoy
     {
         //TODO: load from command-line args
         //private const string romPath = @"C:\roms\gb\tic-tac-toe.gb";
-        //private const string romPath = @"C:\roms\gb\Tetris (World) (Rev A).gb";
+        //private const string romPath = @"C:\roms\gb\Tetris.gb";
         private const string romPath = @"C:\roms\gb\hello-brandon.gb";
         private const string logPath = "monogameboy.log";
 
@@ -26,7 +26,7 @@ namespace MonoGameBoy
                     Console.SetOut(log);
                     var (cpu, ppu) = BootEmulator();
                     //cpu.Breakpoints.Add(0x0040);
-                    using (var game = new MonoGameBoy(cpu, ppu))
+                    using (var game = new MonoGameBoy(cpu, ppu, romPath))
                         game.Run();
                 }
                 finally

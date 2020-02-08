@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GBDotNet.Core
 {
@@ -22,9 +23,9 @@ namespace GBDotNet.Core
             set => Pixels[y * WidthInPixels + x] = value;
         }
 
-        public Tile(byte[] bytes)
+        public Tile(IList<byte> bytes)
         {
-            if (bytes.Length != BytesPerTile)
+            if (bytes.Count != BytesPerTile)
                 throw new ArgumentException($"Tile data must be {BytesPerTile} bytes.");
 
             //parse bytes into pixels one row (two bytes) at a time
