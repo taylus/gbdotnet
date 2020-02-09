@@ -23,6 +23,7 @@ namespace MonoGameBoy
         private string RomName => Path.GetFileName(romPath);
         private static readonly GameBoyColorPalette palette = GameBoyColorPalette.Dmg;
         private bool paused = true;
+        private DisplayMode currentDisplayMode;
         private readonly bool runInBackground = true;
 
         public MonoGameBoy(CPU cpu, PPU ppu, string romPath)
@@ -33,6 +34,7 @@ namespace MonoGameBoy
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            Window.IsBorderless = true;
         }
 
         protected override void Initialize()
@@ -48,7 +50,7 @@ namespace MonoGameBoy
             while (true)
             {
                 if (paused) continue;
-                Console.WriteLine($"{cpu} {ppu}");
+                //Console.WriteLine($"{cpu} {ppu}");
                 cpu.Tick();
                 ppu.Tick(cpu.CyclesLastTick);
             }
@@ -70,6 +72,16 @@ namespace MonoGameBoy
         {
             currentKeyboardState = Keyboard.GetState();
 
+            if (!runInBackground)
+            {
+                for (int i = 0; i < 512; i++)
+                {
+                    Console.WriteLine($"{cpu} {ppu}");
+                    cpu.Tick();
+                    ppu.Tick(cpu.CyclesLastTick);
+                }
+            }
+
             if (currentKeyboardState.IsKeyDown(Keys.Escape)) Exit();
             else if (WasJustPressed(Keys.Space)) ShowScreen();
             if (WasJustPressed(Keys.T)) ShowTileSet();
@@ -78,16 +90,13 @@ namespace MonoGameBoy
             else if (WasJustPressed(Keys.S)) ShowSpriteLayer();
             else if (WasJustPressed(Keys.P)) ShowPalettes();
             else if (WasJustPressed(Keys.F1)) SaveMemoryDump(openAfterSaving: true);
+            else if (WasJustPressed(Keys.F2)) RestartEmulator();
 
-            if (!runInBackground)
-            {
-                for (int i = 0; i < 1024; i++)
-                {
-                    Console.WriteLine($"{cpu} {ppu}");
-                    cpu.Tick();
-                    ppu.Tick(cpu.CyclesLastTick);
-                }
-            }
+            if (currentDisplayMode == DisplayMode.Screen) screen.PutPixels(palette, ppu.RenderScreen());
+            else if (currentDisplayMode == DisplayMode.TileSet) screen.PutPixels(palette, ppu.RenderTileSet());
+            else if (currentDisplayMode == DisplayMode.BackgroundMap) screen.PutPixels(palette, ppu.RenderBackgroundMap());
+            else if (currentDisplayMode == DisplayMode.WindowLayer) screen.PutPixels(palette, ppu.RenderWindow());
+            else if (currentDisplayMode == DisplayMode.SpriteLayer) screen.PutPixels(palette, ppu.RenderSprites());
 
             previousKeyboardState = currentKeyboardState;
             base.Update(gameTime);
@@ -101,37 +110,37 @@ namespace MonoGameBoy
         private void ShowTileSet()
         {
             screen = new GameBoyScreen(GraphicsDevice, TileSet.WidthInPixels, TileSet.HeightInPixels);
-            screen.PutPixels(palette, ppu.RenderTileSet());
             SetWindowSize(screen.Width * 4, screen.Height * 4);
             Window.Title = $"MonoGameBoy - Tileset [{RomName}]";
-            paused = true;
+            currentDisplayMode = DisplayMode.TileSet;
+            //paused = true;
         }
 
         private void ShowBackgroundMap()
         {
             screen = new GameBoyScreen(GraphicsDevice, TileMap.WidthInPixels, TileMap.HeightInPixels);
-            screen.PutPixels(palette, ppu.RenderBackgroundMap());
             SetWindowSize(screen.Width * 2, screen.Height * 2);
             Window.Title = $"MonoGameBoy - Background Map [{RomName}]";
-            paused = true;
+            currentDisplayMode = DisplayMode.BackgroundMap;
+            //paused = true;
         }
 
         private void ShowWindowLayer()
         {
             screen = new GameBoyScreen(GraphicsDevice, TileMap.WidthInPixels, TileMap.HeightInPixels);
-            screen.PutPixels(palette, ppu.RenderWindow());
             SetWindowSize(screen.Width * 2, screen.Height * 2);
             Window.Title = $"MonoGameBoy - Window Layer [{RomName}]";
-            paused = true;
+            currentDisplayMode = DisplayMode.WindowLayer;
+            //paused = true;
         }
 
         private void ShowSpriteLayer()
         {
             screen = new GameBoyScreen(GraphicsDevice, PPU.ScreenWidthInPixels, PPU.ScreenHeightInPixels);
-            screen.PutPixels(palette, ppu.RenderSprites());
             SetWindowSize(screen.Width * 3, screen.Height * 3);
             Window.Title = $"MonoGameBoy - Sprites [{RomName}]";
-            paused = true;
+            currentDisplayMode = DisplayMode.SpriteLayer;
+            //paused = true;
         }
 
         private void ShowPalettes()
@@ -143,19 +152,16 @@ namespace MonoGameBoy
         {
             screen = new GameBoyScreen(GraphicsDevice, PPU.ScreenWidthInPixels, PPU.ScreenHeightInPixels);
             SetWindowSize(screen.Width * 3, screen.Height * 3);
-            screen.PutPixels(palette, ppu.RenderScreen());
             Window.Title = $"MonoGameBoy [{RomName}]";
+            currentDisplayMode = DisplayMode.Screen;
             paused = false;
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            if (!paused) screen.PutPixels(palette, ppu.RenderScreen());
-
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             screen.Draw(spriteBatch, GraphicsDevice.Viewport.Bounds);
             spriteBatch.End();
-
             base.Draw(gameTime);
         }
 
@@ -169,6 +175,12 @@ namespace MonoGameBoy
         protected static void OpenFile(string path)
         {
             Process.Start(new ProcessStartInfo() { FileName = path, UseShellExecute = true });
+        }
+
+        private void RestartEmulator()
+        {
+            cpu.Reset();
+            ppu.Boot();
         }
     }
 }

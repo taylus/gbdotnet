@@ -47,11 +47,15 @@ namespace GBDotNet.Core
         }
 
         public TileSet TileSet => MemoryBus.TileSet;
+        private readonly BackgroundMap bgMap;
+        private readonly Window window;
 
         public PPU(PPURegisters registers, MemoryBus memoryBus)
         {
             Registers = registers;
             MemoryBus = memoryBus;
+            bgMap = new BackgroundMap(this);
+            window = new Window(this);
         }
 
         public PPU(byte[] memory)
@@ -64,6 +68,8 @@ namespace GBDotNet.Core
             VideoMemory = new Memory(new ArraySegment<byte>(memory, offset: 0x8000, count: 8192));
             TileSet.UpdateFrom(VideoMemory);
             ObjectAttributeMemory = new Memory(new ArraySegment<byte>(memory, offset: 0xFE00, count: 160));
+            bgMap = new BackgroundMap(this);
+            window = new Window(this);
         }
 
         /// <summary>
@@ -190,19 +196,15 @@ namespace GBDotNet.Core
         public byte[] RenderScanline()
         {
             if (!Registers.LCDControl.Enabled) return screenPixels;
-
-            //TODO: cache and update these as needed instead of new-ing up every scanline?
-            var bgMap = new BackgroundMap(this);
-            var window = new Window(this);
-            //var sprites = new SpriteSet(Registers, tileset, VideoMemory)?
+            if (CurrentLine > ScreenHeightInPixels) return screenPixels; //?
 
             var bgMapY = (byte)(CurrentLine + Registers.ScrollY);
             for (int x = 0; x < ScreenWidthInPixels; x++)
             {
                 var bgMapX = (byte)(x + Registers.ScrollX);
                 screenPixels[CurrentLine * ScreenWidthInPixels + x] = bgMap.GetPixelAt(bgMapX, bgMapY);
-                window.DrawOntoScanline(ref screenPixels, x, CurrentLine);
-                DrawSpritesOntoScanline(x);
+                if (Registers.LCDControl.WindowDisplayEnabled) window.DrawOntoScanline(ref screenPixels, x, CurrentLine);
+                //DrawSpritesOntoScanline(x);
             }
 
             return screenPixels;

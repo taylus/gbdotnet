@@ -25,13 +25,13 @@ namespace MonoGameBoy
                 {
                     Console.SetOut(log);
                     var (cpu, ppu) = BootEmulator();
-                    //cpu.Breakpoints.Add(0x0040);
+                    cpu.Breakpoints.Add(0x021e);
                     using (var game = new MonoGameBoy(cpu, ppu, romPath))
                         game.Run();
                 }
                 finally
                 {
-                    Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
+                    //Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
                 }
             }
         }
@@ -44,7 +44,7 @@ namespace MonoGameBoy
             ppu.Boot();
 
             var cpu = new CPU(new Registers(), memoryBus);
-            cpu.Boot();
+            //cpu.Boot();
 
             var rom = new RomFile(romPath);
             memoryBus.LoadRom(rom);

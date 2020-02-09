@@ -55,20 +55,17 @@ namespace GBDotNet.Core
         /// </summary>
         public byte[] Render()
         {
-            const int widthInPixels = WidthInTiles * Tile.WidthInPixels;
-            const int heightInPixels = HeightInTiles * Tile.HeightInPixels;
+            var pixels = new byte[WidthInPixels * HeightInPixels];
 
-            var pixels = new byte[widthInPixels * heightInPixels];
-
-            for (int x = 0; x < widthInPixels; x++)
+            for (int x = 0; x < WidthInPixels; x++)
             {
-                for (int y = 0; y < heightInPixels; y++)
+                for (int y = 0; y < HeightInPixels; y++)
                 {
                     int tileX = x / Tile.WidthInPixels;
                     int tileY = y / Tile.HeightInPixels;
                     int tilePixelX = x % Tile.WidthInPixels;
                     int tilePixelY = y % Tile.HeightInPixels;
-                    pixels[y * widthInPixels + x] = this[tileX, tileY][tilePixelX, tilePixelY];
+                    pixels[y * WidthInPixels + x] = this[tileX, tileY][tilePixelX, tilePixelY];
                 }
             }
 

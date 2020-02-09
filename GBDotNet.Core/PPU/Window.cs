@@ -21,7 +21,6 @@
 
         public void DrawOntoScanline(ref byte[] screenPixels, int x, int y)
         {
-            if (!PPU.Registers.LCDControl.WindowDisplayEnabled) return;
             if (!OverlapsCoordinates(x, y)) return;
             var windowX = (byte)(x - PPU.Registers.WindowX + OffsetX);
             var windowY = (byte)(y - PPU.Registers.WindowY);

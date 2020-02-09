@@ -18,7 +18,7 @@ namespace GBDotNet.Core
     public class CPU
     {
         public Registers Registers { get; private set; }
-        public IMemory Memory { get; private set; }
+        public MemoryBus Memory { get; private set; }
         public bool IsHalted { get; private set; }
         public bool InterruptsEnabled { get; private set; }
         public int CyclesLastTick { get; private set; }
@@ -28,7 +28,7 @@ namespace GBDotNet.Core
         private readonly Action[] instructionSet;
         private readonly Action[] prefixCBInstructions;
 
-        public CPU(Registers registers, IMemory memory)
+        public CPU(Registers registers, MemoryBus memory)
         {
             Registers = registers;
             Memory = memory;
@@ -604,6 +604,22 @@ namespace GBDotNet.Core
             Registers.HL = 0xC060;
             Registers.SP = 0xFFFE;
             Registers.PC = 0x0100;
+        }
+
+        /// <summary>
+        /// Resets the CPU's internal state to what it would be before executing the boot ROM.
+        /// </summary>
+        public void Reset()
+        {
+            Registers.AF = 0;
+            Registers.BC = 0;
+            Registers.DE = 0;
+            Registers.HL = 0;
+            Registers.SP = 0;
+            Registers.PC = 0;
+            IsHalted = false;
+            InterruptsEnabled = false;
+            Memory.IsBootRomMapped = true;
         }
 
         /// <summary>
