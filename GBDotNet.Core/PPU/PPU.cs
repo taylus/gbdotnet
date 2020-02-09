@@ -35,13 +35,13 @@ namespace GBDotNet.Core
         public MemoryBus MemoryBus { get; private set; }
 
         public IMemory VideoMemory
-        { 
+        {
             get => MemoryBus.VideoMemory;
             set => MemoryBus.VideoMemory = value;
-        } 
+        }
 
         public IMemory ObjectAttributeMemory
-        { 
+        {
             get => MemoryBus.ObjectAttributeMemory;
             set => MemoryBus.ObjectAttributeMemory = value;
         }
@@ -201,10 +201,19 @@ namespace GBDotNet.Core
             var bgMapY = (byte)(CurrentLine + Registers.ScrollY);
             for (int x = 0; x < ScreenWidthInPixels; x++)
             {
-                var bgMapX = (byte)(x + Registers.ScrollX);
-                screenPixels[CurrentLine * ScreenWidthInPixels + x] = bgMap.GetPixelAt(bgMapX, bgMapY);
-                if (Registers.LCDControl.WindowDisplayEnabled) window.DrawOntoScanline(ref screenPixels, x, CurrentLine);
-                //DrawSpritesOntoScanline(x);
+                if (Registers.LCDControl.BackgroundDisplayEnabled)
+                {
+                    var bgMapX = (byte)(x + Registers.ScrollX);
+                    screenPixels[CurrentLine * ScreenWidthInPixels + x] = bgMap.GetPixelAt(bgMapX, bgMapY);
+                }
+                if (Registers.LCDControl.WindowDisplayEnabled)
+                {
+                    window.DrawOntoScanline(ref screenPixels, x, CurrentLine);
+                }
+                if (Registers.LCDControl.SpriteDisplayEnabled)
+                {
+                    DrawSpritesOntoScanline(x);
+                }
             }
 
             return screenPixels;
@@ -226,7 +235,7 @@ namespace GBDotNet.Core
                 if (!sprite.OverlapsCoordinates(x, CurrentLine)) continue;
 
                 //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
-                //TODO: 10 sprites per scanline limit?
+                //TODO: implement 10-sprite-per-scanline limit, I think this will help performance a lot (160 x 40 sprite checks per scanline is way too many!)
                 byte? spritePixel = sprite.GetPixel(TileSet, x, y: CurrentLine);
                 if (!spritePixel.HasValue) continue;    //transparency
                 screenPixels[CurrentLine * ScreenWidthInPixels + x] = spritePixel.Value;

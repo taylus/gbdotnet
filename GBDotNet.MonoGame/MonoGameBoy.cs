@@ -34,7 +34,7 @@ namespace MonoGameBoy
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            Window.IsBorderless = true;
+            //Window.IsBorderless = true;
         }
 
         protected override void Initialize()
