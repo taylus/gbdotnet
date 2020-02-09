@@ -6,5 +6,6 @@ namespace GBDotNet.Core
     {
         byte this[int index] { get; set; }
         byte[] Data { get; }
+        void Reset();
     }
 }

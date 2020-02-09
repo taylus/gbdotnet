@@ -89,6 +89,11 @@ namespace GBDotNet.Core
             TileSet = new TileSet(VideoMemory);
         }
 
+        public void Reset()
+        {
+            IsBootRomMapped = true;
+        }
+
         private void Randomize(IMemory memory)
         {
             for(int i = 0; i < Memory.Size; i++)

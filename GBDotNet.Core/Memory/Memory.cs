@@ -40,6 +40,11 @@ namespace GBDotNet.Core
             set => Data[i] = value;
         }
 
+        public void Reset()
+        {
+
+        }
+
         /// <summary>
         /// Prints the first N bytes of memory to the console.
         /// </summary>

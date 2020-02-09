@@ -18,7 +18,7 @@ namespace GBDotNet.Core
     public class CPU
     {
         public Registers Registers { get; private set; }
-        public MemoryBus Memory { get; private set; }
+        public IMemory Memory { get; private set; }
         public bool IsHalted { get; private set; }
         public bool InterruptsEnabled { get; private set; }
         public int CyclesLastTick { get; private set; }
@@ -28,7 +28,7 @@ namespace GBDotNet.Core
         private readonly Action[] instructionSet;
         private readonly Action[] prefixCBInstructions;
 
-        public CPU(Registers registers, MemoryBus memory)
+        public CPU(Registers registers, IMemory memory)
         {
             Registers = registers;
             Memory = memory;
@@ -619,7 +619,7 @@ namespace GBDotNet.Core
             Registers.PC = 0;
             IsHalted = false;
             InterruptsEnabled = false;
-            Memory.IsBootRomMapped = true;
+            Memory.Reset();
         }
 
         /// <summary>

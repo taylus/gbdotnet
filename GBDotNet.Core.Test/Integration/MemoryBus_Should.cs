@@ -13,7 +13,7 @@ namespace GBDotNet.Core.Test.Integration
         {
             var romData = Enumerable.Repeat(marker, RomFile.BankSize);
             var rom = new RomFile(romData.ToArray());
-            var memoryBus = new MemoryBus(ppuRegisters: null);
+            var memoryBus = new MemoryBus(ppuRegisters: null) { IsBootRomMapped = false };
 
             memoryBus.LoadRom(rom);
 
