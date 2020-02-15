@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GBDotNet.Core
 {
@@ -13,7 +15,7 @@ namespace GBDotNet.Core
     /// </remarks>
     /// <see cref="http://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html"/>
     /// <see cref="https://rednex.github.io/rgbds/gbz80.7.html"/>
-    public partial class CPU
+    public class CPU
     {
         public Registers Registers { get; private set; }
         public IMemory Memory { get; private set; }
@@ -21,6 +23,7 @@ namespace GBDotNet.Core
         public bool InterruptsEnabled { get; private set; }
         public int CyclesLastTick { get; private set; }
         public long TotalElapsedCycles { get; private set; }
+        public ISet<uint> Breakpoints { get; private set; } = new HashSet<uint>();
 
         private readonly Action[] instructionSet;
         private readonly Action[] prefixCBInstructions;
@@ -604,15 +607,76 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// Resets the CPU's internal state to what it would be before executing the boot ROM.
+        /// </summary>
+        public void Reset()
+        {
+            Registers.AF = 0;
+            Registers.BC = 0;
+            Registers.DE = 0;
+            Registers.HL = 0;
+            Registers.SP = 0;
+            Registers.PC = 0;
+            IsHalted = false;
+            InterruptsEnabled = false;
+            Memory.Reset();
+        }
+
+        /// <summary>
         /// Implements a single iteration of the processor's fetch/decode/execute cycle.
         /// </summary>
         public void Tick()
         {
             if (IsHalted) return;
             CyclesLastTick = 0;
+
+            Registers.LastPC = Registers.PC;
+            if (Breakpoints.Contains(Registers.PC)) Debugger.Break();
+
             byte opcode = Fetch();
             Execute(opcode);
+
             TotalElapsedCycles += CyclesLastTick;
+            HandleInterrupts();
+        }
+
+        private void HandleInterrupts()
+        {
+            if (!InterruptsEnabled) return;
+
+            var interruptFlags = new InterruptFlags() { Data = Memory[0xFF0F] };
+            var interruptEnable = new InterruptEnable() { Data = Memory[0xFFFF] };
+
+            if (interruptFlags.VBlankInterruptRequested && interruptEnable.VBlankInterruptEnabled)
+            {
+                InterruptsEnabled = false;
+                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(0);
+                Call(0x0040, returnAddress: Registers.PC);
+            }
+            else if (interruptFlags.LCDStatInterruptRequested && interruptEnable.LCDStatInterruptEnabled)
+            {
+                InterruptsEnabled = false;
+                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(1);
+                Call(0x0048, returnAddress: Registers.PC);
+            }
+            else if (interruptFlags.TimerInterruptRequested && interruptEnable.TimerInterruptEnabled)
+            {
+                InterruptsEnabled = false;
+                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(2);
+                Call(0x0050, returnAddress: Registers.PC);
+            }
+            else if (interruptFlags.SerialInterruptRequested && interruptEnable.SerialInterruptEnabled)
+            {
+                InterruptsEnabled = false;
+                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(3);
+                Call(0x0058, returnAddress: Registers.PC);
+            }
+            else if (interruptFlags.JoypadInterruptRequested && interruptEnable.JoypadInterruptEnabled)
+            {
+                InterruptsEnabled = false;
+                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(4);
+                Call(0x0060, returnAddress: Registers.PC);
+            }
         }
 
         /// <summary>

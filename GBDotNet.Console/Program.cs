@@ -16,22 +16,26 @@ namespace GBDotNet.ConsoleApp
         private const string romPath = @"C:\roms\gb\Tetris (World) (Rev A).gb";
         private const string logPath = "gbdotnet.log";
 
+        private static CPU cpu;
+        private static PPU ppu;
+
         public static void Main()
         {
-            var stderr = Console.Error; //capture stderr to log exceptions both to log file and console
-
             using (var log = new StreamWriter(logPath))
             {
+                var stderr = Console.Error; //capture stderr to log exceptions both to log file and console
                 try
                 {
                     Console.SetOut(log);
-                    var cpu = Start(romPath);
-                    Run(cpu);
+                    Start(romPath);
+                    //cpu.Breakpoints.Add(0x0223);
+                    Run();
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
-                    stderr.WriteLine(ex);
+                    var emuEx = new EmulationException($"Error executing instruction at address ${cpu.Registers.LastPC:x4}, see inner exception for details.", ex);
+                    Console.WriteLine(emuEx);
+                    stderr.WriteLine(emuEx);
                 }
                 finally
                 {
@@ -40,25 +44,26 @@ namespace GBDotNet.ConsoleApp
             }
         }
 
-        private static CPU Start(string romPath)
+        private static void Start(string romPath)
         {
-            var memoryBus = new MemoryBus();
-            var cpu = new CPU(new Registers(), memoryBus);
+            var ppuRegs = new PPURegisters();
+            var memoryBus = new MemoryBus(ppuRegs);
+            ppu = new PPU(ppuRegs, memoryBus);
+            cpu = new CPU(new Registers(), memoryBus);
             cpu.Boot();
 
             var rom = new RomFile(romPath);
             memoryBus.LoadRom(rom);
-
-            return cpu;
         }
 
-        private static void Run(CPU cpu)
+        private static void Run()
         {
             do
             {
                 Console.WriteLine(cpu);
                 //Console.WriteLine("Press enter to single step...");
                 cpu.Tick();
+                ppu.Tick(cpu.CyclesLastTick);
                 //Console.ReadLine();
             } while (!cpu.IsHalted);
 

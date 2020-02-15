@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GBDotNet.Core
 {
@@ -19,10 +20,10 @@ namespace GBDotNet.Core
         public const int WidthInPixels = WidthInTiles * Tile.WidthInPixels;
         public const int HeightInPixels = HeightInTiles * Tile.HeightInPixels;
 
-        public PPURegisters Registers { get; private set; }
-        public byte[] Tiles { get; private set; }       //tile index numbers
+        public PPU PPU { get; private set; }
+        public IList<byte> Tiles { get; private set; }       //tile index numbers
         public abstract int BaseAddress { get; }
-        public TileSet TileSet { get; private set; }
+        public TileSet TileSet => PPU.TileSet;
 
         /// <summary>
         /// Gets/sets the tileset tile # stored at the given tile coordinates.
@@ -35,16 +36,18 @@ namespace GBDotNet.Core
             set => Tiles[y * WidthInTiles + x] = value;
         }
 
-        public TileMap(PPURegisters registers, TileSet tileset, IMemory vram)
+        public TileMap(PPU ppu)
         {
-            Registers = registers;
-            TileSet = tileset;
-            UpdateFrom(vram);
+            PPU = ppu;
+            UpdateFrom(ppu.VideoMemory);
         }
 
+        /// <summary>
+        /// Loads the entire tilemap from the given video memory.
+        /// </summary>
         public void UpdateFrom(IMemory vram)
         {
-            Tiles = vram.Skip(BaseAddress - 0x8000).Take(NumTiles).ToArray();
+            Tiles = new ArraySegment<byte>(vram.Data, offset: BaseAddress - 0x8000, count: NumTiles);
         }
 
         /// <summary>
@@ -74,14 +77,14 @@ namespace GBDotNet.Core
             int tileX = x / Tile.WidthInPixels;
             int tileY = y / Tile.HeightInPixels;
             int tileNumber = this[tileX, tileY];
-            if (Registers.LCDControl.AreBackgroundAndWindowTileNumbersSigned && tileNumber < 128)
+            if (PPU.Registers.LCDControl.AreBackgroundAndWindowTileNumbersSigned && tileNumber < 128)
             {
                 tileNumber += 256;
             }
             int tilePixelX = x % Tile.WidthInPixels;
             int tilePixelY = y % Tile.HeightInPixels;
             var paletteIndex = TileSet[tileNumber][tilePixelX, tilePixelY];
-            return Registers.BackgroundPalette[paletteIndex];
+            return PPU.Registers.BackgroundPalette[paletteIndex];
         }
     }
 }

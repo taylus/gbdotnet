@@ -9,12 +9,15 @@ namespace GBDotNet.Core.Test.Integration
         public void Generate_Expected_Tileset_Pixels_From_Known_VRAM_Dump()
         {
             var vram = Memory.FromFile(Path.Combine("PPU", "Input", "tetris.tileset.dump"));
-            var ppu = new PPU(new PPURegisters(), vram, oam: new Memory());
+            var regs = new PPURegisters();
+            var memBus = new MemoryBus(regs) { VideoMemory = vram };
+            var ppu = new PPU(regs, memBus);
+            ppu.TileSet.UpdateFrom(ppu.VideoMemory);
 
             var actualPixels = ppu.RenderTileSet();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris.tileset.png"));
 
-            AssertPixelsMatch(expectedPixels, actualPixels, width: 128);
+            AssertPixelsMatch(expectedPixels, actualPixels, width: TileSet.WidthInPixels);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace GBDotNet.Core
 {
@@ -14,26 +15,22 @@ namespace GBDotNet.Core
     {
         public const int WidthInTiles = 16;
         public const int HeightInTiles = 24;
+        public const int WidthInPixels = WidthInTiles * Tile.WidthInPixels;
+        public const int HeightInPixels = HeightInTiles * Tile.HeightInPixels;
         public const int NumTiles = WidthInTiles * HeightInTiles;
         public Tile[] Tiles { get; private set; } = new Tile[NumTiles];
 
-        public Tile this[int i]
-        {
-            get => Tiles[i];
-            set => Tiles[i] = value;
-        }
-
-        private Tile this[int x, int y]
-        {
-            get => Tiles[y * WidthInTiles + x];
-            set => Tiles[y * WidthInTiles + x] = value;
-        }
+        public Tile this[int i] => Tiles[i];
+        private Tile this[int x, int y] => Tiles[y * WidthInTiles + x];
 
         public TileSet(IMemory vram)
         {
             UpdateFrom(vram);
         }
 
+        /// <summary>
+        /// Loads the entire tileset from the given video memory.
+        /// </summary>
         public void UpdateFrom(IMemory vram)
         {
             for (int i = 0; i < NumTiles; i++)
@@ -44,24 +41,31 @@ namespace GBDotNet.Core
         }
 
         /// <summary>
+        /// Updates the (single) relevant tile for the given video memory update.
+        /// </summary>
+        public void UpdateFromMemoryWrite(IMemory vram, int vramAddress)
+        {
+            var updatedTileIndex = vramAddress / Tile.BytesPerTile;
+            var tileBytes = new ArraySegment<byte>(vram.Data, offset: Tile.BytesPerTile * updatedTileIndex, count: Tile.BytesPerTile);
+            Tiles[updatedTileIndex] = new Tile(tileBytes);  //TODO: would it be better to *update* the tile based only on this byte instead?
+        }
+
+        /// <summary>
         /// Returns a 128 x 192 pixel (16 x 24 tile) image of the tileset.
         /// </summary>
         public byte[] Render()
         {
-            const int widthInPixels = WidthInTiles * Tile.WidthInPixels;
-            const int heightInPixels = HeightInTiles * Tile.HeightInPixels;
+            var pixels = new byte[WidthInPixels * HeightInPixels];
 
-            var pixels = new byte[widthInPixels * heightInPixels];
-
-            for (int x = 0; x < widthInPixels; x++)
+            for (int x = 0; x < WidthInPixels; x++)
             {
-                for (int y = 0; y < heightInPixels; y++)
+                for (int y = 0; y < HeightInPixels; y++)
                 {
                     int tileX = x / Tile.WidthInPixels;
                     int tileY = y / Tile.HeightInPixels;
                     int tilePixelX = x % Tile.WidthInPixels;
                     int tilePixelY = y % Tile.HeightInPixels;
-                    pixels[y * widthInPixels + x] = this[tileX, tileY][tilePixelX, tilePixelY];
+                    pixels[y * WidthInPixels + x] = this[tileX, tileY][tilePixelX, tilePixelY];
                 }
             }
 

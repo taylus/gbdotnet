@@ -16,6 +16,7 @@
         public byte L { get; set; }
         public ushort SP { get; set; }
         public ushort PC { get; set; }
+        public ushort LastPC { get; set; }  //the PC for the previous instruction
 
         public ushort AF
         {

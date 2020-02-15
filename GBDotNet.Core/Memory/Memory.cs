@@ -11,22 +11,22 @@ namespace GBDotNet.Core
     public class Memory : IMemory
     {
         public const int Size = ushort.MaxValue + 1;
-        protected readonly IList<byte> data;
+        public byte[] Data { get; protected set; }
 
         public Memory(params byte[] bytes)
         {
             Array.Resize(ref bytes, Size);
-            data = bytes;
+            Data = bytes;
         }
 
         public Memory(ArraySegment<byte> bytes)
         {
-            data = bytes;
+            Data = bytes.ToArray();
         }
 
         public Memory(string path)
         {
-            data = File.ReadAllBytes(path);
+            Data = File.ReadAllBytes(path);
         }
 
         public static Memory FromFile(string path)
@@ -36,8 +36,13 @@ namespace GBDotNet.Core
 
         public virtual byte this[int i]
         {
-            get => data[i];
-            set => data[i] = value;
+            get => Data[i];
+            set => Data[i] = value;
+        }
+
+        public void Reset()
+        {
+
         }
 
         /// <summary>
@@ -45,15 +50,15 @@ namespace GBDotNet.Core
         /// </summary>
         public void HexDump(int bytesPerLine = 16, int? stopAfterBytes = null)
         {
-            HexDump(data, bytesPerLine, stopAfterBytes);
+            HexDump(Data, bytesPerLine, stopAfterBytes);
         }
 
         /// <summary>
         /// Prints the first N bytes of the given buffer to the console.
         /// </summary>
-        private static void HexDump(IList<byte> bytes, int bytesPerLine = 16, int? stopAfterBytes = null)
+        private static void HexDump(byte[] bytes, int bytesPerLine = 16, int? stopAfterBytes = null)
         {
-            int length = stopAfterBytes ?? bytes.Count;
+            int length = stopAfterBytes ?? bytes.Length;
             for (int i = 0; i < length; i++)
             {
                 Console.Write("{0:x2} ", bytes[i]);
@@ -63,12 +68,12 @@ namespace GBDotNet.Core
 
         public virtual IEnumerator<byte> GetEnumerator()
         {
-            return data.GetEnumerator();
+            return ((IEnumerable<byte>)Data).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return data.GetEnumerator();
+            return ((IEnumerable<byte>)Data).GetEnumerator();
         }
     }
 }

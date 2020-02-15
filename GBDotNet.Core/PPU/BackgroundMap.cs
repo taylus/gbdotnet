@@ -2,16 +2,16 @@
 {
     public class BackgroundMap : TileMap
     {
-        public override int BaseAddress => Registers.LCDControl.BackgroundTileMapBaseAddress;
+        public override int BaseAddress => PPU.Registers.LCDControl.BackgroundTileMapBaseAddress;
 
-        public BackgroundMap(PPURegisters registers, TileSet tileset, IMemory vram) : base(registers, tileset, vram)
+        public BackgroundMap(PPU ppu) : base(ppu)
         {
 
         }
 
         public override byte[] Render()
         {
-            if (!Registers.LCDControl.BackgroundDisplayEnabled)
+            if (!PPU.Registers.LCDControl.BackgroundDisplayEnabled)
                 return new byte[WidthInPixels * HeightInPixels];
 
             return base.Render();
