@@ -592,11 +592,7 @@ namespace GBDotNet.Core
         /// after executing the boot ROM.
         /// </summary>
         /// <see cref="https://gbdev.gg8.se/wiki/articles/Gameboy_Bootstrap_ROM"/>
-        /// <remarks>
-        /// TODO: Maybe change this later to actually execute the boot ROM for that
-        /// classic logo scroll and sfx: https://github.com/taylus/gbdotnet/issues/13
-        /// </remarks>
-        public void Boot()
+        public void BootWithoutBootRom()
         {
             Registers.AF = 0x0100;
             Registers.BC = 0x0014;

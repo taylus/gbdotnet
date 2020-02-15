@@ -36,7 +36,7 @@ namespace GBDotNet.Core
         public InterruptFlags InterruptFlags { get; } = new InterruptFlags();
         public InterruptEnable InterruptEnable { get; } = new InterruptEnable();
 
-        public bool IsBootRomMapped { get; internal set; } = true;
+        public bool IsBootRomMapped { get; set; } = true;
         private static readonly byte[] bootRom = new byte[]
         {
             0x31, 0xFE, 0xFF, 0xAF, 0x21, 0xFF, 0x9F, 0x32, 0xCB, 0x7C, 0x20, 0xFB, 0x21, 0x26, 0xFF, 0x0E,

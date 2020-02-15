@@ -17,6 +17,7 @@ namespace MonoGameBoy
         //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\individual\11-op a,(hl).gb"; //reports 9E failed
         private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\individual\01-special.gb";
         private const string logPath = "monogameboy.log";
+        private const bool useBootRom = false;
 
         [STAThread]
         public static void Main()
@@ -27,7 +28,7 @@ namespace MonoGameBoy
                 {
                     Console.SetOut(log);
                     var (cpu, ppu) = BootEmulator();
-                    using (var game = new MonoGameBoy(cpu, ppu, romPath))
+                    using (var game = new MonoGameBoy(cpu, ppu, romPath, useBootRom))
                         game.Run();
                 }
                 finally
@@ -40,13 +41,13 @@ namespace MonoGameBoy
         private static (CPU cpu, PPU ppu) BootEmulator()
         {
             var ppuRegs = new PPURegisters();
-            var memoryBus = new MemoryBus(ppuRegs);
+            var memoryBus = new MemoryBus(ppuRegs) { IsBootRomMapped = useBootRom };
             memoryBus.Attach(new GameLinkConsole());
             var ppu = new PPU(ppuRegs, memoryBus);
             ppu.Boot();
 
             var cpu = new CPU(new Registers(), memoryBus);
-            //cpu.Boot();
+            if (!useBootRom) cpu.BootWithoutBootRom();
 
             var rom = new RomFile(romPath);
             memoryBus.LoadRom(rom);

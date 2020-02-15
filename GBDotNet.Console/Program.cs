@@ -50,7 +50,7 @@ namespace GBDotNet.ConsoleApp
             var memoryBus = new MemoryBus(ppuRegs);
             ppu = new PPU(ppuRegs, memoryBus);
             cpu = new CPU(new Registers(), memoryBus);
-            cpu.Boot();
+            cpu.BootWithoutBootRom();
 
             var rom = new RomFile(romPath);
             memoryBus.LoadRom(rom);
