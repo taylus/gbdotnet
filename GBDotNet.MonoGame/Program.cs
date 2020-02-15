@@ -11,9 +11,11 @@ namespace MonoGameBoy
     public static class Program
     {
         //TODO: load from command-line args
-        //private const string romPath = @"C:\roms\gb\tic-tac-toe.gb";
         //private const string romPath = @"C:\roms\gb\Tetris.gb";
-        private const string romPath = @"C:\roms\gb\hello-brandon.gb";
+        //private const string romPath = @"C:\roms\gb\hello-brandon.gb";
+        //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\cpu_instrs.gb";
+        //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\individual\11-op a,(hl).gb"; //reports 9E failed
+        private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\individual\01-special.gb";
         private const string logPath = "monogameboy.log";
 
         [STAThread]
@@ -25,7 +27,6 @@ namespace MonoGameBoy
                 {
                     Console.SetOut(log);
                     var (cpu, ppu) = BootEmulator();
-                    cpu.Breakpoints.Add(0x021e);
                     using (var game = new MonoGameBoy(cpu, ppu, romPath))
                         game.Run();
                 }
@@ -40,6 +41,7 @@ namespace MonoGameBoy
         {
             var ppuRegs = new PPURegisters();
             var memoryBus = new MemoryBus(ppuRegs);
+            memoryBus.Attach(new GameLinkConsole());
             var ppu = new PPU(ppuRegs, memoryBus);
             ppu.Boot();
 

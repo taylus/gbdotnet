@@ -21,6 +21,7 @@ namespace GBDotNet.Core
         //TODO: game link cable: http://bgb.bircd.org/pandocs.htm#serialdatatransferlinkcable
         private byte serialData;        //$FF01
         private byte serialControl;     //$FF02
+        private GameLinkConsole gameLinkConsole;
 
         //TODO: audio
         private readonly SoundRegisters soundRegisters = new SoundRegisters();
@@ -110,6 +111,11 @@ namespace GBDotNet.Core
         public void LoadVideoMemory(Memory vram)
         {
             VideoMemory = vram;
+        }
+
+        public void Attach(GameLinkConsole gameLinkConsole)
+        {
+            this.gameLinkConsole = gameLinkConsole;
         }
 
         public byte this[int address]
@@ -244,7 +250,11 @@ namespace GBDotNet.Core
                 {
                     //various hardware I/O registers (PPU, APU, joypad, etc)
                     if (address == 0xFF00) joypadPort = value;
-                    else if (address == 0xFF01) serialData = value;
+                    else if (address == 0xFF01)
+                    {
+                        serialData = value;
+                        gameLinkConsole?.Print(value);
+                    }
                     else if (address == 0xFF02) serialControl = value;
                     else if (address == 0xFF0F) InterruptFlags.Data = value;
                     else if (soundRegisters.MappedToAddress(address)) soundRegisters[address] = value;
