@@ -2,7 +2,6 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GBDotNet.Core.Test.Integration
@@ -17,10 +16,9 @@ namespace GBDotNet.Core.Test.Integration
     public class Blargg_Test_Roms : Program_Tests_Base
     {
         [TestMethod]
-        public void Run_All_Test_Roms()
+        public void CPU_Instructions_Test_ROM_01()
         {
-            //Parallel.ForEach(GetTestRoms(), (rom) => RunTestRom(rom.FullName));
-            RunTestRom(@"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\individual\01-special.gb");
+            RunTestRom(Path.Combine(GetTestRomsDirectory(), "cpu_instrs", "individual", "01-special.gb"));
         }
 
         private static void RunTestRom(string romPath)
@@ -58,14 +56,7 @@ namespace GBDotNet.Core.Test.Integration
             return (cpu, outputStream);
         }
 
-        /*
-        private static FileInfo[] GetTestRoms()
-        {
-            var dir = new DirectoryInfo(GetTestRomDirectory());
-            return dir.GetFiles("*.gb", SearchOption.AllDirectories);
-        }
-
-        private static string GetTestRomDirectory()
+        private static string GetTestRomsDirectory()
         {
             return Path.Combine(GetSolutionDirectory(), "gb-test-roms");
         }
@@ -76,6 +67,5 @@ namespace GBDotNet.Core.Test.Integration
             var thisDir = new DirectoryInfo(thisAssembly.Location);
             return thisDir.Parent?.Parent?.Parent?.Parent?.Parent?.FullName ?? "";
         }
-        */
     }
 }
