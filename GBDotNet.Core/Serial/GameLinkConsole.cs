@@ -12,7 +12,8 @@ namespace GBDotNet.Core
     /// </remarks>
     public class GameLinkConsole
     {
-        private readonly Stream outputStream;
+        public Stream OutputStream { get; private set; }
+        public bool HasFreshUpdate { get; set; }    //so tests know when to check the output stream
 
         public GameLinkConsole() : this(Console.OpenStandardOutput())
         {
@@ -21,12 +22,13 @@ namespace GBDotNet.Core
 
         public GameLinkConsole(Stream outputStream)
         {
-            this.outputStream = outputStream;
+            OutputStream = outputStream;
         }
 
         public void Print(byte b)
         {
-            outputStream.WriteByte(b);
+            OutputStream.WriteByte(b);
+            HasFreshUpdate = true;
         }
     }
 }

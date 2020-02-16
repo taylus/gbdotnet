@@ -184,7 +184,8 @@ namespace GBDotNet.Core
                     else if (address == 0xFF49) return PPURegisters.SpritePalette1.Data;
                     else if (address == 0xFF4A) return PPURegisters.WindowY;
                     else if (address == 0xFF4B) return PPURegisters.WindowX;
-                    else throw new NotImplementedException($"Unsupported read of address ${address:X4} (not all hardware I/O registers are implemented yet).");
+                    //else throw new NotImplementedException($"Unsupported read of address ${address:X4} (not all hardware I/O registers are implemented yet).");
+                    else return 0xFF;
                 }
                 else if (address < 0xFFFF)
                 {
