@@ -140,8 +140,8 @@ namespace GBDotNet.Core.Test
 
             cpu.Tick();
 
-            Assert.AreEqual(0xBEEF, cpu.Registers.AF);
-            Assert.AreEqual(0x0003, cpu.Registers.SP);
+            Assert.AreEqual(0xBEE0, cpu.Registers.AF);  //accuracy: the unused, lower bits of F should *not* be preserved
+            Assert.AreEqual(0x0003, cpu.Registers.SP);  //per Blargg_Tests.CPU_Instructions_01_Special_Test_Number_5()
             Assert.AreEqual(12, cpu.CyclesLastTick);
         }
 

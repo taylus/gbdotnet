@@ -2672,7 +2672,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xF1_Pop_Stack_Into_AF()
         {
-            Registers.AF = PopStack();
+            Registers.AF = (ushort)(PopStack() & 0xFFF0);   //lower, undocumented bits of F are zeroed in a real Game Boy
         }
 
         /// <summary>

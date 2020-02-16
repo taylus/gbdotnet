@@ -9,7 +9,7 @@ namespace GBDotNet.Core.Test
     /// Tests of series of instructions (programs) as opposed to individual instructions.
     /// </summary>
     [TestClass]
-    public class Program_Tests
+    public class Program_Tests : Program_Tests_Base
     {
         [TestMethod]
         public void Branching_Program_Should_Halt_At_Expected_Address()
@@ -24,7 +24,7 @@ namespace GBDotNet.Core.Test
             var memory = new Memory(program);
             var cpu = new CPU(new Registers(), memory);
 
-            while (!cpu.IsHalted)
+            while (!cpu.IsHalted && !ProbablyInInfiniteLoop(cpu))
             {
                 Console.WriteLine($"CPU state before executing instruction at address {cpu.Registers.PC:x4}:");
                 Console.WriteLine(cpu + Environment.NewLine);
@@ -43,7 +43,7 @@ namespace GBDotNet.Core.Test
             var memory = new Memory(program.ToArray());
             var cpu = new CPU(new Registers(), memory);
 
-            while (!cpu.IsHalted)
+            while (!cpu.IsHalted && !ProbablyInInfiniteLoop(cpu))
             {
                 Console.WriteLine($"CPU state before executing instruction at address {cpu.Registers.PC:x4}:");
                 Console.WriteLine(cpu + Environment.NewLine);
