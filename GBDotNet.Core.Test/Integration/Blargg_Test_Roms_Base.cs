@@ -25,7 +25,7 @@ namespace GBDotNet.Core.Test.Integration
             var cpu = new CPU(new Registers(), memoryBus);
             cpu.BootWithoutBootRom();   //no PPU => can't run boot ROM (it will hang waiting for blank)
 
-            while (!cpu.IsHalted && cpu.TotalElapsedCycles <= maxCycles)
+            while (cpu.TotalElapsedCycles <= maxCycles)
             {
                 cpu.Tick();
 
