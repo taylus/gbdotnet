@@ -2641,11 +2641,11 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xE8_Add_8_Bit_Signed_Immediate_To_Stack_Pointer()
         {
-            var immediate = (sbyte)Fetch();
-            Registers.SP = (ushort)(Registers.SP + immediate);
+            var immediate = Fetch();
             Registers.ClearFlag(Flags.AddSubtract | Flags.Zero);
             Registers.SetFlagTo(Flags.HalfCarry, ((Registers.SP & 0xF) + (immediate & 0xF) > 0xF));
             Registers.SetFlagTo(Flags.Carry, ((Registers.SP & 0xFF) + immediate > 0xFF));
+            Registers.SP = (ushort)(Registers.SP + (sbyte)immediate);
             CyclesLastTick += 8;
         }
 
@@ -2745,11 +2745,11 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xF8_Add_8_Bit_Signed_Immediate_To_Stack_Pointer_And_Store_Result_In_HL()
         {
-            var immediate = (sbyte)Fetch();
-            Registers.HL = (ushort)(Registers.SP + immediate);
+            var immediate = Fetch();
             Registers.ClearFlag(Flags.AddSubtract | Flags.Zero);
             Registers.SetFlagTo(Flags.HalfCarry, ((Registers.SP & 0xF) + (immediate & 0xF) > 0xF));
             Registers.SetFlagTo(Flags.Carry, ((Registers.SP & 0xFF) + immediate > 0xFF));
+            Registers.HL = (ushort)(Registers.SP + (sbyte)immediate);
             CyclesLastTick += 4;
         }
 

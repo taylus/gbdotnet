@@ -174,7 +174,7 @@ namespace GBDotNet.Core.Test
                 Assert.AreEqual(expected, cpu.Registers.HL);
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.AddSubtract), "ld hl, sp + e8 instruction should clear N flag.");
                 Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero), "ld hl, sp + e8 instruction should clear Z flag.");
-                if ((cpu.Registers.SP & 0xF) + (i & 0xF) > 0xF) // this matches the CPU code, but I couldn't think of a better way to express the half carry logic...
+                if ((cpu.Registers.SP & 0xF) + ((byte)i & 0xF) > 0xF) // this matches the CPU code, but I couldn't think of a better way to express the half carry logic...
                 {
                     Assert.IsTrue(cpu.Registers.HasFlag(Flags.HalfCarry), $"For SP = {cpu.Registers.SP}, e8 = {i}, expected half carry flag to be set when SP + e8 overflows from bit 3.");
                 }
@@ -182,7 +182,7 @@ namespace GBDotNet.Core.Test
                 {
                     Assert.IsFalse(cpu.Registers.HasFlag(Flags.HalfCarry), $"For SP = {cpu.Registers.SP}, e8 = {i}, expected half carry flag to be cleared when SP + e8 does not overflow from bit 3.");
                 }
-                if ((cpu.Registers.SP & 0xFF) + i > 0xFF)   // this matches in the CPU code, but I couldn't think of a better way to express the carry logic...
+                if ((cpu.Registers.SP & 0xFF) + (byte)i > 0xFF)   // this matches the CPU code, but I couldn't think of a better way to express the carry logic...
                 {
                     Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry), $"For SP = {cpu.Registers.SP}, e8 = {i}, expected carry flag to be set when SP + e8 overflows from bit 7.");
                 }
