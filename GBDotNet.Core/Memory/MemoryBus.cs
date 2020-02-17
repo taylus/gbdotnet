@@ -35,6 +35,7 @@ namespace GBDotNet.Core
         //interrupts
         public InterruptFlags InterruptFlags { get; } = new InterruptFlags();
         public InterruptEnable InterruptEnable { get; } = new InterruptEnable();
+        public Timer Timer { get; }
 
         public bool IsBootRomMapped { get; set; } = true;
         private static readonly byte[] bootRom = new byte[]
@@ -88,11 +89,17 @@ namespace GBDotNet.Core
             //Randomize(VideoMemory);
             //Randomize(ObjectAttributeMemory);
             TileSet = new TileSet(VideoMemory);
+            Timer = new Timer(this);
         }
 
         public void Reset()
         {
             IsBootRomMapped = true;
+        }
+
+        public void Tick(int elapsedCycles)
+        {
+            Timer.Tick(elapsedCycles);
         }
 
         private void Randomize(IMemory memory)
@@ -171,6 +178,10 @@ namespace GBDotNet.Core
                     if (address == 0xFF00) return joypadPort;
                     else if (address == 0xFF01) return serialData;
                     else if (address == 0xFF02) return serialControl;
+                    else if (address == 0xFF04) return Timer.DividerRegister;
+                    else if (address == 0xFF05) return Timer.TimerCounter;
+                    else if (address == 0xFF06) return Timer.TimerModulo;
+                    else if (address == 0xFF07) return Timer.TimerControl;
                     else if (address == 0xFF0F) return InterruptFlags.Data;
                     else if (soundRegisters.MappedToAddress(address)) return soundRegisters[address];
                     else if (address == 0xFF40) return PPURegisters.LCDControl.Data;
@@ -184,8 +195,7 @@ namespace GBDotNet.Core
                     else if (address == 0xFF49) return PPURegisters.SpritePalette1.Data;
                     else if (address == 0xFF4A) return PPURegisters.WindowY;
                     else if (address == 0xFF4B) return PPURegisters.WindowX;
-                    //else throw new NotImplementedException($"Unsupported read of address ${address:X4} (not all hardware I/O registers are implemented yet).");
-                    else return 0xFF;
+                    else throw new NotImplementedException($"Unsupported read of address ${address:X4} (not all hardware I/O registers are implemented yet).");
                 }
                 else if (address < 0xFFFF)
                 {
@@ -257,6 +267,10 @@ namespace GBDotNet.Core
                         gameLinkConsole?.Print(value);
                     }
                     else if (address == 0xFF02) serialControl = value;
+                    else if (address == 0xFF04) Timer.DividerRegister = 0;  //writing any value to DIV resets it to 0
+                    else if (address == 0xFF05) Timer.TimerCounter = value;
+                    else if (address == 0xFF06) Timer.TimerModulo = value;
+                    else if (address == 0xFF07) Timer.TimerControl = value;
                     else if (address == 0xFF0F) InterruptFlags.Data = value;
                     else if (soundRegisters.MappedToAddress(address)) soundRegisters[address] = value;
                     else if (address == 0xFF40) PPURegisters.LCDControl.Data = value;

@@ -623,55 +623,79 @@ namespace GBDotNet.Core
         /// </summary>
         public void Tick()
         {
-            if (IsHalted) return;
+            if (Breakpoints.Contains(Registers.PC)) Debugger.Break();
+            Registers.LastPC = Registers.PC;
             CyclesLastTick = 0;
 
-            Registers.LastPC = Registers.PC;
-            if (Breakpoints.Contains(Registers.PC)) Debugger.Break();
+            if (IsHalted)
+            {
+                CyclesLastTick += 4;
+            }
+            else
+            {
+                byte opcode = Fetch();
+                Execute(opcode);
+            }
 
-            byte opcode = Fetch();
-            Execute(opcode);
-
+            Memory.Tick(CyclesLastTick);
             TotalElapsedCycles += CyclesLastTick;
             HandleInterrupts();
         }
 
         private void HandleInterrupts()
         {
-            if (!InterruptsEnabled) return;
-
             var interruptFlags = new InterruptFlags() { Data = Memory[0xFF0F] };
             var interruptEnable = new InterruptEnable() { Data = Memory[0xFFFF] };
 
             if (interruptFlags.VBlankInterruptRequested && interruptEnable.VBlankInterruptEnabled)
             {
-                InterruptsEnabled = false;
-                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(0);
-                Call(0x0040, returnAddress: Registers.PC);
+                IsHalted = false;
+                if (InterruptsEnabled)
+                {
+                    InterruptsEnabled = false;
+                    Memory[0xFF0F] = Memory[0xFF0F].ClearBit(0);
+                    Call(0x0040, returnAddress: Registers.PC);
+                }
             }
             else if (interruptFlags.LCDStatInterruptRequested && interruptEnable.LCDStatInterruptEnabled)
             {
-                InterruptsEnabled = false;
-                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(1);
-                Call(0x0048, returnAddress: Registers.PC);
+                IsHalted = false;
+                if (InterruptsEnabled)
+                {
+                    InterruptsEnabled = false;
+                    Memory[0xFF0F] = Memory[0xFF0F].ClearBit(1);
+                    Call(0x0048, returnAddress: Registers.PC);
+                }
             }
             else if (interruptFlags.TimerInterruptRequested && interruptEnable.TimerInterruptEnabled)
             {
-                InterruptsEnabled = false;
-                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(2);
-                Call(0x0050, returnAddress: Registers.PC);
+                IsHalted = false;
+                if (InterruptsEnabled)
+                {
+                    InterruptsEnabled = false;
+                    Memory[0xFF0F] = Memory[0xFF0F].ClearBit(2);
+                    Call(0x0050, returnAddress: Registers.PC);
+                }
             }
             else if (interruptFlags.SerialInterruptRequested && interruptEnable.SerialInterruptEnabled)
             {
-                InterruptsEnabled = false;
-                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(3);
-                Call(0x0058, returnAddress: Registers.PC);
+                IsHalted = false;
+                if (InterruptsEnabled)
+                {
+                    InterruptsEnabled = false;
+                    Memory[0xFF0F] = Memory[0xFF0F].ClearBit(3);
+                    Call(0x0058, returnAddress: Registers.PC);
+                }
             }
             else if (interruptFlags.JoypadInterruptRequested && interruptEnable.JoypadInterruptEnabled)
             {
-                InterruptsEnabled = false;
-                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(4);
-                Call(0x0060, returnAddress: Registers.PC);
+                IsHalted = false;
+                if (InterruptsEnabled)
+                {
+                    InterruptsEnabled = false;
+                    Memory[0xFF0F] = Memory[0xFF0F].ClearBit(4);
+                    Call(0x0060, returnAddress: Registers.PC);
+                }
             }
         }
 

@@ -12,7 +12,7 @@ namespace GBDotNet.Core.Test.Integration
             RunTestRom(Path.Combine(GetTestRomsDirectory(), "01-special.gb"));
         }
 
-        [TestMethod, Ignore("Currently fails!")]
+        [TestMethod]
         public void CPU_Instructions_Test_ROM_02()
         {
             RunTestRom(Path.Combine(GetTestRomsDirectory(), "02-interrupts.gb"));

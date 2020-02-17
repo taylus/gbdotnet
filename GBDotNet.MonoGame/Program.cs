@@ -14,10 +14,10 @@ namespace MonoGameBoy
         //private const string romPath = @"C:\roms\gb\Tetris.gb";
         //private const string romPath = @"C:\roms\gb\hello-brandon.gb";
         //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\cpu_instrs.gb";
-        //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\individual\11-op a,(hl).gb"; //reports 9E failed
-        private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\individual\01-special.gb";
+        private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\individual\02-interrupts.gb";
         private const string logPath = "monogameboy.log";
         private const bool useBootRom = false;
+        private const bool loggingEnabled = false;
 
         [STAThread]
         public static void Main()
@@ -28,12 +28,12 @@ namespace MonoGameBoy
                 {
                     Console.SetOut(log);
                     var (cpu, ppu) = BootEmulator();
-                    using (var game = new MonoGameBoy(cpu, ppu, romPath, useBootRom))
+                    using (var game = new MonoGameBoy(cpu, ppu, romPath, useBootRom, loggingEnabled))
                         game.Run();
                 }
                 finally
                 {
-                    //Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
+                    if (loggingEnabled) Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
                 }
             }
         }

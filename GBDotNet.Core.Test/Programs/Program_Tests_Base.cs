@@ -8,7 +8,7 @@ namespace GBDotNet.Core.Test
         /// If a test makes the CPU execute more than this many cycles, fail it,
         /// assuming an infinite loop, so as not to lock up the test runner.
         /// </summary>
-        protected const int maxCycles = 100_000_000;
+        protected const int maxCycles = 10_000_000;
 
         protected static bool ProbablyInInfiniteLoop(CPU cpu, int maxCycles = maxCycles)
         {

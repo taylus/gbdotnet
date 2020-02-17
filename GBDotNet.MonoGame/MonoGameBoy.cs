@@ -26,13 +26,15 @@ namespace MonoGameBoy
         private bool paused = true;
         private DisplayMode currentDisplayMode;
         private readonly bool runInBackground = true;
+        private readonly bool loggingEnabled;
 
-        public MonoGameBoy(CPU cpu, PPU ppu, string romPath, bool useBootRom)
+        public MonoGameBoy(CPU cpu, PPU ppu, string romPath, bool useBootRom, bool loggingEnabled)
         {
             this.cpu = cpu;
             this.ppu = ppu;
             this.romPath = romPath;
             this.useBootRom = useBootRom;
+            this.loggingEnabled = loggingEnabled;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -52,7 +54,7 @@ namespace MonoGameBoy
             while (true)
             {
                 if (paused) continue;
-                //Console.WriteLine($"{cpu} {ppu}");
+                if (loggingEnabled) Console.WriteLine($"{cpu} {ppu}");
                 cpu.Tick();
                 ppu.Tick(cpu.CyclesLastTick);
             }
