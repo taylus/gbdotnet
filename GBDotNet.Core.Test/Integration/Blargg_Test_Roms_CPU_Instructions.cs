@@ -54,7 +54,7 @@ namespace GBDotNet.Core.Test.Integration
             RunTestRom(Path.Combine(GetTestRomsDirectory(), "08-misc instrs.gb"));
         }
 
-        [TestMethod, Ignore("Currently fails!")]
+        [TestMethod]
         public void CPU_Instructions_Test_ROM_09()
         {
             RunTestRom(Path.Combine(GetTestRomsDirectory(), "09-op r,r.gb"));
