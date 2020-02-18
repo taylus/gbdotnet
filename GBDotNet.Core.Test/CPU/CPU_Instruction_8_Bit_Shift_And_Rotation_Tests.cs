@@ -1129,7 +1129,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x46_Should_Test_Bit_0_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x46));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 0, expectedCycles: 16);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 0, expectedCycles: 12);
         }
 
         [TestMethod]
@@ -1185,7 +1185,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x4E_Should_Test_Bit_1_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x4E));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 1, expectedCycles: 16);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 1, expectedCycles: 12);
         }
 
         [TestMethod]
@@ -1241,7 +1241,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x56_Should_Test_Bit_2_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x56));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 2, expectedCycles: 16);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 2, expectedCycles: 12);
         }
 
         [TestMethod]
@@ -1297,7 +1297,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x5E_Should_Test_Bit_3_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x5E));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 3, expectedCycles: 16);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 3, expectedCycles: 12);
         }
 
         [TestMethod]
@@ -1353,7 +1353,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x66_Should_Test_Bit_4_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x66));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 4, expectedCycles: 16);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 4, expectedCycles: 12);
         }
 
         [TestMethod]
@@ -1409,7 +1409,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x6E_Should_Test_Bit_5_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x6E));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 5, expectedCycles: 16);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 5, expectedCycles: 12);
         }
 
         [TestMethod]
@@ -1465,7 +1465,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x76_Should_Test_Bit_6_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x76));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 6, expectedCycles: 16);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 6, expectedCycles: 12);
         }
 
         [TestMethod]
@@ -1521,7 +1521,7 @@ namespace GBDotNet.Core.Test
         public void Instruction_0xCB_0x7E_Should_Test_Bit_7_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             var cpu = new CPU(new Registers() { HL = 0x4000 }, new Memory(0xCB, 0x7E));
-            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 7, expectedCycles: 16);
+            TestBitInstruction(cpu, setValueUnderTest: (value) => cpu.Memory[cpu.Registers.HL] = value, bitToTest: 7, expectedCycles: 12);
         }
 
         [TestMethod]

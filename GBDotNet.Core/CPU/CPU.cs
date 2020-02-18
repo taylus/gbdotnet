@@ -3361,7 +3361,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x46_Test_Bit_0_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 0);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3426,7 +3425,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x4E_Test_Bit_1_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 1);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3491,7 +3489,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x56_Test_Bit_2_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 2);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3556,7 +3553,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x5E_Test_Bit_3_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 3);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3621,7 +3617,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x66_Test_Bit_4_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 4);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3686,7 +3681,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x6E_Test_Bit_5_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 5);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3751,7 +3745,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x76_Test_Bit_6_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 6);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3816,7 +3809,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x7E_Test_Bit_7_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 7);
-            CyclesLastTick += 4;
         }
 
         /// <summary>

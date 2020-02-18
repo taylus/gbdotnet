@@ -46,9 +46,9 @@
         private void IncrementDividerRegisterAtFixedSpeed(int elapsedCycles)
         {
             cyclesSinceLastDivIncrement += elapsedCycles;
-            if (cyclesSinceLastDivIncrement >= cyclesPerDividerRegisterIncrement)
+            while (cyclesSinceLastDivIncrement >= cyclesPerDividerRegisterIncrement)
             {
-                cyclesSinceLastDivIncrement = 0;
+                cyclesSinceLastDivIncrement -= cyclesPerDividerRegisterIncrement;
                 DividerRegister++;
             }
         }
@@ -56,9 +56,9 @@
         private void IncrementTimerCounterAtVariableSpeedAndFireInterruptAsAppropriate(int elapsedCycles)
         {
             cyclesSinceLastTimerIncrement += elapsedCycles;
-            if (cyclesSinceLastTimerIncrement >= CyclesPerTimerIncrement)
+            while (cyclesSinceLastTimerIncrement >= CyclesPerTimerIncrement)
             {
-                cyclesSinceLastTimerIncrement = 0;
+                cyclesSinceLastTimerIncrement -= CyclesPerTimerIncrement;
                 TimerCounter++;
                 if (TimerCounter == 0)
                 {
