@@ -66,7 +66,7 @@ namespace GBDotNet.Core.Test.Integration
             RunTestRom(Path.Combine(GetTestRomsDirectory(), "10-bit ops.gb"));
         }
 
-        [TestMethod, Ignore("Currently fails!")]
+        [TestMethod]
         public void CPU_Instructions_Test_ROM_11()
         {
             RunTestRom(Path.Combine(GetTestRomsDirectory(), "11-op a,(hl).gb"));
