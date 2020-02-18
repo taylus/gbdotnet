@@ -5035,7 +5035,7 @@ namespace GBDotNet.Core
         {
             var carry = (byte)(carryBit ? 1 : 0);
             //half carry (borrow from upper nibble) occurs if the lower nibble of the value being subtracted is > A's
-            Registers.SetFlagTo(Flags.HalfCarry, ((value + carry) & 0xF) > (Registers.A & 0xF));
+            Registers.SetFlagTo(Flags.HalfCarry, ((value & 0xF) + carry) > (Registers.A & 0xF));
             Registers.SetFlagTo(Flags.Carry, (value + carry) > Registers.A);
             Registers.SetFlag(Flags.AddSubtract);
 

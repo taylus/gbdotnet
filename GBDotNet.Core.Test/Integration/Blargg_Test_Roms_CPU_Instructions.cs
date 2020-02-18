@@ -24,7 +24,7 @@ namespace GBDotNet.Core.Test.Integration
             RunTestRom(Path.Combine(GetTestRomsDirectory(), "03-op sp,hl.gb"));
         }
 
-        [TestMethod, Ignore("Currently fails!")]
+        [TestMethod]
         public void CPU_Instructions_Test_ROM_04()
         {
             RunTestRom(Path.Combine(GetTestRomsDirectory(), "04-op r,imm.gb"));
