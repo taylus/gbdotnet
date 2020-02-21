@@ -14,6 +14,7 @@ namespace GBDotNet.Core
         private RomFile rom;
         private readonly IMemory wram = new Memory();
         private readonly IMemory zram = new Memory();
+        private readonly IMemory sram = new Memory();
 
         //TODO: joypad: http://bgb.bircd.org/pandocs.htm#joypadinput
         private byte joypadPort;        //$FF00
@@ -150,7 +151,7 @@ namespace GBDotNet.Core
                 else if (address < 0xC000)
                 {
                     //external RAM (8K)
-                    throw new NotImplementedException($"Unsupported read of address ${address:X4}: Cartridge RAM is not yet implemented.");
+                    return sram[address - 0xA000];
                 }
                 else if (address < 0xE000)
                 {
@@ -232,7 +233,7 @@ namespace GBDotNet.Core
                 else if (address < 0xC000)
                 {
                     //external RAM (8K)
-                    throw new NotImplementedException($"Unsupported write to address ${address:X4}: Cartridge RAM is not yet implemented.");
+                    sram[address - 0xA000] = value;
                 }
                 else if (address < 0xE000)
                 {

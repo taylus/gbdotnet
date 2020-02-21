@@ -656,7 +656,7 @@ namespace GBDotNet.Core
                 if (InterruptsEnabled)
                 {
                     InterruptsEnabled = false;
-                    Memory[0xFF0F] = Memory[0xFF0F].ClearBit(0);
+                    MemoryWrite(0xFF0F, MemoryRead(0xFF0F).ClearBit(0));
                     Call(0x0040, returnAddress: Registers.PC);
                 }
             }
@@ -666,7 +666,7 @@ namespace GBDotNet.Core
                 if (InterruptsEnabled)
                 {
                     InterruptsEnabled = false;
-                    Memory[0xFF0F] = Memory[0xFF0F].ClearBit(1);
+                    MemoryWrite(0xFF0F, MemoryRead(0xFF0F).ClearBit(1));
                     Call(0x0048, returnAddress: Registers.PC);
                 }
             }
@@ -676,7 +676,7 @@ namespace GBDotNet.Core
                 if (InterruptsEnabled)
                 {
                     InterruptsEnabled = false;
-                    Memory[0xFF0F] = Memory[0xFF0F].ClearBit(2);
+                    MemoryWrite(0xFF0F, MemoryRead(0xFF0F).ClearBit(2));
                     Call(0x0050, returnAddress: Registers.PC);
                 }
             }
@@ -686,7 +686,7 @@ namespace GBDotNet.Core
                 if (InterruptsEnabled)
                 {
                     InterruptsEnabled = false;
-                    Memory[0xFF0F] = Memory[0xFF0F].ClearBit(3);
+                    MemoryWrite(0xFF0F, MemoryRead(0xFF0F).ClearBit(3));
                     Call(0x0058, returnAddress: Registers.PC);
                 }
             }
@@ -696,7 +696,7 @@ namespace GBDotNet.Core
                 if (InterruptsEnabled)
                 {
                     InterruptsEnabled = false;
-                    Memory[0xFF0F] = Memory[0xFF0F].ClearBit(4);
+                    MemoryWrite(0xFF0F, MemoryRead(0xFF0F).ClearBit(4));
                     Call(0x0060, returnAddress: Registers.PC);
                 }
             }
