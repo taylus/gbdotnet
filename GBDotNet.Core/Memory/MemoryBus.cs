@@ -178,10 +178,7 @@ namespace GBDotNet.Core
                     if (address == 0xFF00) return joypadPort;
                     else if (address == 0xFF01) return serialData;
                     else if (address == 0xFF02) return serialControl;
-                    else if (address == 0xFF04) return Timer.DividerRegister;
-                    else if (address == 0xFF05) return Timer.TimerCounter;
-                    else if (address == 0xFF06) return Timer.TimerModulo;
-                    else if (address == 0xFF07) return Timer.TimerControl;
+                    else if (Timer.MappedToAddress(address)) return Timer[address];
                     else if (address == 0xFF0F) return InterruptFlags.Data;
                     else if (soundRegisters.MappedToAddress(address)) return soundRegisters[address];
                     else if (address == 0xFF40) return PPURegisters.LCDControl.Data;
@@ -267,10 +264,7 @@ namespace GBDotNet.Core
                         gameLinkConsole?.Print(value);
                     }
                     else if (address == 0xFF02) serialControl = value;
-                    else if (address == 0xFF04) Timer.DividerRegister = 0;  //writing any value to DIV resets it to 0
-                    else if (address == 0xFF05) Timer.TimerCounter = value;
-                    else if (address == 0xFF06) Timer.TimerModulo = value;
-                    else if (address == 0xFF07) Timer.TimerControl = value;
+                    else if (Timer.MappedToAddress(address)) Timer[address] = value;
                     else if (address == 0xFF0F) InterruptFlags.Data = value;
                     else if (soundRegisters.MappedToAddress(address)) soundRegisters[address] = value;
                     else if (address == 0xFF40) PPURegisters.LCDControl.Data = value;

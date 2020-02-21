@@ -25,6 +25,8 @@ namespace GBDotNet.Core
         public long TotalElapsedCycles { get; private set; }
         public ISet<uint> Breakpoints { get; private set; } = new HashSet<uint>();
 
+        //for passing Blargg's memory timing tests by making memory access sync up w/ the timer more accurately
+        private int midInstructionMemoryCyclesAlreadyTicked;
         private readonly Action[] instructionSet;
         private readonly Action[] prefixCBInstructions;
 
@@ -626,6 +628,7 @@ namespace GBDotNet.Core
             if (Breakpoints.Contains(Registers.PC)) Debugger.Break();
             Registers.LastPC = Registers.PC;
             CyclesLastTick = 0;
+            midInstructionMemoryCyclesAlreadyTicked = 0;
 
             if (IsHalted)
             {
@@ -637,9 +640,9 @@ namespace GBDotNet.Core
                 Execute(opcode);
             }
 
-            Memory.Tick(CyclesLastTick);
-            TotalElapsedCycles += CyclesLastTick;
             HandleInterrupts();
+            Memory.Tick(CyclesLastTick - midInstructionMemoryCyclesAlreadyTicked);
+            TotalElapsedCycles += CyclesLastTick;
         }
 
         private void HandleInterrupts()
@@ -704,8 +707,9 @@ namespace GBDotNet.Core
         /// </summary>
         private byte Fetch()
         {
-            CyclesLastTick += 4;
-            return Memory[Registers.PC++];
+            var value = MemoryRead(Registers.PC);
+            Registers.PC++;
+            return value;
         }
 
         /// <summary>
@@ -713,7 +717,10 @@ namespace GBDotNet.Core
         /// </summary>
         private byte MemoryRead(int address)
         {
-            CyclesLastTick += 4;
+            const int cycles = 4;
+            Memory.Tick(cycles);
+            CyclesLastTick += cycles;
+            midInstructionMemoryCyclesAlreadyTicked += cycles;
             return Memory[address];
         }
 
@@ -722,7 +729,10 @@ namespace GBDotNet.Core
         /// </summary>
         private void MemoryWrite(int address, byte value)
         {
-            CyclesLastTick += 4;
+            const int cycles = 4;
+            Memory.Tick(cycles);
+            CyclesLastTick += cycles;
+            midInstructionMemoryCyclesAlreadyTicked += cycles;
             Memory[address] = value;
         }
 
