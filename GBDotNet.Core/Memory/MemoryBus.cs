@@ -267,7 +267,7 @@ namespace GBDotNet.Core
                     }
                     else if (address == 0xFF02) serialControl = value;
                     else if (Timer.MappedToAddress(address)) Timer[address] = value;
-                    else if (address == 0xFF0F) InterruptFlags.Data = value;
+                    else if (address == 0xFF0F) InterruptFlags.Data = (byte)(value | 0b1110_0000);  //upper 3 bits are unused and always read as 1
                     else if (soundRegisters.MappedToAddress(address)) soundRegisters[address] = value;
                     else if (address == 0xFF40) PPURegisters.LCDControl.Data = value;
                     else if (address == 0xFF41) PPURegisters.LCDStatus.Data = value;

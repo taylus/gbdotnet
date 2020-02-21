@@ -12,8 +12,9 @@ namespace MonoGameBoy
     {
         //TODO: load from command-line args
         //private const string romPath = @"C:\roms\gb\Tetris.gb";
+        //private const string romPath = @"C:\roms\gb\Dr. Mario (W) (V1.1).gb";
         //private const string romPath = @"C:\roms\gb\hello-brandon.gb";
-        private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\interrupt_time\interrupt_time.gb";
+        private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\halt_bug.gb";
         private const string logPath = "monogameboy.log";
         private const bool useBootRom = false;
         private const bool loggingEnabled = false;

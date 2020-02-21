@@ -20,13 +20,14 @@ namespace GBDotNet.Core
         public Registers Registers { get; private set; }
         public IMemory Memory { get; private set; }
         public bool IsHalted { get; private set; }
-        public bool InterruptsEnabled { get; private set; }
+        public bool InterruptsEnabled { get; private set; }     //Interrupt Master Enable flag, aka IME
         public int CyclesLastTick { get; private set; }
         public long TotalElapsedCycles { get; private set; }
         public ISet<uint> Breakpoints { get; private set; } = new HashSet<uint>();
 
         //for passing Blargg's memory timing tests by making memory access sync up w/ the timer more accurately
         private int midInstructionMemoryCyclesAlreadyTicked;
+        private bool haltBugActive = false;
         private readonly Action[] instructionSet;
         private readonly Action[] prefixCBInstructions;
 
@@ -708,7 +709,8 @@ namespace GBDotNet.Core
         private byte Fetch()
         {
             var value = MemoryRead(Registers.PC);
-            Registers.PC++;
+            if (!haltBugActive) Registers.PC++;
+            else haltBugActive = false;
             return value;
         }
 
@@ -1775,7 +1777,16 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x76_Halt()
         {
-            IsHalted = true;
+            if (!InterruptsEnabled && (Memory[0xFF0F] & Memory[0xFFFF] & 0x1F) != 0)
+            {
+                //famous "halt bug" becomes active if interrupts are disabled and IF and IE have interrupt bits in common
+                //see: https://github.com/AntonioND/giibiiadvance/blob/master/docs/TCAGBD.pdf
+                haltBugActive = true;
+            }
+            else
+            {
+                IsHalted = true;
+            }
         }
 
         /// <summary>
