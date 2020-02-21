@@ -46,7 +46,11 @@ namespace MonoGameBoy
             base.Initialize();
             currentKeyboardState = previousKeyboardState = Keyboard.GetState();
             ShowScreen();
-            if (runInBackground) Task.Run(RunEmulator);
+            if (runInBackground) Task.Run(RunEmulator).ContinueWith(deadEmulator =>
+            {
+                Console.WriteLine($"Emulator task unexpectedly faulted while executing instruction at ${cpu.Registers.LastPC:x4}:");
+                Console.WriteLine($"Exception (if any): {deadEmulator.Exception}");
+            });
         }
 
         private void RunEmulator()

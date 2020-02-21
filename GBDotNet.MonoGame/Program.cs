@@ -13,8 +13,7 @@ namespace MonoGameBoy
         //TODO: load from command-line args
         //private const string romPath = @"C:\roms\gb\Tetris.gb";
         //private const string romPath = @"C:\roms\gb\hello-brandon.gb";
-        //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\cpu_instrs.gb";
-        private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\individual\02-interrupts.gb";
+        private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\interrupt_time\interrupt_time.gb";
         private const string logPath = "monogameboy.log";
         private const bool useBootRom = false;
         private const bool loggingEnabled = false;
@@ -26,7 +25,7 @@ namespace MonoGameBoy
             {
                 try
                 {
-                    Console.SetOut(log);
+                    if (loggingEnabled) Console.SetOut(log);
                     var (cpu, ppu) = BootEmulator();
                     using (var game = new MonoGameBoy(cpu, ppu, romPath, useBootRom, loggingEnabled))
                         game.Run();
