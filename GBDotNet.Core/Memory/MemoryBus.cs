@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GBDotNet.Core
 {
@@ -14,7 +15,7 @@ namespace GBDotNet.Core
         private RomFile rom;
         private readonly IMemory wram = new Memory();
         private readonly IMemory zram = new Memory();
-        private readonly IMemory sram = new Memory();
+        private readonly IMemory sram = new Memory(Enumerable.Repeat<byte>(0xFF, Memory.Size).ToArray());
 
         //TODO: joypad: http://bgb.bircd.org/pandocs.htm#joypadinput
         private byte joypadPort;        //$FF00
