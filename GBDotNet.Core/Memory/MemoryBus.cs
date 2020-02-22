@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GBDotNet.Core
 {
@@ -14,6 +15,7 @@ namespace GBDotNet.Core
         private RomFile rom;
         private readonly IMemory wram = new Memory();
         private readonly IMemory zram = new Memory();
+        private readonly IMemory sram = new Memory(Enumerable.Repeat<byte>(0xFF, Memory.Size).ToArray());
 
         //TODO: joypad: http://bgb.bircd.org/pandocs.htm#joypadinput
         private byte joypadPort;        //$FF00
@@ -21,6 +23,7 @@ namespace GBDotNet.Core
         //TODO: game link cable: http://bgb.bircd.org/pandocs.htm#serialdatatransferlinkcable
         private byte serialData;        //$FF01
         private byte serialControl;     //$FF02
+        private GameLinkConsole gameLinkConsole;
 
         //TODO: audio
         private readonly SoundRegisters soundRegisters = new SoundRegisters();
@@ -34,8 +37,9 @@ namespace GBDotNet.Core
         //interrupts
         public InterruptFlags InterruptFlags { get; } = new InterruptFlags();
         public InterruptEnable InterruptEnable { get; } = new InterruptEnable();
+        public Timer Timer { get; }
 
-        public bool IsBootRomMapped { get; internal set; } = true;
+        public bool IsBootRomMapped { get; set; } = true;
         private static readonly byte[] bootRom = new byte[]
         {
             0x31, 0xFE, 0xFF, 0xAF, 0x21, 0xFF, 0x9F, 0x32, 0xCB, 0x7C, 0x20, 0xFB, 0x21, 0x26, 0xFF, 0x0E,
@@ -87,11 +91,17 @@ namespace GBDotNet.Core
             //Randomize(VideoMemory);
             //Randomize(ObjectAttributeMemory);
             TileSet = new TileSet(VideoMemory);
+            Timer = new Timer(this);
         }
 
         public void Reset()
         {
             IsBootRomMapped = true;
+        }
+
+        public void Tick(int elapsedCycles)
+        {
+            Timer.Tick(elapsedCycles);
         }
 
         private void Randomize(IMemory memory)
@@ -110,6 +120,11 @@ namespace GBDotNet.Core
         public void LoadVideoMemory(Memory vram)
         {
             VideoMemory = vram;
+        }
+
+        public void Attach(GameLinkConsole gameLinkConsole)
+        {
+            this.gameLinkConsole = gameLinkConsole;
         }
 
         public byte this[int address]
@@ -137,7 +152,7 @@ namespace GBDotNet.Core
                 else if (address < 0xC000)
                 {
                     //external RAM (8K)
-                    throw new NotImplementedException($"Unsupported read of address ${address:X4}: Cartridge RAM is not yet implemented.");
+                    return sram[address - 0xA000];
                 }
                 else if (address < 0xE000)
                 {
@@ -165,6 +180,7 @@ namespace GBDotNet.Core
                     if (address == 0xFF00) return joypadPort;
                     else if (address == 0xFF01) return serialData;
                     else if (address == 0xFF02) return serialControl;
+                    else if (Timer.MappedToAddress(address)) return Timer[address];
                     else if (address == 0xFF0F) return InterruptFlags.Data;
                     else if (soundRegisters.MappedToAddress(address)) return soundRegisters[address];
                     else if (address == 0xFF40) return PPURegisters.LCDControl.Data;
@@ -218,7 +234,7 @@ namespace GBDotNet.Core
                 else if (address < 0xC000)
                 {
                     //external RAM (8K)
-                    throw new NotImplementedException($"Unsupported write to address ${address:X4}: Cartridge RAM is not yet implemented.");
+                    sram[address - 0xA000] = value;
                 }
                 else if (address < 0xE000)
                 {
@@ -244,9 +260,14 @@ namespace GBDotNet.Core
                 {
                     //various hardware I/O registers (PPU, APU, joypad, etc)
                     if (address == 0xFF00) joypadPort = value;
-                    else if (address == 0xFF01) serialData = value;
+                    else if (address == 0xFF01)
+                    {
+                        serialData = value;
+                        gameLinkConsole?.Print(value);
+                    }
                     else if (address == 0xFF02) serialControl = value;
-                    else if (address == 0xFF0F) InterruptFlags.Data = value;
+                    else if (Timer.MappedToAddress(address)) Timer[address] = value;
+                    else if (address == 0xFF0F) InterruptFlags.Data = (byte)(value | 0b1110_0000);  //upper 3 bits are unused and always read as 1
                     else if (soundRegisters.MappedToAddress(address)) soundRegisters[address] = value;
                     else if (address == 0xFF40) PPURegisters.LCDControl.Data = value;
                     else if (address == 0xFF41) PPURegisters.LCDStatus.Data = value;

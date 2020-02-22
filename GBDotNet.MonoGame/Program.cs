@@ -11,10 +11,13 @@ namespace MonoGameBoy
     public static class Program
     {
         //TODO: load from command-line args
-        //private const string romPath = @"C:\roms\gb\tic-tac-toe.gb";
         //private const string romPath = @"C:\roms\gb\Tetris.gb";
-        private const string romPath = @"C:\roms\gb\hello-brandon.gb";
+        //private const string romPath = @"C:\roms\gb\Dr. Mario (W) (V1.1).gb";
+        //private const string romPath = @"C:\roms\gb\hello-brandon.gb";
+        private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\halt_bug.gb";
         private const string logPath = "monogameboy.log";
+        private const bool useBootRom = false;
+        private const bool loggingEnabled = false;
 
         [STAThread]
         public static void Main()
@@ -23,15 +26,14 @@ namespace MonoGameBoy
             {
                 try
                 {
-                    Console.SetOut(log);
+                    if (loggingEnabled) Console.SetOut(log);
                     var (cpu, ppu) = BootEmulator();
-                    cpu.Breakpoints.Add(0x021e);
-                    using (var game = new MonoGameBoy(cpu, ppu, romPath))
+                    using (var game = new MonoGameBoy(cpu, ppu, romPath, useBootRom, loggingEnabled))
                         game.Run();
                 }
                 finally
                 {
-                    //Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
+                    if (loggingEnabled) Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
                 }
             }
         }
@@ -39,12 +41,13 @@ namespace MonoGameBoy
         private static (CPU cpu, PPU ppu) BootEmulator()
         {
             var ppuRegs = new PPURegisters();
-            var memoryBus = new MemoryBus(ppuRegs);
+            var memoryBus = new MemoryBus(ppuRegs) { IsBootRomMapped = useBootRom };
+            memoryBus.Attach(new GameLinkConsole());
             var ppu = new PPU(ppuRegs, memoryBus);
             ppu.Boot();
 
             var cpu = new CPU(new Registers(), memoryBus);
-            //cpu.Boot();
+            if (!useBootRom) cpu.BootWithoutBootRom();
 
             var rom = new RomFile(romPath);
             memoryBus.LoadRom(rom);

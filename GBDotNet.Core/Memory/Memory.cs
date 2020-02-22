@@ -45,6 +45,11 @@ namespace GBDotNet.Core
 
         }
 
+        public void Tick(int elapsedCycles)
+        {
+
+        }
+
         /// <summary>
         /// Prints the first N bytes of memory to the console.
         /// </summary>

@@ -21,16 +21,20 @@ namespace MonoGameBoy
         private readonly PPU ppu;
         private readonly string romPath;
         private string RomName => Path.GetFileName(romPath);
+        private readonly bool useBootRom;
         private static readonly GameBoyColorPalette palette = GameBoyColorPalette.Dmg;
         private bool paused = true;
         private DisplayMode currentDisplayMode;
         private readonly bool runInBackground = true;
+        private readonly bool loggingEnabled;
 
-        public MonoGameBoy(CPU cpu, PPU ppu, string romPath)
+        public MonoGameBoy(CPU cpu, PPU ppu, string romPath, bool useBootRom, bool loggingEnabled)
         {
             this.cpu = cpu;
             this.ppu = ppu;
             this.romPath = romPath;
+            this.useBootRom = useBootRom;
+            this.loggingEnabled = loggingEnabled;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -42,7 +46,11 @@ namespace MonoGameBoy
             base.Initialize();
             currentKeyboardState = previousKeyboardState = Keyboard.GetState();
             ShowScreen();
-            if (runInBackground) Task.Run(RunEmulator);
+            if (runInBackground) Task.Run(RunEmulator).ContinueWith(deadEmulator =>
+            {
+                Console.WriteLine($"Emulator task unexpectedly faulted while executing instruction at ${cpu.Registers.LastPC:x4}:");
+                Console.WriteLine($"Exception (if any): {deadEmulator.Exception}");
+            });
         }
 
         private void RunEmulator()
@@ -50,7 +58,7 @@ namespace MonoGameBoy
             while (true)
             {
                 if (paused) continue;
-                //Console.WriteLine($"{cpu} {ppu}");
+                if (loggingEnabled) Console.WriteLine($"{cpu} {ppu}");
                 cpu.Tick();
                 ppu.Tick(cpu.CyclesLastTick);
             }
@@ -179,8 +187,10 @@ namespace MonoGameBoy
 
         private void RestartEmulator()
         {
-            cpu.Reset();
+            if (useBootRom) cpu.Reset();
+            else cpu.BootWithoutBootRom();
             ppu.Boot();
+            Console.Clear();
         }
     }
 }

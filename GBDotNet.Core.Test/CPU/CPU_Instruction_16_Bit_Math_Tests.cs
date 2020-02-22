@@ -120,7 +120,7 @@ namespace GBDotNet.Core.Test
 
             Assert.AreEqual(0xFFFD, cpu.Registers.SP);
             Assert.IsFalse(cpu.Registers.HasFlag(Flags.Zero | Flags.AddSubtract), "add sp, e8 instruction should always clear Z and N flags.");
-            Assert.IsFalse(cpu.Registers.HasFlag(Flags.Carry | Flags.HalfCarry));
+            Assert.IsTrue(cpu.Registers.HasFlag(Flags.Carry & Flags.HalfCarry));    //flags calculated as if immediate is *unsigned* (http://forums.nesdev.com/viewtopic.php?p=42138)
             Assert.AreEqual(16, cpu.CyclesLastTick);
         }
 

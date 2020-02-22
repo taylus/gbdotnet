@@ -20,11 +20,14 @@ namespace GBDotNet.Core
         public Registers Registers { get; private set; }
         public IMemory Memory { get; private set; }
         public bool IsHalted { get; private set; }
-        public bool InterruptsEnabled { get; private set; }
+        public bool InterruptsEnabled { get; private set; }     //Interrupt Master Enable flag, aka IME
         public int CyclesLastTick { get; private set; }
         public long TotalElapsedCycles { get; private set; }
         public ISet<uint> Breakpoints { get; private set; } = new HashSet<uint>();
 
+        //for passing Blargg's memory timing tests by making memory access sync up w/ the timer more accurately
+        private int midInstructionMemoryCyclesAlreadyTicked;
+        private bool haltBugActive = false;
         private readonly Action[] instructionSet;
         private readonly Action[] prefixCBInstructions;
 
@@ -592,11 +595,7 @@ namespace GBDotNet.Core
         /// after executing the boot ROM.
         /// </summary>
         /// <see cref="https://gbdev.gg8.se/wiki/articles/Gameboy_Bootstrap_ROM"/>
-        /// <remarks>
-        /// TODO: Maybe change this later to actually execute the boot ROM for that
-        /// classic logo scroll and sfx: https://github.com/taylus/gbdotnet/issues/13
-        /// </remarks>
-        public void Boot()
+        public void BootWithoutBootRom()
         {
             Registers.AF = 0x0100;
             Registers.BC = 0x0014;
@@ -627,55 +626,80 @@ namespace GBDotNet.Core
         /// </summary>
         public void Tick()
         {
-            if (IsHalted) return;
-            CyclesLastTick = 0;
-
-            Registers.LastPC = Registers.PC;
             if (Breakpoints.Contains(Registers.PC)) Debugger.Break();
+            Registers.LastPC = Registers.PC;
+            CyclesLastTick = 0;
+            midInstructionMemoryCyclesAlreadyTicked = 0;
 
-            byte opcode = Fetch();
-            Execute(opcode);
+            if (IsHalted)
+            {
+                CyclesLastTick += 4;
+            }
+            else
+            {
+                byte opcode = Fetch();
+                Execute(opcode);
+            }
 
-            TotalElapsedCycles += CyclesLastTick;
             HandleInterrupts();
+            Memory.Tick(CyclesLastTick - midInstructionMemoryCyclesAlreadyTicked);
+            TotalElapsedCycles += CyclesLastTick;
         }
 
         private void HandleInterrupts()
         {
-            if (!InterruptsEnabled) return;
-
             var interruptFlags = new InterruptFlags() { Data = Memory[0xFF0F] };
             var interruptEnable = new InterruptEnable() { Data = Memory[0xFFFF] };
 
             if (interruptFlags.VBlankInterruptRequested && interruptEnable.VBlankInterruptEnabled)
             {
-                InterruptsEnabled = false;
-                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(0);
-                Call(0x0040, returnAddress: Registers.PC);
+                IsHalted = false;
+                if (InterruptsEnabled)
+                {
+                    InterruptsEnabled = false;
+                    MemoryWrite(0xFF0F, MemoryRead(0xFF0F).ClearBit(0));
+                    Call(0x0040, returnAddress: Registers.PC);
+                }
             }
             else if (interruptFlags.LCDStatInterruptRequested && interruptEnable.LCDStatInterruptEnabled)
             {
-                InterruptsEnabled = false;
-                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(1);
-                Call(0x0048, returnAddress: Registers.PC);
+                IsHalted = false;
+                if (InterruptsEnabled)
+                {
+                    InterruptsEnabled = false;
+                    MemoryWrite(0xFF0F, MemoryRead(0xFF0F).ClearBit(1));
+                    Call(0x0048, returnAddress: Registers.PC);
+                }
             }
             else if (interruptFlags.TimerInterruptRequested && interruptEnable.TimerInterruptEnabled)
             {
-                InterruptsEnabled = false;
-                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(2);
-                Call(0x0050, returnAddress: Registers.PC);
+                IsHalted = false;
+                if (InterruptsEnabled)
+                {
+                    InterruptsEnabled = false;
+                    MemoryWrite(0xFF0F, MemoryRead(0xFF0F).ClearBit(2));
+                    Call(0x0050, returnAddress: Registers.PC);
+                }
             }
             else if (interruptFlags.SerialInterruptRequested && interruptEnable.SerialInterruptEnabled)
             {
-                InterruptsEnabled = false;
-                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(3);
-                Call(0x0058, returnAddress: Registers.PC);
+                IsHalted = false;
+                if (InterruptsEnabled)
+                {
+                    InterruptsEnabled = false;
+                    MemoryWrite(0xFF0F, MemoryRead(0xFF0F).ClearBit(3));
+                    Call(0x0058, returnAddress: Registers.PC);
+                }
             }
             else if (interruptFlags.JoypadInterruptRequested && interruptEnable.JoypadInterruptEnabled)
             {
-                InterruptsEnabled = false;
-                Memory[0xFF0F] = Memory[0xFF0F].ClearBit(4);
-                Call(0x0060, returnAddress: Registers.PC);
+                IsHalted = false;
+                if (InterruptsEnabled)
+                {
+                    InterruptsEnabled = false;
+                    MemoryWrite(0xFF0F, MemoryRead(0xFF0F).ClearBit(4));
+                    Call(0x0060, returnAddress: Registers.PC);
+                }
             }
         }
 
@@ -684,8 +708,10 @@ namespace GBDotNet.Core
         /// </summary>
         private byte Fetch()
         {
-            CyclesLastTick += 4;
-            return Memory[Registers.PC++];
+            var value = MemoryRead(Registers.PC);
+            if (!haltBugActive) Registers.PC++;
+            else haltBugActive = false;
+            return value;
         }
 
         /// <summary>
@@ -693,7 +719,10 @@ namespace GBDotNet.Core
         /// </summary>
         private byte MemoryRead(int address)
         {
-            CyclesLastTick += 4;
+            const int cycles = 4;
+            Memory.Tick(cycles);
+            CyclesLastTick += cycles;
+            midInstructionMemoryCyclesAlreadyTicked += cycles;
             return Memory[address];
         }
 
@@ -702,7 +731,10 @@ namespace GBDotNet.Core
         /// </summary>
         private void MemoryWrite(int address, byte value)
         {
-            CyclesLastTick += 4;
+            const int cycles = 4;
+            Memory.Tick(cycles);
+            CyclesLastTick += cycles;
+            midInstructionMemoryCyclesAlreadyTicked += cycles;
             Memory[address] = value;
         }
 
@@ -1745,7 +1777,16 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0x76_Halt()
         {
-            IsHalted = true;
+            if (!InterruptsEnabled && (Memory[0xFF0F] & Memory[0xFFFF] & 0x1F) != 0)
+            {
+                //famous "halt bug" becomes active if interrupts are disabled and IF and IE have interrupt bits in common
+                //see: https://github.com/AntonioND/giibiiadvance/blob/master/docs/TCAGBD.pdf
+                haltBugActive = true;
+            }
+            else
+            {
+                IsHalted = true;
+            }
         }
 
         /// <summary>
@@ -2621,11 +2662,11 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xE8_Add_8_Bit_Signed_Immediate_To_Stack_Pointer()
         {
-            var immediate = (sbyte)Fetch();
-            Registers.SP = (ushort)(Registers.SP + immediate);
+            var immediate = Fetch();
             Registers.ClearFlag(Flags.AddSubtract | Flags.Zero);
             Registers.SetFlagTo(Flags.HalfCarry, ((Registers.SP & 0xF) + (immediate & 0xF) > 0xF));
             Registers.SetFlagTo(Flags.Carry, ((Registers.SP & 0xFF) + immediate > 0xFF));
+            Registers.SP = (ushort)(Registers.SP + (sbyte)immediate);
             CyclesLastTick += 8;
         }
 
@@ -2676,7 +2717,7 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xF1_Pop_Stack_Into_AF()
         {
-            Registers.AF = PopStack();
+            Registers.AF = (ushort)(PopStack() & 0xFFF0);   //lower, undocumented bits of F are zeroed in a real Game Boy
         }
 
         /// <summary>
@@ -2725,11 +2766,11 @@ namespace GBDotNet.Core
         /// </summary>
         private void Instruction_0xF8_Add_8_Bit_Signed_Immediate_To_Stack_Pointer_And_Store_Result_In_HL()
         {
-            var immediate = (sbyte)Fetch();
-            Registers.HL = (ushort)(Registers.SP + immediate);
+            var immediate = Fetch();
             Registers.ClearFlag(Flags.AddSubtract | Flags.Zero);
             Registers.SetFlagTo(Flags.HalfCarry, ((Registers.SP & 0xF) + (immediate & 0xF) > 0xF));
             Registers.SetFlagTo(Flags.Carry, ((Registers.SP & 0xFF) + immediate > 0xFF));
+            Registers.HL = (ushort)(Registers.SP + (sbyte)immediate);
             CyclesLastTick += 4;
         }
 
@@ -3341,7 +3382,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x46_Test_Bit_0_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 0);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3406,7 +3446,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x4E_Test_Bit_1_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 1);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3471,7 +3510,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x56_Test_Bit_2_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 2);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3536,7 +3574,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x5E_Test_Bit_3_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 3);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3601,7 +3638,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x66_Test_Bit_4_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 4);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3666,7 +3702,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x6E_Test_Bit_5_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 5);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3731,7 +3766,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x76_Test_Bit_6_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 6);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -3796,7 +3830,6 @@ namespace GBDotNet.Core
         private void Instruction_0xCB_0x7E_Test_Bit_7_Of_Address_Pointed_To_By_HL_And_Set_Zero_Flag_If_It_Was_Zero()
         {
             TestBitAndSetFlags(MemoryRead(Registers.HL), bitToTest: 7);
-            CyclesLastTick += 4;
         }
 
         /// <summary>
@@ -5015,7 +5048,7 @@ namespace GBDotNet.Core
         {
             var carry = (byte)(carryBit ? 1 : 0);
             //half carry (borrow from upper nibble) occurs if the lower nibble of the value being subtracted is > A's
-            Registers.SetFlagTo(Flags.HalfCarry, ((value + carry) & 0xF) > (Registers.A & 0xF));
+            Registers.SetFlagTo(Flags.HalfCarry, ((value & 0xF) + carry) > (Registers.A & 0xF));
             Registers.SetFlagTo(Flags.Carry, (value + carry) > Registers.A);
             Registers.SetFlag(Flags.AddSubtract);
 
