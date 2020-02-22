@@ -50,6 +50,68 @@ namespace GBDotNet.Core.Test.Integration
             Assert.Inconclusive($"Test ROM {Path.GetFileName(romPath)} did not pass, but did not report failure. (Does it need to run longer?)");
         }
 
+        protected static void RunHaltBugTestRom(string romPath)
+        {
+            var memoryBus = new MemoryBus(new PPURegisters()) { IsBootRomMapped = false };
+            memoryBus.LoadRom(new RomFile(romPath));
+            var ppu = new PPU(memoryBus.PPURegisters, memoryBus);   //this rom requires a PPU or it'll infinite loop waiting for LY
+            var cpu = new CPU(new Registers(), memoryBus);
+            cpu.BootWithoutBootRom();
+
+            const int maxCycles = 7_000_000;
+            while (cpu.TotalElapsedCycles <= maxCycles)
+            {
+                cpu.Tick();
+                ppu.Tick(cpu.CyclesLastTick);
+            }
+
+            if (ScanBackgroundMapForString(cpu.Memory, "Failed"))
+            {
+                Console.WriteLine(BackgroundMapToString(cpu.Memory));
+                Assert.Fail($"Test ROM {Path.GetFileName(romPath)} failed, see output for more details.");
+            }
+            else if (ScanBackgroundMapForString(cpu.Memory, "Passed"))
+            {
+                Console.WriteLine(BackgroundMapToString(cpu.Memory));
+                return;
+            }
+            else
+            {
+                Assert.Inconclusive($"Test ROM {Path.GetFileName(romPath)} did not pass, but did not report failure. (Does it need to run longer?)");
+            }
+        }
+
+        private static bool ScanBackgroundMapForString(IMemory memory, string searchString) => ScanMemoryForString(memory, 0x9800, 0x9BFF, searchString) >= 0;
+
+        private static int ScanMemoryForString(IMemory memory, int startAddress, int endAddressInclusive, string searchString)
+        {
+            var searchBytes = Encoding.ASCII.GetBytes(searchString);
+            var searchStringLength = searchBytes.Length;
+            for (int i = startAddress; i <= endAddressInclusive - searchStringLength; i++)
+            {
+                int k = 0;
+                for (; k < searchStringLength; k++)
+                {
+                    if (searchBytes[k] != memory[i + k]) break;
+                }
+                if (k == searchStringLength) return i;
+            }
+            return -1;
+        }
+
+        private static string BackgroundMapToString(IMemory memory) => MemoryRegionToString(memory, 0x9800, 0x9BFF);
+
+        private static string MemoryRegionToString(IMemory memory, int startAddress, int endAddressInclusive)
+        {
+            var stringBuilder = new StringBuilder();
+            for (int i = startAddress; i < endAddressInclusive; i++)
+            {
+                stringBuilder.Append((char)memory[i]);
+                if (i % 16 == 15) stringBuilder.Append(Environment.NewLine);
+            }
+            return stringBuilder.ToString().Trim();
+        }
+
         protected virtual string GetTestRomsDirectory()
         {
             return Path.Combine(GetSolutionDirectory(), "gb-test-roms");
