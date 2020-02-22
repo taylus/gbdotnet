@@ -142,7 +142,7 @@ namespace GBDotNet.Core
                 }
                 else if (address < 0x8000)
                 {
-                    return rom[address];  //ROM bank 1 (16K) -- TODO: bank switching
+                    return rom[address];  //ROM bank 1-N (16K, switchable if cart has an MBC)
                 }
                 else if (address < 0xA000)
                 {
@@ -219,7 +219,9 @@ namespace GBDotNet.Core
                 }
                 else if (address < 0x8000)
                 {
-                    //TODO: memory bank controllers
+                    //memory bank controllers intercept ROM writes and use them for bank switching and etc
+                    rom[address] = value;
+
                     //why does Tetris write here when it doesn't use one?
                     //see: https://www.reddit.com/r/EmuDev/comments/5ht388/gb_why_does_tetris_write_to_the_rom/
                 }

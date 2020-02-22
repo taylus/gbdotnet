@@ -17,7 +17,7 @@ namespace GBDotNet.Core
         public override byte this[int index]
         {
             get => Data[index];
-            set => throw new NotImplementedException("Cannot write to read-only memory.");
+            set { }
         }
 
         /// <summary>
