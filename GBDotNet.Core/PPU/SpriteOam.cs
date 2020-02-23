@@ -55,7 +55,7 @@ namespace GBDotNet.Core
         public byte[] Render()
         {
             var spriteLayer = new byte[PPU.ScreenWidthInPixels * PPU.ScreenHeightInPixels];
-            foreach(var sprite in Sprites)
+            foreach (var sprite in Sprites)
             {
                 //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
                 sprite.Render(Tileset, ref spriteLayer);
