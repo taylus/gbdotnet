@@ -91,7 +91,7 @@ namespace MonoGameBoy
             HandleJoypadInput();
             HandleDebugInput();
 
-            if (currentDisplayMode == DisplayMode.Screen) screen.PutPixels(palette, emulator.PPU.RenderScreen());
+            if (currentDisplayMode == DisplayMode.Screen) screen.PutPixels(palette, emulator.PPU.ScreenBackBuffer);
             else if (currentDisplayMode == DisplayMode.TileSet) screen.PutPixels(palette, emulator.PPU.RenderTileSet());
             else if (currentDisplayMode == DisplayMode.BackgroundMap) screen.PutPixels(palette, emulator.PPU.RenderBackgroundMap());
             else if (currentDisplayMode == DisplayMode.WindowLayer) screen.PutPixels(palette, emulator.PPU.RenderWindow());

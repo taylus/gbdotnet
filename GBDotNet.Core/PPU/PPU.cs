@@ -31,6 +31,7 @@ namespace GBDotNet.Core
         private byte[] screenPixels = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
         private int cycleCounter;
 
+        public byte[] ScreenBackBuffer { get; } = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
         public PPURegisters Registers { get; private set; }
         public MemoryBus MemoryBus { get; private set; }
 
@@ -161,7 +162,12 @@ namespace GBDotNet.Core
         public byte[] RenderBackgroundMap() => bgMap.Render();
         public byte[] RenderTileSet() => TileSet.Render();
         public byte[] RenderWindow() => window.Render();
-        public byte[] RenderScreen() => screenPixels;
+
+        public byte[] RenderScreen()
+        {
+            Array.Copy(screenPixels, ScreenBackBuffer, screenPixels.Length);
+            return screenPixels;
+        }
 
         public byte[] ForceRenderScreen()
         {
@@ -191,7 +197,7 @@ namespace GBDotNet.Core
                 }
             }
 
-            sprites.RenderScanline(CurrentLine, ref screenPixels);
+            if (Registers.LCDControl.SpriteDisplayEnabled) sprites.RenderScanline(CurrentLine, ref screenPixels);
             return screenPixels;
         }
 
