@@ -12,9 +12,9 @@ namespace MonoGameBoy
     {
         //TODO: load from command-line args
         //private const string romPath = @"C:\roms\gb\Tetris.gb";
-        //private const string romPath = @"C:\roms\gb\Dr. Mario (W) (V1.1).gb";
+        private const string romPath = @"C:\roms\gb\Dr. Mario (World).gb";
         //private const string romPath = @"C:\roms\gb\hello-brandon.gb";
-        private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\halt_bug.gb";
+        //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\halt_bug.gb";
         private const string logPath = "monogameboy.log";
         private const bool useBootRom = false;
         private const bool loggingEnabled = false;
@@ -42,7 +42,7 @@ namespace MonoGameBoy
         {
             var ppuRegs = new PPURegisters();
             var memoryBus = new MemoryBus(ppuRegs) { IsBootRomMapped = useBootRom };
-            memoryBus.Attach(new GameLinkConsole());
+            //memoryBus.Attach(new GameLinkConsole());
             var ppu = new PPU(ppuRegs, memoryBus);
             ppu.Boot();
 
