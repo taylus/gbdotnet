@@ -16,7 +16,7 @@
     ///  ───Down─┼───┼─Start────────┤ 3   P13      │
     ///  ───Up───┼───┼─Select───────┤ 2   P12      │
     ///  ───Left─┼───┼─B────────────┤ 1   P11      │
-    ///  ───Right┼───┼─A────────────| 0   P10      │
+    ///  ───Right┼───┼─A────────────┤ 0   P10      │
     ///                             └──────────────┘ 	 
     /// </remarks>
     /// <seealso cref="https://github.com/AntonioND/giibiiadvance/blob/master/docs/TCAGBD.pdf"/>
