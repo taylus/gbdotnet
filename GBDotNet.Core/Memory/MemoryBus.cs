@@ -17,8 +17,8 @@ namespace GBDotNet.Core
         private readonly IMemory zram = new Memory();
         private readonly IMemory sram = new Memory(Enumerable.Repeat<byte>(0xFF, Memory.Size).ToArray());
 
-        //TODO: joypad: http://bgb.bircd.org/pandocs.htm#joypadinput
-        private byte joypadPort;        //$FF00
+        //input
+        public JoypadRegister JoypadRegister { get; private set; } = new JoypadRegister();  //$FF00
 
         //TODO: game link cable: http://bgb.bircd.org/pandocs.htm#serialdatatransferlinkcable
         private byte serialData;        //$FF01
@@ -177,7 +177,7 @@ namespace GBDotNet.Core
                 else if (address < 0xFF80)
                 {
                     //various hardware I/O registers (PPU, APU, joypad, etc)
-                    if (address == 0xFF00) return joypadPort;
+                    if (address == 0xFF00) return JoypadRegister.Read();
                     else if (address == 0xFF01) return serialData;
                     else if (address == 0xFF02) return serialControl;
                     else if (Timer.MappedToAddress(address)) return Timer[address];
@@ -259,7 +259,7 @@ namespace GBDotNet.Core
                 else if (address < 0xFF80)
                 {
                     //various hardware I/O registers (PPU, APU, joypad, etc)
-                    if (address == 0xFF00) joypadPort = value;
+                    if (address == 0xFF00) JoypadRegister.Write(value);
                     else if (address == 0xFF01)
                     {
                         serialData = value;

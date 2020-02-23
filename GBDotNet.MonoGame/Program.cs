@@ -11,8 +11,8 @@ namespace MonoGameBoy
     public static class Program
     {
         //TODO: load from command-line args
-        //private const string romPath = @"C:\roms\gb\Tetris.gb";
-        private const string romPath = @"C:\roms\gb\Dr. Mario (World).gb";
+        private const string romPath = @"C:\roms\gb\Tetris.gb";
+        //private const string romPath = @"C:\roms\gb\Dr. Mario (World).gb";
         //private const string romPath = @"C:\roms\gb\hello-brandon.gb";
         //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\halt_bug.gb";
         private const string logPath = "monogameboy.log";
@@ -27,8 +27,8 @@ namespace MonoGameBoy
                 try
                 {
                     if (loggingEnabled) Console.SetOut(log);
-                    var (cpu, ppu) = BootEmulator();
-                    using (var game = new MonoGameBoy(cpu, ppu, romPath, useBootRom, loggingEnabled))
+                    var emulator = Boot();
+                    using (var game = new MonoGameBoy(emulator, romPath, useBootRom, loggingEnabled))
                         game.Run();
                 }
                 finally
@@ -38,7 +38,7 @@ namespace MonoGameBoy
             }
         }
 
-        private static (CPU cpu, PPU ppu) BootEmulator()
+        private static Emulator Boot()
         {
             var ppuRegs = new PPURegisters();
             var memoryBus = new MemoryBus(ppuRegs) { IsBootRomMapped = useBootRom };
@@ -52,7 +52,8 @@ namespace MonoGameBoy
             var rom = new RomFile(romPath);
             memoryBus.LoadRom(rom);
 
-            return (cpu, ppu);
+            var joypad = new Joypad(memoryBus.JoypadRegister);
+            return new Emulator(cpu, ppu, joypad);
         }
     }
 }
