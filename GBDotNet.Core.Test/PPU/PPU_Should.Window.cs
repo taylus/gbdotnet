@@ -18,7 +18,7 @@ namespace GBDotNet.Core.Test.Integration
             var regs = new PPURegisters(lcdc: 0xE7, bgPalette: 0xE4);
             var memBus = new MemoryBus(regs) { VideoMemory = vram };
             var ppu = new PPU(regs, memBus);
-            ppu.TileSet.UpdateFrom(ppu.VideoMemory);
+            ppu.TileSet.UpdateFrom(vram);
 
             var actualPixels = ppu.RenderWindow();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "links_awakening_you_are_on_koholint_island_expected_window.png"));

@@ -27,7 +27,8 @@ namespace MonoGameBoy
         private readonly bool runInBackground = true;
         private readonly bool loggingEnabled;
         private long frameCount = 0;
-        private double fps = 60;
+        private double fps = 0;
+        private const double targetFps = -1;
 
         public MonoGameBoy(Emulator emulator, string romPath, bool useBootRom, bool loggingEnabled)
         {
@@ -39,6 +40,7 @@ namespace MonoGameBoy
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             //Window.IsBorderless = true;
+            if (targetFps > 0) TargetElapsedTime = TimeSpan.FromSeconds(1 / targetFps);
         }
 
         protected override void Initialize()
@@ -101,6 +103,13 @@ namespace MonoGameBoy
 
             if (emulator.PPU.HasNewFrame)
             {
+                //NOTE: FPS display can be misleading because the emulator and MonoGame are running at their own frame rates
+                //MonoGame will run at 60 FPS by default, but currently the emulator seems to be running a bit faster than this.
+                //MonoGame will draw the emulator's screen at 60 FPS by default, so the window title shows 60 FPS while in reality
+                //the emulator is running faster w/ some frames being skipped (not being drawn). Likewise, MonoGame can be made
+                //to run at higher FPS, but when the emulator can't keep up, the same frames are just multiple times at a faster rate.
+                //TODO: Need some way of getting an FPS measure from the emulator itself, and not from the MonoGame frontend.
+                //(is this what BGB's FPS display of two numbers (N/M) means?)
                 frameCount++;
                 emulator.PPU.HasNewFrame = false;
             }
@@ -147,7 +156,7 @@ namespace MonoGameBoy
             else if (WasJustPressed(Keys.S)) ShowSpriteLayer();
             else if (WasJustPressed(Keys.P)) ShowPalettes();
             else if (WasJustPressed(Keys.F1)) SaveMemoryDump(openAfterSaving: true);
-            else if (WasJustPressed(Keys.F2)) RestartEmulator();
+            else if (WasJustPressed(Keys.F2) || WasJustPressed(Keys.R)) RestartEmulator();
         }
 
         private bool IsKeyDown(Keys key)
@@ -236,6 +245,8 @@ namespace MonoGameBoy
         {
             emulator.Restart(useBootRom);
             if (loggingEnabled) Console.Clear();
+            frameCount = 0;
+            fps = 0;
         }
     }
 }

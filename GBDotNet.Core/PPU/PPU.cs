@@ -49,9 +49,9 @@ namespace GBDotNet.Core
         }
 
         public TileSet TileSet => MemoryBus.TileSet;
+        public SpriteOam Sprites => MemoryBus.SpriteOam;
         private readonly BackgroundMap bgMap;
         private readonly Window window;
-        private readonly SpriteOam sprites;
 
         public PPU(PPURegisters registers, MemoryBus memoryBus)
         {
@@ -59,7 +59,6 @@ namespace GBDotNet.Core
             MemoryBus = memoryBus;
             bgMap = new BackgroundMap(this);
             window = new Window(this);
-            sprites = new SpriteOam(this);
         }
 
         public PPU(byte[] memory)
@@ -72,9 +71,9 @@ namespace GBDotNet.Core
             VideoMemory = new Memory(new ArraySegment<byte>(memory, offset: 0x8000, count: 8192));
             TileSet.UpdateFrom(VideoMemory);
             ObjectAttributeMemory = new Memory(new ArraySegment<byte>(memory, offset: 0xFE00, count: 160));
+            Sprites.UpdateFrom(ObjectAttributeMemory);
             bgMap = new BackgroundMap(this);
             window = new Window(this);
-            sprites = new SpriteOam(this);
         }
 
         /// <summary>
@@ -159,7 +158,7 @@ namespace GBDotNet.Core
             }
         }
 
-        public byte[] RenderSprites() => sprites.Render();
+        public byte[] RenderSprites() => Sprites.Render();
         public byte[] RenderBackgroundMap() => bgMap.Render();
         public byte[] RenderTileSet() => TileSet.Render();
         public byte[] RenderWindow() => window.Render();
@@ -199,7 +198,7 @@ namespace GBDotNet.Core
                 }
             }
 
-            if (Registers.LCDControl.SpriteDisplayEnabled) sprites.RenderScanline(CurrentLine, ref screenPixels);
+            if (Registers.LCDControl.SpriteDisplayEnabled) Sprites.RenderScanline(CurrentLine, ref screenPixels);
             return screenPixels;
         }
 

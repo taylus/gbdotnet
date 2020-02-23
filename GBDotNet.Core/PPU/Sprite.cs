@@ -118,5 +118,11 @@
             if (paletteIndex == 0) return null;
             return Palette[paletteIndex];
         }
+
+        public override string ToString()
+        {
+            var size = PPURegisters.LCDControl.AreSprites8x16 ? "8x16" : "8x8";
+            return $"(Tile: {TileNumber}, Pos: ({TruePositionX}, {TruePositionY}), Size: {size}, Visible: {Visible}";
+        }
     }
 }

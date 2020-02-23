@@ -30,6 +30,7 @@ namespace GBDotNet.Core
 
         //graphics
         public TileSet TileSet { get; set; }
+        public SpriteOam SpriteOam { get; set; }
         public IMemory VideoMemory { get; set; } = new Memory();
         public IMemory ObjectAttributeMemory { get; set; } = new Memory();
         public PPURegisters PPURegisters { get; set; }
@@ -91,6 +92,7 @@ namespace GBDotNet.Core
             //Randomize(VideoMemory);
             //Randomize(ObjectAttributeMemory);
             TileSet = new TileSet(VideoMemory);
+            SpriteOam = new SpriteOam(ppuRegisters, ObjectAttributeMemory, TileSet);
             Timer = new Timer(this);
         }
 
@@ -227,9 +229,9 @@ namespace GBDotNet.Core
                 {
                     //VRAM (8K)
                     var vramAddress = address - 0x8000;
-                    bool tilesetDirty = address < 0x9800 && VideoMemory[vramAddress] != value;
+                    bool isTilesetDirty = address < 0x9800 && VideoMemory[vramAddress] != value;
                     VideoMemory[vramAddress] = value;
-                    if (tilesetDirty) TileSet.UpdateFromMemoryWrite(VideoMemory, vramAddress);
+                    if (isTilesetDirty) TileSet.UpdateFromMemoryWrite(VideoMemory, vramAddress);
                 }
                 else if (address < 0xC000)
                 {
@@ -249,7 +251,10 @@ namespace GBDotNet.Core
                 else if (address < 0xFEA0)
                 {
                     //sprite OAM (160 bytes)
+                    var oamAddress = address - 0xFE00;
+                    bool isOamDirty = ObjectAttributeMemory[oamAddress] != value;
                     ObjectAttributeMemory[address - 0xFE00] = value;
+                    if (isOamDirty) SpriteOam.UpdateFromMemoryWrite(ObjectAttributeMemory, oamAddress);
                 }
                 else if (address < 0xFF00)
                 {
