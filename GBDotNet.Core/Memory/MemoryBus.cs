@@ -275,6 +275,7 @@ namespace GBDotNet.Core
                     else if (address == 0xFF43) PPURegisters.ScrollX = value;
                     else if (address == 0xFF44) PPURegisters.CurrentScanline = value;
                     else if (address == 0xFF45) PPURegisters.CompareScanline = value;
+                    else if (address == 0xFF46) OamDmaTransfer(value);
                     else if (address == 0xFF47) PPURegisters.BackgroundPalette.Data = value;
                     else if (address == 0xFF48) PPURegisters.SpritePalette0.Data = value;
                     else if (address == 0xFF49) PPURegisters.SpritePalette1.Data = value;
@@ -296,6 +297,26 @@ namespace GBDotNet.Core
                 {
                     throw new ArgumentOutOfRangeException($"Unexpected write to address ${address:X4}");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Performs a DMA (direct memory access) transfer of the 160 bytes in
+        /// memory at the written value (times $100) into sprite OAM at $FE00.
+        /// </summary>
+        /// <param name="value">The upper byte of the source address.</param>
+        /// <remarks>
+        /// Sources say this takes 4 setup cycles + 160 x 4 cycles (for each byte copied).
+        /// Does accurate timing/writing 1 byte every 4 cycles matter? Look into this later:
+        /// https://www.reddit.com/r/EmuDev/comments/8b5wvr/gb_what_game_boy_games_rely_on_correct_dma_timing/
+        /// </remarks>
+        /// <see cref="https://github.com/AntonioND/giibiiadvance/blob/master/docs/TCAGBD.pdf"/>
+        private void OamDmaTransfer(byte value)
+        {
+            var sourceAddress = value << 8;
+            for (int i = 0; i < Sprite.OamSizeInBytes; i++)
+            {
+                this[0xFE00 + i] = this[sourceAddress + i];
             }
         }
 
