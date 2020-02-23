@@ -88,7 +88,7 @@ namespace GBDotNet.Core
 
         public void Tick(int elapsedCycles)
         {
-            if (!Registers.LCDControl.Enabled) return;
+            //if (!Registers.LCDControl.Enabled) return;
             cycleCounter += elapsedCycles;
             if (CurrentMode == PPUMode.HBlank) HBlank();
             else if (CurrentMode == PPUMode.VBlank) VBlank();
@@ -196,7 +196,7 @@ namespace GBDotNet.Core
         public byte[] RenderScanline()
         {
             if (!Registers.LCDControl.Enabled) return screenPixels;
-            if (CurrentLine > ScreenHeightInPixels) return screenPixels; //?
+            //if (CurrentLine > ScreenHeightInPixels) return screenPixels; //?
 
             var bgMapY = (byte)(CurrentLine + Registers.ScrollY);
             for (int x = 0; x < ScreenWidthInPixels; x++)
