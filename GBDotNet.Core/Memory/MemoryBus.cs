@@ -314,7 +314,7 @@ namespace GBDotNet.Core
         private void OamDmaTransfer(byte value)
         {
             var sourceAddress = value << 8;
-            for (int i = 0; i < Sprite.OamSizeInBytes; i++)
+            for (int i = 0; i < SpriteOam.SizeInBytes; i++)
             {
                 this[0xFE00 + i] = this[sourceAddress + i];
             }

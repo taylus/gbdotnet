@@ -49,6 +49,7 @@ namespace GBDotNet.Core
         public TileSet TileSet => MemoryBus.TileSet;
         private readonly BackgroundMap bgMap;
         private readonly Window window;
+        private readonly SpriteOam sprites;
 
         public PPU(PPURegisters registers, MemoryBus memoryBus)
         {
@@ -56,6 +57,7 @@ namespace GBDotNet.Core
             MemoryBus = memoryBus;
             bgMap = new BackgroundMap(this);
             window = new Window(this);
+            sprites = new SpriteOam(this);
         }
 
         public PPU(byte[] memory)
@@ -70,6 +72,7 @@ namespace GBDotNet.Core
             ObjectAttributeMemory = new Memory(new ArraySegment<byte>(memory, offset: 0xFE00, count: 160));
             bgMap = new BackgroundMap(this);
             window = new Window(this);
+            sprites = new SpriteOam(this);
         }
 
         /// <summary>
@@ -154,43 +157,19 @@ namespace GBDotNet.Core
             }
         }
 
-        public byte[] RenderSprites()
+        public byte[] RenderSprites() => sprites.Render();
+        public byte[] RenderBackgroundMap() => bgMap.Render();
+        public byte[] RenderTileSet() => TileSet.Render();
+        public byte[] RenderWindow() => window.Render();
+        public byte[] RenderScreen() => screenPixels;
+
+        public byte[] ForceRenderScreen()
         {
-            //TODO: make and move this into a class representing all 40 sprites in OAM?
-            var spriteLayer = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
-            const int oamSize = Sprite.BytesPerSprite * Sprite.TotalSprites;
-            for (int i = 0; i < oamSize; i += Sprite.BytesPerSprite)
+            for (CurrentLine = 0; CurrentLine < ScreenHeightInPixels; CurrentLine++)
             {
-                var sprite = new Sprite(positionY: ObjectAttributeMemory[i],
-                    positionX: ObjectAttributeMemory[i + 1],
-                    tileNumber: ObjectAttributeMemory[i + 2],
-                    attributes: ObjectAttributeMemory[i + 3],
-                    Registers);
-
-                if (!sprite.Visible) continue;
-
-                //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
-                sprite.Render(TileSet, ref spriteLayer);
+                RenderScanline();
             }
-
-            return spriteLayer;
-        }
-
-        public byte[] RenderBackgroundMap()
-        {
-            var bgMap = new BackgroundMap(this);
-            return bgMap.Render();
-        }
-
-        public byte[] RenderTileSet()
-        {
-            return TileSet.Render();
-        }
-
-        public byte[] RenderWindow()
-        {
-            var window = new Window(this);
-            return window.Render();
+            return RenderScreen();
         }
 
         public byte[] RenderScanline()
@@ -210,50 +189,10 @@ namespace GBDotNet.Core
                 {
                     window.DrawOntoScanline(ref screenPixels, x, CurrentLine);
                 }
-                if (Registers.LCDControl.SpriteDisplayEnabled)
-                {
-                    DrawSpritesOntoScanline(x);
-                }
             }
 
+            sprites.RenderScanline(CurrentLine, ref screenPixels);
             return screenPixels;
-        }
-
-        private void DrawSpritesOntoScanline(int x)
-        {
-            //TODO: move this into a class representing all sprites in OAM which has
-            //      methods to render all sprites (for debugging) + a single scanline?
-            const int oamSize = Sprite.BytesPerSprite * Sprite.TotalSprites;
-            for (int i = 0; i < oamSize; i += Sprite.BytesPerSprite)
-            {
-                var sprite = new Sprite(positionY: ObjectAttributeMemory[i],
-                    positionX: ObjectAttributeMemory[i + 1],
-                    tileNumber: ObjectAttributeMemory[i + 2],
-                    attributes: ObjectAttributeMemory[i + 3],
-                    Registers);
-
-                if (!sprite.OverlapsCoordinates(x, CurrentLine)) continue;
-
-                //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
-                //TODO: implement 10-sprite-per-scanline limit, I think this will help performance a lot (160 x 40 sprite checks per scanline is way too many!)
-                byte? spritePixel = sprite.GetPixel(TileSet, x, y: CurrentLine);
-                if (!spritePixel.HasValue) continue;    //transparency
-                screenPixels[CurrentLine * ScreenWidthInPixels + x] = spritePixel.Value;
-            }
-        }
-
-        public byte[] RenderScreen()
-        {
-            return screenPixels;
-        }
-
-        public byte[] ForceRenderScreen()
-        {
-            for (CurrentLine = 0; CurrentLine < ScreenHeightInPixels; CurrentLine++)
-            {
-                RenderScanline();
-            }
-            return RenderScreen();
         }
 
         public override string ToString() => $"{CurrentMode} LY: {CurrentLine}";
