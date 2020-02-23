@@ -31,6 +31,7 @@ namespace GBDotNet.Core
         private byte[] screenPixels = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
         private int cycleCounter;
 
+        public bool HasNewFrame { get; set; } = false;
         public byte[] ScreenBackBuffer { get; } = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
         public PPURegisters Registers { get; private set; }
         public MemoryBus MemoryBus { get; private set; }
@@ -166,6 +167,7 @@ namespace GBDotNet.Core
         public byte[] RenderScreen()
         {
             Array.Copy(screenPixels, ScreenBackBuffer, screenPixels.Length);
+            HasNewFrame = true;
             return screenPixels;
         }
 

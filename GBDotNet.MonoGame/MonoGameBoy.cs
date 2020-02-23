@@ -26,6 +26,8 @@ namespace MonoGameBoy
         private DisplayMode currentDisplayMode;
         private readonly bool runInBackground = true;
         private readonly bool loggingEnabled;
+        private long frameCount = 0;
+        private double fps = 60;
 
         public MonoGameBoy(Emulator emulator, string romPath, bool useBootRom, bool loggingEnabled)
         {
@@ -97,6 +99,14 @@ namespace MonoGameBoy
             else if (currentDisplayMode == DisplayMode.WindowLayer) screen.PutPixels(palette, emulator.PPU.RenderWindow());
             else if (currentDisplayMode == DisplayMode.SpriteLayer) screen.PutPixels(palette, emulator.PPU.RenderSprites());
 
+            if (emulator.PPU.HasNewFrame)
+            {
+                frameCount++;
+                emulator.PPU.HasNewFrame = false;
+            }
+            fps = frameCount / gameTime.TotalGameTime.TotalSeconds;
+            SetWindowTitle($"MonoGameBoy - {currentDisplayMode}");
+
             previousKeyboardState = currentKeyboardState;
             base.Update(gameTime);
         }
@@ -154,7 +164,6 @@ namespace MonoGameBoy
         {
             screen = new GameBoyScreen(GraphicsDevice, TileSet.WidthInPixels, TileSet.HeightInPixels);
             SetWindowSize(screen.Width * 4, screen.Height * 4);
-            Window.Title = $"MonoGameBoy - Tileset [{RomName}]";
             currentDisplayMode = DisplayMode.TileSet;
             //paused = true;
         }
@@ -163,7 +172,6 @@ namespace MonoGameBoy
         {
             screen = new GameBoyScreen(GraphicsDevice, TileMap.WidthInPixels, TileMap.HeightInPixels);
             SetWindowSize(screen.Width * 2, screen.Height * 2);
-            Window.Title = $"MonoGameBoy - Background Map [{RomName}]";
             currentDisplayMode = DisplayMode.BackgroundMap;
             //paused = true;
         }
@@ -172,7 +180,6 @@ namespace MonoGameBoy
         {
             screen = new GameBoyScreen(GraphicsDevice, TileMap.WidthInPixels, TileMap.HeightInPixels);
             SetWindowSize(screen.Width * 2, screen.Height * 2);
-            Window.Title = $"MonoGameBoy - Window Layer [{RomName}]";
             currentDisplayMode = DisplayMode.WindowLayer;
             //paused = true;
         }
@@ -181,7 +188,6 @@ namespace MonoGameBoy
         {
             screen = new GameBoyScreen(GraphicsDevice, PPU.ScreenWidthInPixels, PPU.ScreenHeightInPixels);
             SetWindowSize(screen.Width * 3, screen.Height * 3);
-            Window.Title = $"MonoGameBoy - Sprites [{RomName}]";
             currentDisplayMode = DisplayMode.SpriteLayer;
             //paused = true;
         }
@@ -195,9 +201,15 @@ namespace MonoGameBoy
         {
             screen = new GameBoyScreen(GraphicsDevice, PPU.ScreenWidthInPixels, PPU.ScreenHeightInPixels);
             SetWindowSize(screen.Width * 3, screen.Height * 3);
-            Window.Title = $"MonoGameBoy [{RomName}]";
             currentDisplayMode = DisplayMode.Screen;
             paused = false;
+        }
+
+        private void SetWindowTitle(string title, bool showRomName = true, bool showFps = true)
+        {
+            string romNamePart = showRomName ? $" [{RomName}]" : "";
+            string fpsPart = showFps ? $" [{fps:n1} FPS]" : "";
+            Window.Title = $"{title}{romNamePart}{fpsPart}";
         }
 
         protected override void Draw(GameTime gameTime)
