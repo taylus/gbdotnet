@@ -12,7 +12,7 @@ namespace GBDotNet.Core.Test.Integration
             var regs = new PPURegisters(lcdc: 0xD3, bgPalette: 0xE4);
             var memBus = new MemoryBus(regs) { VideoMemory = vram };
             var ppu = new PPU(regs, memBus);
-            ppu.TileSet.UpdateFrom(ppu.VideoMemory);
+            ppu.TileSet.UpdateFrom(vram);
 
             var actualPixels = ppu.RenderBackgroundMap();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "tetris_title_screen_expected_bgmap.png"));
@@ -27,7 +27,7 @@ namespace GBDotNet.Core.Test.Integration
             var regs = new PPURegisters(lcdc: 0xE3, bgPalette: 0xE4);
             var memBus = new MemoryBus(regs) { VideoMemory = vram };
             var ppu = new PPU(regs, memBus);
-            ppu.TileSet.UpdateFrom(ppu.VideoMemory);
+            ppu.TileSet.UpdateFrom(vram);
 
             var actualPixels = ppu.RenderBackgroundMap();
             var expectedPixels = ImageHelper.LoadImageAsPaletteIndexedByteArray(Path.Combine("PPU", "Expected", "pokemon_reds_room_expected_bgmap.png"));

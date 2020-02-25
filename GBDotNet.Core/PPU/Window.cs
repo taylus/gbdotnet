@@ -19,7 +19,7 @@
             return base.Render();
         }
 
-        public void DrawOntoScanline(ref byte[] screenPixels, int x, int y)
+        public void DrawOntoScanline(byte[] screenPixels, int x, int y)
         {
             if (!OverlapsCoordinates(x, y)) return;
             var windowX = (byte)(x - PPU.Registers.WindowX + OffsetX);

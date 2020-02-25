@@ -17,8 +17,8 @@ namespace GBDotNet.Core
         private readonly IMemory zram = new Memory();
         private readonly IMemory sram = new Memory(Enumerable.Repeat<byte>(0xFF, Memory.Size).ToArray());
 
-        //TODO: joypad: http://bgb.bircd.org/pandocs.htm#joypadinput
-        private byte joypadPort;        //$FF00
+        //input
+        public JoypadRegister JoypadRegister { get; private set; } = new JoypadRegister();  //$FF00
 
         //TODO: game link cable: http://bgb.bircd.org/pandocs.htm#serialdatatransferlinkcable
         private byte serialData;        //$FF01
@@ -30,6 +30,7 @@ namespace GBDotNet.Core
 
         //graphics
         public TileSet TileSet { get; set; }
+        public SpriteOam SpriteOam { get; set; }
         public IMemory VideoMemory { get; set; } = new Memory();
         public IMemory ObjectAttributeMemory { get; set; } = new Memory();
         public PPURegisters PPURegisters { get; set; }
@@ -91,6 +92,7 @@ namespace GBDotNet.Core
             //Randomize(VideoMemory);
             //Randomize(ObjectAttributeMemory);
             TileSet = new TileSet(VideoMemory);
+            SpriteOam = new SpriteOam(ppuRegisters, ObjectAttributeMemory, TileSet);
             Timer = new Timer(this);
         }
 
@@ -177,7 +179,7 @@ namespace GBDotNet.Core
                 else if (address < 0xFF80)
                 {
                     //various hardware I/O registers (PPU, APU, joypad, etc)
-                    if (address == 0xFF00) return joypadPort;
+                    if (address == 0xFF00) return JoypadRegister.Read();
                     else if (address == 0xFF01) return serialData;
                     else if (address == 0xFF02) return serialControl;
                     else if (Timer.MappedToAddress(address)) return Timer[address];
@@ -227,9 +229,9 @@ namespace GBDotNet.Core
                 {
                     //VRAM (8K)
                     var vramAddress = address - 0x8000;
-                    bool tilesetDirty = address < 0x9800 && VideoMemory[vramAddress] != value;
+                    bool isTilesetDirty = address < 0x9800 && VideoMemory[vramAddress] != value;
                     VideoMemory[vramAddress] = value;
-                    if (tilesetDirty) TileSet.UpdateFromMemoryWrite(VideoMemory, vramAddress);
+                    if (isTilesetDirty) TileSet.UpdateFromMemoryWrite(VideoMemory, vramAddress);
                 }
                 else if (address < 0xC000)
                 {
@@ -249,7 +251,10 @@ namespace GBDotNet.Core
                 else if (address < 0xFEA0)
                 {
                     //sprite OAM (160 bytes)
+                    var oamAddress = address - 0xFE00;
+                    bool isOamDirty = ObjectAttributeMemory[oamAddress] != value;
                     ObjectAttributeMemory[address - 0xFE00] = value;
+                    if (isOamDirty) SpriteOam.UpdateFromMemoryWrite(ObjectAttributeMemory, oamAddress);
                 }
                 else if (address < 0xFF00)
                 {
@@ -259,7 +264,7 @@ namespace GBDotNet.Core
                 else if (address < 0xFF80)
                 {
                     //various hardware I/O registers (PPU, APU, joypad, etc)
-                    if (address == 0xFF00) joypadPort = value;
+                    if (address == 0xFF00) JoypadRegister.Write(value);
                     else if (address == 0xFF01)
                     {
                         serialData = value;
@@ -314,7 +319,7 @@ namespace GBDotNet.Core
         private void OamDmaTransfer(byte value)
         {
             var sourceAddress = value << 8;
-            for (int i = 0; i < Sprite.OamSizeInBytes; i++)
+            for (int i = 0; i < SpriteOam.SizeInBytes; i++)
             {
                 this[0xFE00 + i] = this[sourceAddress + i];
             }
