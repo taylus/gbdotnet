@@ -194,11 +194,11 @@ namespace GBDotNet.Core
                 }
                 if (Registers.LCDControl.WindowDisplayEnabled)
                 {
-                    window.DrawOntoScanline(ref screenPixels, x, CurrentLine);
+                    window.DrawOntoScanline(screenPixels, x, CurrentLine);
                 }
             }
 
-            if (Registers.LCDControl.SpriteDisplayEnabled) Sprites.RenderScanline(CurrentLine, ref screenPixels);
+            if (Registers.LCDControl.SpriteDisplayEnabled) Sprites.RenderScanline(CurrentLine, screenPixels);
             return screenPixels;
         }
 

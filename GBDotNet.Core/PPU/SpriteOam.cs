@@ -58,12 +58,12 @@ namespace GBDotNet.Core
             foreach (var sprite in Sprites)
             {
                 //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
-                sprite.Render(Tileset, ref spriteLayer);
+                sprite.Render(Tileset, spriteLayer);
             }
             return spriteLayer;
         }
 
-        public byte[] RenderScanline(int y, ref byte[] screenPixels)
+        public byte[] RenderScanline(int y, byte[] screenPixels)
         {
             var spritesOnScanline = Sprites.Where(s => s.Visible && s.OverlapsScanline(y));
             foreach (var sprite in spritesOnScanline)

@@ -53,7 +53,7 @@
             PPURegisters = ppuRegisters;
         }
 
-        public void Render(TileSet tileset, ref byte[] spriteLayer)
+        public void Render(TileSet tileset, byte[] spriteLayer)
         {
             if (!Visible) return;
             var tiles = GetTiles(tileset);
