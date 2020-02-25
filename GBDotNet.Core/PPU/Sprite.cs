@@ -70,6 +70,18 @@
             }
         }
 
+        public void RenderOntoScanline(TileSet tileset, int y, byte[] screenPixels)
+        {
+            for (int x = 0; x < Tile.WidthInPixels; x++)
+            {
+                var spriteX = TruePositionX + x;
+                if (spriteX >= PPU.ScreenWidthInPixels) continue;
+                byte? spritePixel = GetPixel(tileset, spriteX, y);
+                if (!spritePixel.HasValue) continue;    //transparency
+                screenPixels[y * PPU.ScreenWidthInPixels + spriteX] = spritePixel.Value;
+            }
+        }
+
         /// <summary>
         /// Returns the two tiles used by this sprite in 8x16 mode (the first should be drawn above the second).
         /// If the sprite is in 8x8 mode, returns the sprite's single tile.

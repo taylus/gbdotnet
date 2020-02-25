@@ -70,15 +70,7 @@ namespace GBDotNet.Core
             {
                 //TODO: sprite priority logic, see: http://bgb.bircd.org/pandocs.htm#vramspriteattributetableoam
                 //TODO: implement 10-sprite-per-scanline limit (toggleable?)
-                //draw the sprite's individual pixels onto this scanline (TODO: move into Sprite)
-                for (int x = 0; x < Tile.WidthInPixels; x++)
-                {
-                    var spriteX = sprite.TruePositionX + x;
-                    if (spriteX >= PPU.ScreenWidthInPixels) continue;
-                    byte? spritePixel = sprite.GetPixel(Tileset, spriteX, y);
-                    if (!spritePixel.HasValue) continue;    //transparency
-                    screenPixels[y * PPU.ScreenWidthInPixels + spriteX] = spritePixel.Value;
-                }
+                sprite.RenderOntoScanline(Tileset, y, screenPixels);
             }
 
             return screenPixels;
