@@ -27,7 +27,7 @@ namespace MonoGameBoy
         private readonly bool runInBackground = true;
         private readonly bool loggingEnabled;
         private long frameCount = 0;
-        private double fps = 0;
+        private double fps = 60;
         private const double targetFps = -1;
 
         public MonoGameBoy(Emulator emulator, string romPath, bool useBootRom, bool loggingEnabled)
@@ -217,7 +217,7 @@ namespace MonoGameBoy
         private void SetWindowTitle(string title, bool showRomName = true, bool showFps = true)
         {
             string romNamePart = showRomName ? $" [{RomName}]" : "";
-            string fpsPart = showFps ? $" [{fps:n1} FPS]" : "";
+            string fpsPart = showFps ? $" [{fps:n0} FPS]" : "";
             Window.Title = $"{title}{romNamePart}{fpsPart}";
         }
 
