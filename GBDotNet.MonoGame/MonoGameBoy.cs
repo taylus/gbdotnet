@@ -114,7 +114,7 @@ namespace MonoGameBoy
                 emulator.PPU.HasNewFrame = false;
             }
             fps = frameCount / gameTime.TotalGameTime.TotalSeconds;
-            SetWindowTitle($"MonoGameBoy - {currentDisplayMode}");
+            SetWindowTitle(currentDisplayMode == DisplayMode.Screen ? "MonoGameBoy" : $"MonoGameBoy - {currentDisplayMode}", gameTime);
 
             previousKeyboardState = currentKeyboardState;
             base.Update(gameTime);
@@ -214,11 +214,12 @@ namespace MonoGameBoy
             paused = false;
         }
 
-        private void SetWindowTitle(string title, bool showRomName = true, bool showFps = true)
+        private void SetWindowTitle(string title, GameTime gameTime, bool showRomName = true, bool showFps = true, bool showCpuTime = true)
         {
             string romNamePart = showRomName ? $" [{RomName}]" : "";
             string fpsPart = showFps ? $" [{fps:n0} FPS]" : "";
-            Window.Title = $"{title}{romNamePart}{fpsPart}";
+            string cpuTimePart = showCpuTime ? $" [{emulator.CPU.TotalElapsedCpuSeconds:n0}/{gameTime.TotalGameTime.TotalSeconds:n0} sec]" : "";
+            Window.Title = $"{title}{romNamePart}{fpsPart}{cpuTimePart}";
         }
 
         protected override void Draw(GameTime gameTime)
