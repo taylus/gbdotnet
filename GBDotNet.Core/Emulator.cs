@@ -1,4 +1,6 @@
-﻿namespace GBDotNet.Core
+﻿using System;
+
+namespace GBDotNet.Core
 {
     public class Emulator
     {
@@ -24,6 +26,11 @@
             if (useBootRom) CPU.Reset();
             else CPU.BootWithoutBootRom();
             PPU.Boot();
+        }
+
+        public double CalculateAverageFramesPerSecond(TimeSpan elapsedTimeSinceBoot)
+        {
+            return PPU.RenderedFrameCount / elapsedTimeSinceBoot.TotalSeconds;
         }
 
         public override string ToString() => $"{CPU} {PPU}";

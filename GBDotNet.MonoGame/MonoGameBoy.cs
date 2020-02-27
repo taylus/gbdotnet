@@ -26,9 +26,9 @@ namespace MonoGameBoy
         private DisplayMode currentDisplayMode;
         private readonly bool runInBackground = true;
         private readonly bool loggingEnabled;
-        private long frameCount = 0;
-        private double fps = 60;
-        private const double targetFps = -1;
+        private long frontendFrameCount = 0;
+        private double frontendFps = 60;
+        private const double targetFrontendFps = -1;
 
         public MonoGameBoy(Emulator emulator, string romPath, bool useBootRom, bool loggingEnabled)
         {
@@ -40,7 +40,7 @@ namespace MonoGameBoy
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             //Window.IsBorderless = true;
-            if (targetFps > 0) TargetElapsedTime = TimeSpan.FromSeconds(1 / targetFps);
+            if (targetFrontendFps > 0) TargetElapsedTime = TimeSpan.FromSeconds(1 / targetFrontendFps);
         }
 
         protected override void Initialize()
@@ -101,19 +101,8 @@ namespace MonoGameBoy
             else if (currentDisplayMode == DisplayMode.WindowLayer) screen.PutPixels(palette, emulator.PPU.RenderWindow());
             else if (currentDisplayMode == DisplayMode.SpriteLayer) screen.PutPixels(palette, emulator.PPU.RenderSprites());
 
-            if (emulator.PPU.HasNewFrame)
-            {
-                //NOTE: FPS display can be misleading because the emulator and MonoGame are running at their own frame rates
-                //MonoGame will run at 60 FPS by default, but currently the emulator seems to be running a bit faster than this.
-                //MonoGame will draw the emulator's screen at 60 FPS by default, so the window title shows 60 FPS while in reality
-                //the emulator is running faster w/ some frames being skipped (not being drawn). Likewise, MonoGame can be made
-                //to run at higher FPS, but when the emulator can't keep up, the same frames are just multiple times at a faster rate.
-                //TODO: Need some way of getting an FPS measure from the emulator itself, and not from the MonoGame frontend.
-                //(is this what BGB's FPS display of two numbers (N/M) means?)
-                frameCount++;
-                emulator.PPU.HasNewFrame = false;
-            }
-            fps = frameCount / gameTime.TotalGameTime.TotalSeconds;
+            frontendFrameCount++;
+            frontendFps = frontendFrameCount / gameTime.TotalGameTime.TotalSeconds;
             SetWindowTitle(currentDisplayMode == DisplayMode.Screen ? "MonoGameBoy" : $"MonoGameBoy - {currentDisplayMode}", gameTime);
 
             previousKeyboardState = currentKeyboardState;
@@ -214,11 +203,11 @@ namespace MonoGameBoy
             paused = false;
         }
 
-        private void SetWindowTitle(string title, GameTime gameTime, bool showRomName = true, bool showFps = true, bool showCpuTime = true)
+        private void SetWindowTitle(string title, GameTime gameTime, bool showRomName = true, bool showFps = true, bool showCpuTime = false)
         {
             string romNamePart = showRomName ? $" [{RomName}]" : "";
-            string fpsPart = showFps ? $" [{fps:n0} FPS]" : "";
-            string cpuTimePart = showCpuTime ? $" [{emulator.CPU.TotalElapsedCpuSeconds:n0}/{gameTime.TotalGameTime.TotalSeconds:n0} sec]" : "";
+            string fpsPart = showFps ? $" [{emulator.CalculateAverageFramesPerSecond(gameTime.TotalGameTime):n0}/{frontendFps:n0} FPS]" : "";
+            string cpuTimePart = showCpuTime ? $" [{emulator.CPU.ElapsedCpuTime.TotalSeconds:n0}/{gameTime.TotalGameTime.TotalSeconds:n0} sec]" : "";
             Window.Title = $"{title}{romNamePart}{fpsPart}{cpuTimePart}";
         }
 
@@ -246,8 +235,8 @@ namespace MonoGameBoy
         {
             emulator.Restart(useBootRom);
             if (loggingEnabled) Console.Clear();
-            frameCount = 0;
-            fps = 0;
+            frontendFrameCount = 0;
+            frontendFps = 60;
         }
     }
 }

@@ -24,7 +24,7 @@ namespace GBDotNet.Core
         public int CyclesLastTick { get; private set; }
         public long TotalElapsedCycles { get; private set; }
         public const double ClockSpeed = 4194304;               //4 MHz
-        public double TotalElapsedCpuSeconds => TotalElapsedCycles / ClockSpeed;
+        public TimeSpan ElapsedCpuTime => TimeSpan.FromSeconds(TotalElapsedCycles / ClockSpeed);
         public ISet<uint> Breakpoints { get; private set; } = new HashSet<uint>();
 
         //for passing Blargg's memory timing tests by making memory access sync up w/ the timer more accurately
