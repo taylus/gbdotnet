@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GBDotNet.Core;
 using Microsoft.Xna.Framework;
@@ -29,6 +30,7 @@ namespace MonoGameBoy
         private long frontendFrameCount = 0;
         private double frontendFps = 60;
         private const double targetFrontendFps = -1;
+        private bool runAtMaxSpeed = false;
 
         public MonoGameBoy(Emulator emulator, string romPath, bool useBootRom, bool loggingEnabled)
         {
@@ -57,11 +59,29 @@ namespace MonoGameBoy
 
         private void RunEmulator()
         {
+            var fpsFudgeFactor = PPU.FramesPerSecond - 4.5; //why does this make for a more constant 60 FPS? is it something specific to my machine?
+            var cyclesToRunPerFrame = CPU.ClockSpeed / fpsFudgeFactor;
+            var millisecondsPerFrame = 1000 / fpsFudgeFactor;
+            var stopwatch = new Stopwatch();
             while (true)
             {
-                if (paused) continue;
-                if (loggingEnabled) Console.WriteLine(emulator);
-                emulator.Tick();
+                var cycleCount = 0;
+                stopwatch.Restart();
+                //emulate one frame's worth of cycles
+                while (cycleCount < cyclesToRunPerFrame)
+                {
+                    if (paused) continue;
+                    if (loggingEnabled) Console.WriteLine(emulator);
+                    emulator.Tick();
+                    cycleCount += emulator.CPU.CyclesLastTick;
+                }
+                stopwatch.Stop();
+
+                //let real time "catch up" to the emulator, if needed, by sleeping
+                if (!runAtMaxSpeed && stopwatch.ElapsedMilliseconds < millisecondsPerFrame)
+                {
+                    Thread.Sleep(TimeSpan.FromMilliseconds(millisecondsPerFrame - stopwatch.ElapsedMilliseconds));
+                }
             }
         }
 
@@ -146,6 +166,7 @@ namespace MonoGameBoy
             else if (WasJustPressed(Keys.P)) ShowPalettes();
             else if (WasJustPressed(Keys.F1)) SaveMemoryDump(openAfterSaving: true);
             else if (WasJustPressed(Keys.F2) || WasJustPressed(Keys.R)) RestartEmulator();
+            else if (WasJustPressed(Keys.Tab)) runAtMaxSpeed = !runAtMaxSpeed;
         }
 
         private bool IsKeyDown(Keys key)
@@ -203,7 +224,7 @@ namespace MonoGameBoy
             paused = false;
         }
 
-        private void SetWindowTitle(string title, GameTime gameTime, bool showRomName = true, bool showFps = true, bool showCpuTime = false)
+        private void SetWindowTitle(string title, GameTime gameTime, bool showRomName = true, bool showFps = true, bool showCpuTime = true)
         {
             string romNamePart = showRomName ? $" [{RomName}]" : "";
             string fpsPart = showFps ? $" [{emulator.CalculateAverageFramesPerSecond(gameTime.TotalGameTime):n0}/{frontendFps:n0} FPS]" : "";

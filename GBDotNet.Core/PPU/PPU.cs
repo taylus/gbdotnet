@@ -15,6 +15,7 @@ namespace GBDotNet.Core
     {
         public const int ScreenWidthInPixels = 160;
         public const int ScreenHeightInPixels = 144;
+        public const double FramesPerSecond = 60;
 
         private PPUMode CurrentMode
         {
@@ -28,7 +29,7 @@ namespace GBDotNet.Core
             set => Registers.CurrentScanline = value;
         }
 
-        private byte[] screenPixels = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
+        private readonly byte[] screenPixels = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
         private int cycleCounter;
 
         public long RenderedFrameCount { get; private set; }
