@@ -15,7 +15,7 @@ namespace GBDotNet.Core
     {
         public const int ScreenWidthInPixels = 160;
         public const int ScreenHeightInPixels = 144;
-        public const double FramesPerSecond = 60;
+        public const double FramesPerSecond = 59.7;
 
         private PPUMode CurrentMode
         {

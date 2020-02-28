@@ -59,9 +59,8 @@ namespace MonoGameBoy
 
         private void RunEmulator()
         {
-            var fpsFudgeFactor = PPU.FramesPerSecond - 4.5; //why does this make for a more constant 60 FPS? is it something specific to my machine?
-            var cyclesToRunPerFrame = CPU.ClockSpeed / fpsFudgeFactor;
-            var millisecondsPerFrame = 1000 / fpsFudgeFactor;
+            var cyclesToRunPerFrame = CPU.ClockSpeed / PPU.FramesPerSecond;
+            var millisecondsPerFrame = 1000 / PPU.FramesPerSecond;
             var stopwatch = new Stopwatch();
             while (true)
             {
