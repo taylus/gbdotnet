@@ -26,7 +26,15 @@ namespace GBDotNet.Core
         internal byte CurrentLine
         {
             get => Registers.CurrentScanline;
-            set => Registers.CurrentScanline = value;
+            set
+            {
+                Registers.CurrentScanline = value;
+                if (Registers.LCDStatus.InterruptOnScanlineCoincidence && 
+                    Registers.CurrentScanline == Registers.CompareScanline)
+                {
+                    RequestLCDStatInterrupt();
+                }
+            }
         }
 
         private readonly byte[] screenPixels = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
@@ -204,5 +212,7 @@ namespace GBDotNet.Core
         }
 
         public override string ToString() => $"{CurrentMode} LY: {CurrentLine}";
+
+        private void RequestLCDStatInterrupt() => MemoryBus.InterruptFlags.LCDStatInterruptRequested = true;
     }
 }
