@@ -23,6 +23,8 @@ namespace GBDotNet.Core
         public bool InterruptsEnabled { get; private set; }     //Interrupt Master Enable flag, aka IME
         public int CyclesLastTick { get; private set; }
         public long TotalElapsedCycles { get; private set; }
+        public const double ClockSpeed = 4194304;               //4 MHz
+        public TimeSpan ElapsedCpuTime => TimeSpan.FromSeconds(TotalElapsedCycles / ClockSpeed);
         public ISet<uint> Breakpoints { get; private set; } = new HashSet<uint>();
 
         //for passing Blargg's memory timing tests by making memory access sync up w/ the timer more accurately
