@@ -20,7 +20,16 @@ namespace GBDotNet.Core
         private PPUMode CurrentMode
         {
             get => Registers.LCDStatus.ModeFlag;
-            set => Registers.LCDStatus.ModeFlag = value;
+            set
+            {
+                Registers.LCDStatus.ModeFlag = value;
+                if (value == PPUMode.HBlank && Registers.LCDStatus.InterruptOnMode0HBlank ||
+                    value == PPUMode.VBlank && Registers.LCDStatus.InterruptOnMode1VBlank ||
+                    value == PPUMode.OamScan && Registers.LCDStatus.InterruptOnMode2OamScan)
+                {
+                    RequestLCDStatInterrupt();
+                }
+            }
         }
 
         internal byte CurrentLine
