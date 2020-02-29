@@ -11,13 +11,13 @@ namespace GBDotNet.Core.Test.Integration
         [TestMethod]
         public void Expose_Rom_Bank_Zero_From_0x0000_To_0x3FFF()
         {
-            var romData = Enumerable.Repeat(marker, RomFile.BankSize);
-            var rom = new RomFile(romData.ToArray());
+            var romData = Enumerable.Repeat(marker, Cartridge.RomBankSize);
+            var rom = new Cartridge(romData.ToArray());
             var memoryBus = new MemoryBus(ppuRegisters: null) { IsBootRomMapped = false };
 
-            memoryBus.LoadRom(rom);
+            memoryBus.Load(rom);
 
-            for(int i = 0; i < RomFile.BankSize; i++)
+            for(int i = 0; i < Cartridge.RomBankSize; i++)
             {
                 Assert.AreEqual(marker, memoryBus[i]);
             }
@@ -26,13 +26,13 @@ namespace GBDotNet.Core.Test.Integration
         [TestMethod]
         public void Expose_Rom_Bank_One_From_0x4000_To_0x7FFF()
         {
-            var romData = Enumerable.Repeat(marker, RomFile.BankSize * 2);
-            var rom = new RomFile(romData.ToArray());
+            var romData = Enumerable.Repeat(marker, Cartridge.RomBankSize * 2);
+            var rom = new Cartridge(romData.ToArray());
             var memoryBus = new MemoryBus(ppuRegisters: null);
 
-            memoryBus.LoadRom(rom);
+            memoryBus.Load(rom);
 
-            for (int i = RomFile.BankSize; i < RomFile.BankSize * 2; i++)
+            for (int i = Cartridge.RomBankSize; i < Cartridge.RomBankSize * 2; i++)
             {
                 Assert.AreEqual(marker, memoryBus[i]);
             }

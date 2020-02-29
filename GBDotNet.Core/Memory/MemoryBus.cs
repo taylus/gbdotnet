@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace GBDotNet.Core
 {
@@ -12,10 +11,9 @@ namespace GBDotNet.Core
     /// <see cref="http://gameboy.mongenel.com/dmg/asmmemmap.html"/>
     public class MemoryBus : IMemory
     {
-        private RomFile rom;
+        private Cartridge cart;
         private readonly IMemory wram = new Memory();
         private readonly IMemory zram = new Memory();
-        private readonly IMemory sram = new Memory(Enumerable.Repeat<byte>(0xFF, Memory.Size).ToArray());
 
         //input
         public JoypadRegister JoypadRegister { get; private set; } = new JoypadRegister();  //$FF00
@@ -114,9 +112,9 @@ namespace GBDotNet.Core
             }
         }
 
-        public void LoadRom(RomFile rom)
+        public void Load(Cartridge cart)
         {
-            this.rom = rom;
+            this.cart = cart;
         }
 
         public void LoadVideoMemory(Memory vram)
@@ -140,11 +138,11 @@ namespace GBDotNet.Core
                 else if (address < 0x4000)
                 {
                     if (address < 0x100 && IsBootRomMapped) return bootRom[address];
-                    return rom[address];  //ROM bank 0 (16K)
+                    return cart[address];  //ROM bank 0 (16K)
                 }
                 else if (address < 0x8000)
                 {
-                    return rom[address];  //ROM bank 1-N (16K, switchable if cart has an MBC)
+                    return cart[address];  //ROM bank 1-N (16K, switchable if cart has an MBC)
                 }
                 else if (address < 0xA000)
                 {
@@ -154,7 +152,7 @@ namespace GBDotNet.Core
                 else if (address < 0xC000)
                 {
                     //external RAM (8K)
-                    return sram[address - 0xA000];
+                    return cart[address - 0xA000];
                 }
                 else if (address < 0xE000)
                 {
@@ -196,7 +194,8 @@ namespace GBDotNet.Core
                     else if (address == 0xFF49) return PPURegisters.SpritePalette1.Data;
                     else if (address == 0xFF4A) return PPURegisters.WindowY;
                     else if (address == 0xFF4B) return PPURegisters.WindowX;
-                    else throw new NotImplementedException($"Unsupported read of address ${address:X4} (not all hardware I/O registers are implemented yet).");
+                    else return 0xFF;
+                    //else throw new NotImplementedException($"Unsupported read of address ${address:X4} (not all hardware I/O registers are implemented yet).");
                 }
                 else if (address < 0xFFFF)
                 {
@@ -222,7 +221,7 @@ namespace GBDotNet.Core
                 else if (address < 0x8000)
                 {
                     //memory bank controllers intercept ROM writes and use them for bank switching and etc
-                    rom[address] = value;
+                    cart[address] = value;
 
                     //why does Tetris write here when it doesn't use one?
                     //see: https://www.reddit.com/r/EmuDev/comments/5ht388/gb_why_does_tetris_write_to_the_rom/
@@ -238,7 +237,7 @@ namespace GBDotNet.Core
                 else if (address < 0xC000)
                 {
                     //external RAM (8K)
-                    sram[address - 0xA000] = value;
+                    cart[address - 0xA000] = value;
                 }
                 else if (address < 0xE000)
                 {

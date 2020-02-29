@@ -1,12 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 
 namespace GBDotNet.Core
 {
-    public class RomFile : Memory, IMemory
+    public class Cartridge : Memory, IMemory
     {
-        public const int BankSize = 0x4000;
-        public int NumberOfBanks => Math.Max(1, Data.Length / BankSize);
+        public const int RamBankSize = 0x2000;
+        public const int RomBankSize = 0x4000;
+        public int NumberOfRomBanks => Math.Max(1, Data.Length / RomBankSize);
         public bool HasHeader { get; set; }
 
         /// <summary>
@@ -28,7 +30,7 @@ namespace GBDotNet.Core
         /// <summary>
         /// Loads a ROM from the given data.
         /// </summary>
-        public RomFile(byte[] data) : base(data)
+        public Cartridge(byte[] data) : base(data)
         {
 
         }
@@ -36,22 +38,22 @@ namespace GBDotNet.Core
         /// <summary>
         /// Loads a ROM file from the given path.
         /// </summary>
-        public RomFile(string path) : base(path)
+        public Cartridge(string path) : base(path)
         {
 
         }
 
         /// <summary>
-        /// Returns the ROM bank with the given number.
-        /// Game Boy ROMs are split up into 16KB banks.
-        /// The first bank is always addressable from $0000 - $3FFF.
-        /// The other banks are switched into range $4000 - $7FFF using a memory management controller (MMC).
+        /// Loads a ROM w/ the appropriate memory bank controller (MBC) from the given data.
         /// </summary>
-        /// <see cref="http://gameboy.mongenel.com/dmg/asmmemmap.html"/>
-        public ArraySegment<byte> GetBank(int bankNumber)
+        public static Cartridge LoadFrom(string path)
         {
-            if (bankNumber < NumberOfBanks) throw new ArgumentException("Bank number exceeds number of banks in ROM.", nameof(bankNumber));
-            return new ArraySegment<byte>(Data, offset: bankNumber * BankSize, count: BankSize);
+            var data = File.ReadAllBytes(path);
+            var cartridgeType = data[0x147];
+            if (cartridgeType == 0x01) return new MBC1(data);   //MBC1
+            if (cartridgeType == 0x02) return new MBC1(data);   //MBC1+RAM
+            if (cartridgeType == 0x03) return new MBC1(data);   //MBC1+RAM+BATTERY
+            return new Cartridge(data);                         //ROM only
         }
     }
 }
