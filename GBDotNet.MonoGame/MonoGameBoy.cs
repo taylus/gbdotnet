@@ -30,7 +30,7 @@ namespace MonoGameBoy
         private long frontendFrameCount = 0;
         private double frontendFps = 60;
         private const double targetFrontendFps = -1;
-        private bool runAtMaxSpeed = false;
+        private bool runAtMaxSpeed = true;
 
         public MonoGameBoy(Emulator emulator, string romPath, bool useBootRom, bool loggingEnabled)
         {

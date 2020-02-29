@@ -38,8 +38,8 @@ namespace GBDotNet.Core
             set
             {
                 Registers.CurrentScanline = value;
-                if (Registers.LCDStatus.InterruptOnScanlineCoincidence && 
-                    Registers.CurrentScanline == Registers.CompareScanline)
+                Registers.LCDStatus.ScanlineConcidence = Registers.CurrentScanline == Registers.CompareScanline;
+                if (Registers.LCDStatus.InterruptOnScanlineCoincidence && Registers.LCDStatus.ScanlineConcidence)
                 {
                     RequestLCDStatInterrupt();
                 }
