@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GBDotNet.Core;
 using Microsoft.Xna.Framework;
@@ -17,8 +18,7 @@ namespace MonoGameBoy
         private GameBoyScreen screen;
         private KeyboardState previousKeyboardState;
         private KeyboardState currentKeyboardState;
-        private readonly CPU cpu;
-        private readonly PPU ppu;
+        private readonly Emulator emulator;
         private readonly string romPath;
         private string RomName => Path.GetFileName(romPath);
         private readonly bool useBootRom;
@@ -27,11 +27,14 @@ namespace MonoGameBoy
         private DisplayMode currentDisplayMode;
         private readonly bool runInBackground = true;
         private readonly bool loggingEnabled;
+        private long frontendFrameCount = 0;
+        private double frontendFps = 60;
+        private const double targetFrontendFps = -1;
+        private bool runAtMaxSpeed = false;
 
-        public MonoGameBoy(CPU cpu, PPU ppu, string romPath, bool useBootRom, bool loggingEnabled)
+        public MonoGameBoy(Emulator emulator, string romPath, bool useBootRom, bool loggingEnabled)
         {
-            this.cpu = cpu;
-            this.ppu = ppu;
+            this.emulator = emulator;
             this.romPath = romPath;
             this.useBootRom = useBootRom;
             this.loggingEnabled = loggingEnabled;
@@ -39,6 +42,7 @@ namespace MonoGameBoy
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             //Window.IsBorderless = true;
+            if (targetFrontendFps > 0) TargetElapsedTime = TimeSpan.FromSeconds(1 / targetFrontendFps);
         }
 
         protected override void Initialize()
@@ -48,19 +52,35 @@ namespace MonoGameBoy
             ShowScreen();
             if (runInBackground) Task.Run(RunEmulator).ContinueWith(deadEmulator =>
             {
-                Console.WriteLine($"Emulator task unexpectedly faulted while executing instruction at ${cpu.Registers.LastPC:x4}:");
+                Console.WriteLine($"Emulator task unexpectedly faulted while executing instruction at ${emulator.CPU.Registers.LastPC:x4}:");
                 Console.WriteLine($"Exception (if any): {deadEmulator.Exception}");
             });
         }
 
         private void RunEmulator()
         {
+            var cyclesToRunPerFrame = CPU.ClockSpeed / PPU.FramesPerSecond;
+            var millisecondsPerFrame = 1000 / PPU.FramesPerSecond;
+            var stopwatch = new Stopwatch();
             while (true)
             {
-                if (paused) continue;
-                if (loggingEnabled) Console.WriteLine($"{cpu} {ppu}");
-                cpu.Tick();
-                ppu.Tick(cpu.CyclesLastTick);
+                var cycleCount = 0;
+                stopwatch.Restart();
+                //emulate one frame's worth of cycles
+                while (cycleCount < cyclesToRunPerFrame)
+                {
+                    if (paused) continue;
+                    if (loggingEnabled) Console.WriteLine(emulator);
+                    emulator.Tick();
+                    cycleCount += emulator.CPU.CyclesLastTick;
+                }
+                stopwatch.Stop();
+
+                //let real time "catch up" to the emulator, if needed, by sleeping
+                if (!runAtMaxSpeed && stopwatch.ElapsedMilliseconds < millisecondsPerFrame)
+                {
+                    Thread.Sleep(TimeSpan.FromMilliseconds(millisecondsPerFrame - stopwatch.ElapsedMilliseconds));
+                }
             }
         }
 
@@ -84,30 +104,73 @@ namespace MonoGameBoy
             {
                 for (int i = 0; i < 512; i++)
                 {
-                    Console.WriteLine($"{cpu} {ppu}");
-                    cpu.Tick();
-                    ppu.Tick(cpu.CyclesLastTick);
+                    if (loggingEnabled) Console.WriteLine(emulator);
+                    emulator.Tick();
                 }
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.Escape)) Exit();
-            else if (WasJustPressed(Keys.Space)) ShowScreen();
-            if (WasJustPressed(Keys.T)) ShowTileSet();
+            if (IsKeyDown(Keys.Escape)) Exit();
+
+            HandleJoypadInput();
+            HandleDebugInput();
+
+            if (currentDisplayMode == DisplayMode.Screen) screen.PutPixels(palette, emulator.PPU.ScreenBackBuffer);
+            else if (currentDisplayMode == DisplayMode.TileSet) screen.PutPixels(palette, emulator.PPU.RenderTileSet());
+            else if (currentDisplayMode == DisplayMode.BackgroundMap) screen.PutPixels(palette, emulator.PPU.RenderBackgroundMap());
+            else if (currentDisplayMode == DisplayMode.WindowLayer) screen.PutPixels(palette, emulator.PPU.RenderWindow());
+            else if (currentDisplayMode == DisplayMode.SpriteLayer) screen.PutPixels(palette, emulator.PPU.RenderSprites());
+
+            frontendFrameCount++;
+            frontendFps = frontendFrameCount / gameTime.TotalGameTime.TotalSeconds;
+            SetWindowTitle(currentDisplayMode == DisplayMode.Screen ? "MonoGameBoy" : $"MonoGameBoy - {currentDisplayMode}", gameTime);
+
+            previousKeyboardState = currentKeyboardState;
+            base.Update(gameTime);
+        }
+
+        private void HandleJoypadInput()
+        {
+            if (IsKeyDown(Keys.X)) emulator.Joypad.Press(Button.A);
+            else emulator.Joypad.Release(Button.A);
+
+            if (IsKeyDown(Keys.Z)) emulator.Joypad.Press(Button.B);
+            else emulator.Joypad.Release(Button.B);
+
+            if (IsKeyDown(Keys.Enter)) emulator.Joypad.Press(Button.Start);
+            else emulator.Joypad.Release(Button.Start);
+
+            if (IsKeyDown(Keys.RightShift)) emulator.Joypad.Press(Button.Select);
+            else emulator.Joypad.Release(Button.Select);
+
+            if (IsKeyDown(Keys.Up)) emulator.Joypad.Press(Button.Up);
+            else emulator.Joypad.Release(Button.Up);
+
+            if (IsKeyDown(Keys.Down)) emulator.Joypad.Press(Button.Down);
+            else emulator.Joypad.Release(Button.Down);
+
+            if (IsKeyDown(Keys.Left)) emulator.Joypad.Press(Button.Left);
+            else emulator.Joypad.Release(Button.Left);
+
+            if (IsKeyDown(Keys.Right)) emulator.Joypad.Press(Button.Right);
+            else emulator.Joypad.Release(Button.Right);
+        }
+
+        private void HandleDebugInput()
+        {
+            if (WasJustPressed(Keys.Space)) ShowScreen();
+            else if (WasJustPressed(Keys.T)) ShowTileSet();
             else if (WasJustPressed(Keys.B)) ShowBackgroundMap();
             else if (WasJustPressed(Keys.W)) ShowWindowLayer();
             else if (WasJustPressed(Keys.S)) ShowSpriteLayer();
             else if (WasJustPressed(Keys.P)) ShowPalettes();
             else if (WasJustPressed(Keys.F1)) SaveMemoryDump(openAfterSaving: true);
-            else if (WasJustPressed(Keys.F2)) RestartEmulator();
+            else if (WasJustPressed(Keys.F2) || WasJustPressed(Keys.R)) RestartEmulator();
+            else if (WasJustPressed(Keys.Tab)) runAtMaxSpeed = !runAtMaxSpeed;
+        }
 
-            if (currentDisplayMode == DisplayMode.Screen) screen.PutPixels(palette, ppu.RenderScreen());
-            else if (currentDisplayMode == DisplayMode.TileSet) screen.PutPixels(palette, ppu.RenderTileSet());
-            else if (currentDisplayMode == DisplayMode.BackgroundMap) screen.PutPixels(palette, ppu.RenderBackgroundMap());
-            else if (currentDisplayMode == DisplayMode.WindowLayer) screen.PutPixels(palette, ppu.RenderWindow());
-            else if (currentDisplayMode == DisplayMode.SpriteLayer) screen.PutPixels(palette, ppu.RenderSprites());
-
-            previousKeyboardState = currentKeyboardState;
-            base.Update(gameTime);
+        private bool IsKeyDown(Keys key)
+        {
+            return currentKeyboardState.IsKeyDown(key);
         }
 
         private bool WasJustPressed(Keys key)
@@ -119,7 +182,6 @@ namespace MonoGameBoy
         {
             screen = new GameBoyScreen(GraphicsDevice, TileSet.WidthInPixels, TileSet.HeightInPixels);
             SetWindowSize(screen.Width * 4, screen.Height * 4);
-            Window.Title = $"MonoGameBoy - Tileset [{RomName}]";
             currentDisplayMode = DisplayMode.TileSet;
             //paused = true;
         }
@@ -128,7 +190,6 @@ namespace MonoGameBoy
         {
             screen = new GameBoyScreen(GraphicsDevice, TileMap.WidthInPixels, TileMap.HeightInPixels);
             SetWindowSize(screen.Width * 2, screen.Height * 2);
-            Window.Title = $"MonoGameBoy - Background Map [{RomName}]";
             currentDisplayMode = DisplayMode.BackgroundMap;
             //paused = true;
         }
@@ -137,7 +198,6 @@ namespace MonoGameBoy
         {
             screen = new GameBoyScreen(GraphicsDevice, TileMap.WidthInPixels, TileMap.HeightInPixels);
             SetWindowSize(screen.Width * 2, screen.Height * 2);
-            Window.Title = $"MonoGameBoy - Window Layer [{RomName}]";
             currentDisplayMode = DisplayMode.WindowLayer;
             //paused = true;
         }
@@ -146,7 +206,6 @@ namespace MonoGameBoy
         {
             screen = new GameBoyScreen(GraphicsDevice, PPU.ScreenWidthInPixels, PPU.ScreenHeightInPixels);
             SetWindowSize(screen.Width * 3, screen.Height * 3);
-            Window.Title = $"MonoGameBoy - Sprites [{RomName}]";
             currentDisplayMode = DisplayMode.SpriteLayer;
             //paused = true;
         }
@@ -160,9 +219,16 @@ namespace MonoGameBoy
         {
             screen = new GameBoyScreen(GraphicsDevice, PPU.ScreenWidthInPixels, PPU.ScreenHeightInPixels);
             SetWindowSize(screen.Width * 3, screen.Height * 3);
-            Window.Title = $"MonoGameBoy [{RomName}]";
             currentDisplayMode = DisplayMode.Screen;
             paused = false;
+        }
+
+        private void SetWindowTitle(string title, GameTime gameTime, bool showRomName = true, bool showFps = true, bool showCpuTime = true)
+        {
+            string romNamePart = showRomName ? $" [{RomName}]" : "";
+            string fpsPart = showFps ? $" [{emulator.CalculateAverageFramesPerSecond(gameTime.TotalGameTime):n0}/{frontendFps:n0} FPS]" : "";
+            string cpuTimePart = showCpuTime ? $" [{emulator.CPU.ElapsedCpuTime.TotalSeconds:n0}/{gameTime.TotalGameTime.TotalSeconds:n0} sec]" : "";
+            Window.Title = $"{title}{romNamePart}{fpsPart}{cpuTimePart}";
         }
 
         protected override void Draw(GameTime gameTime)
@@ -176,7 +242,7 @@ namespace MonoGameBoy
         private void SaveMemoryDump(bool openAfterSaving = false)
         {
             string path = Guid.NewGuid() + ".bin";
-            File.WriteAllBytes(path, cpu.Memory.Data.ToArray());
+            File.WriteAllBytes(path, emulator.CPU.Memory.Data.ToArray());
             if (openAfterSaving) OpenFile(path);
         }
 
@@ -187,10 +253,10 @@ namespace MonoGameBoy
 
         private void RestartEmulator()
         {
-            if (useBootRom) cpu.Reset();
-            else cpu.BootWithoutBootRom();
-            ppu.Boot();
-            Console.Clear();
+            emulator.Restart(useBootRom);
+            if (loggingEnabled) Console.Clear();
+            frontendFrameCount = 0;
+            frontendFps = 60;
         }
     }
 }

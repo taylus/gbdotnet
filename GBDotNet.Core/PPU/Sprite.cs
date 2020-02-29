@@ -11,8 +11,7 @@
     /// <see cref="https://github.com/taylus/gameboy-graphics/blob/master/building_a_rom.md#an-aside-about-game-boy-video-memory"/>
     public class Sprite
     {
-        public const int BytesPerSprite = 4;
-        public const int TotalSprites = 40;
+        public const int SizeInBytes = 4;
 
         public byte PositionY { get; set; }     //vertical position (plus 16) -- an offscreen value (e.g. y = 0 or y >= 160) hides the sprite
         public byte TruePositionY
@@ -54,7 +53,7 @@
             PPURegisters = ppuRegisters;
         }
 
-        public void Render(TileSet tileset, ref byte[] spriteLayer)
+        public void Render(TileSet tileset, byte[] spriteLayer)
         {
             if (!Visible) return;
             var tiles = GetTiles(tileset);
@@ -68,6 +67,18 @@
                     spriteLayer[screenCoordinates.y * PPU.ScreenWidthInPixels + screenCoordinates.x] = spritePixel.Value;
                     //TODO: implement IsBehindBackground attribute flag
                 }
+            }
+        }
+
+        public void RenderOntoScanline(TileSet tileset, int y, byte[] screenPixels)
+        {
+            for (int x = 0; x < Tile.WidthInPixels; x++)
+            {
+                var spriteX = TruePositionX + x;
+                if (spriteX >= PPU.ScreenWidthInPixels) continue;
+                byte? spritePixel = GetPixel(tileset, spriteX, y);
+                if (!spritePixel.HasValue) continue;    //transparency
+                screenPixels[y * PPU.ScreenWidthInPixels + spriteX] = spritePixel.Value;
             }
         }
 
@@ -118,6 +129,12 @@
             var paletteIndex = tile[x, y];
             if (paletteIndex == 0) return null;
             return Palette[paletteIndex];
+        }
+
+        public override string ToString()
+        {
+            var size = PPURegisters.LCDControl.AreSprites8x16 ? "8x16" : "8x8";
+            return $"(Tile: {TileNumber}, Pos: ({TruePositionX}, {TruePositionY}), Size: {size}, Visible: {Visible}";
         }
     }
 }
