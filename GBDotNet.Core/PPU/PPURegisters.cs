@@ -139,7 +139,11 @@ namespace GBDotNet.Core
         /// <summary>
         /// True if <see cref="PPURegisters.CurrentScanline"/> equals <see cref="PPURegisters.CompareScanline"/>.
         /// </summary>
-        public bool ScanlineConcidence => Data.IsBitSet(2);
+        public bool ScanlineConcidence
+        {
+            get => Data.IsBitSet(2);
+            set => Data = Data.SetBitTo(2, value);
+        }
         public PPUMode ModeFlag
         {
             get

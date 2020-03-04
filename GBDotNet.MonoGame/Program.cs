@@ -12,9 +12,11 @@ namespace MonoGameBoy
     {
         //TODO: load from command-line args
         //private const string romPath = @"C:\roms\gb\Tetris.gb";
-        private const string romPath = @"C:\roms\gb\Dr. Mario (World).gb";
+        //private const string romPath = @"C:\roms\gb\Dr. Mario (World).gb";
         //private const string romPath = @"C:\roms\gb\hello-brandon.gb";
-        //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\halt_bug.gb";
+        private const string romPath = @"C:\roms\gb\Super Mario Land.gb";
+        //private const string romPath = @"C:\roms\gb\Super Mario Land 2.gb";
+        //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\cpu_instrs.gb";
         private const string logPath = "monogameboy.log";
         private const bool useBootRom = false;
         private const bool loggingEnabled = false;
@@ -49,8 +51,8 @@ namespace MonoGameBoy
             var cpu = new CPU(new Registers(), memoryBus);
             if (!useBootRom) cpu.BootWithoutBootRom();
 
-            var rom = new RomFile(romPath);
-            memoryBus.LoadRom(rom);
+            var rom = Cartridge.LoadFrom(romPath);
+            memoryBus.Load(rom);
 
             var joypad = new Joypad(memoryBus.JoypadRegister);
             return new Emulator(cpu, ppu, joypad);

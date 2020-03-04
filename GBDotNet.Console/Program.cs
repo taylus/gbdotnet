@@ -52,8 +52,8 @@ namespace GBDotNet.ConsoleApp
             cpu = new CPU(new Registers(), memoryBus);
             cpu.BootWithoutBootRom();
 
-            var rom = new RomFile(romPath);
-            memoryBus.LoadRom(rom);
+            var rom = Cartridge.LoadFrom(romPath);
+            memoryBus.Load(rom);
         }
 
         private static void Run()

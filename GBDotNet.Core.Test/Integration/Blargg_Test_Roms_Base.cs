@@ -20,7 +20,7 @@ namespace GBDotNet.Core.Test.Integration
             var gameLinkConsole = new GameLinkConsole(outputStream);
             var memoryBus = new MemoryBus(new PPURegisters()) { IsBootRomMapped = false };
             memoryBus.Attach(gameLinkConsole);
-            memoryBus.LoadRom(new RomFile(romPath));
+            memoryBus.Load(Cartridge.LoadFrom(romPath));
 
             var cpu = new CPU(new Registers(), memoryBus);
             cpu.BootWithoutBootRom();   //no PPU => can't run boot ROM (it will hang waiting for blank)
@@ -53,7 +53,7 @@ namespace GBDotNet.Core.Test.Integration
         protected static void RunHaltBugTestRom(string romPath)
         {
             var memoryBus = new MemoryBus(new PPURegisters()) { IsBootRomMapped = false };
-            memoryBus.LoadRom(new RomFile(romPath));
+            memoryBus.Load(Cartridge.LoadFrom(romPath));
             var ppu = new PPU(memoryBus.PPURegisters, memoryBus);   //this rom requires a PPU or it'll infinite loop waiting for LY
             var cpu = new CPU(new Registers(), memoryBus);
             cpu.BootWithoutBootRom();

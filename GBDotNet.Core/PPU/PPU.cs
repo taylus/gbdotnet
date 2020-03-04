@@ -20,13 +20,30 @@ namespace GBDotNet.Core
         private PPUMode CurrentMode
         {
             get => Registers.LCDStatus.ModeFlag;
-            set => Registers.LCDStatus.ModeFlag = value;
+            set
+            {
+                Registers.LCDStatus.ModeFlag = value;
+                if (value == PPUMode.HBlank && Registers.LCDStatus.InterruptOnMode0HBlank ||
+                    value == PPUMode.VBlank && Registers.LCDStatus.InterruptOnMode1VBlank ||
+                    value == PPUMode.OamScan && Registers.LCDStatus.InterruptOnMode2OamScan)
+                {
+                    RequestLCDStatInterrupt();
+                }
+            }
         }
 
         internal byte CurrentLine
         {
             get => Registers.CurrentScanline;
-            set => Registers.CurrentScanline = value;
+            set
+            {
+                Registers.CurrentScanline = value;
+                Registers.LCDStatus.ScanlineConcidence = Registers.CurrentScanline == Registers.CompareScanline;
+                if (Registers.LCDStatus.InterruptOnScanlineCoincidence && Registers.LCDStatus.ScanlineConcidence)
+                {
+                    RequestLCDStatInterrupt();
+                }
+            }
         }
 
         private readonly byte[] screenPixels = new byte[ScreenWidthInPixels * ScreenHeightInPixels];
@@ -204,5 +221,7 @@ namespace GBDotNet.Core
         }
 
         public override string ToString() => $"{CurrentMode} LY: {CurrentLine}";
+
+        private void RequestLCDStatInterrupt() => MemoryBus.InterruptFlags.LCDStatInterruptRequested = true;
     }
 }
