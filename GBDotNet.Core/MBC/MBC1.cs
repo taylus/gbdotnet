@@ -100,5 +100,7 @@ namespace GBDotNet.Core
             Rom = 0,    //~2MB ROM (125x16KB banks)/8KB (1 bank) RAM
             Ram = 1     //512KB ROM (32x16KB banks)/32KB (4x8KB banks) RAM
         }
+
+        public override string ToString() => $"ROM{selectedRomBankNumber:X} RAM{selectedRamBankNumber:X}";
     }
 }

@@ -33,6 +33,6 @@ namespace GBDotNet.Core
             return PPU.RenderedFrameCount / elapsedTimeSinceBoot.TotalSeconds;
         }
 
-        public override string ToString() => $"{CPU} {PPU}";
+        public override string ToString() => $"{CPU} {PPU} {CPU.Memory}".Trim();
     }
 }

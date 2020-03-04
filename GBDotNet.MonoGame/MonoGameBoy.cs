@@ -52,8 +52,10 @@ namespace MonoGameBoy
             ShowScreen();
             if (runInBackground) Task.Run(RunEmulator).ContinueWith(deadEmulator =>
             {
-                Console.WriteLine($"Emulator task unexpectedly faulted while executing instruction at ${emulator.CPU.Registers.LastPC:x4}:");
-                Console.WriteLine($"Exception (if any): {deadEmulator.Exception}");
+                LogToConsoleAndLogFile($"Emulator task unexpectedly faulted while executing instruction at ${emulator.CPU.Registers.LastPC:x4}");
+                string dumpPath = SaveMemoryDump();
+                LogToConsoleAndLogFile($"A memory dump has been written to {dumpPath}");
+                LogToConsoleAndLogFile($"Exception (if any): {deadEmulator.Exception}");
             });
         }
 
@@ -239,11 +241,12 @@ namespace MonoGameBoy
             base.Draw(gameTime);
         }
 
-        private void SaveMemoryDump(bool openAfterSaving = false)
+        private string SaveMemoryDump(bool openAfterSaving = false)
         {
             string path = Guid.NewGuid() + ".bin";
             File.WriteAllBytes(path, emulator.CPU.Memory.Data.ToArray());
             if (openAfterSaving) OpenFile(path);
+            return path;
         }
 
         protected static void OpenFile(string path)
@@ -257,6 +260,12 @@ namespace MonoGameBoy
             if (loggingEnabled) Console.Clear();
             frontendFrameCount = 0;
             frontendFps = 60;
+        }
+
+        private void LogToConsoleAndLogFile(string message)
+        {
+            Console.WriteLine(message);
+            Console.Error.WriteLine(message);
         }
     }
 }

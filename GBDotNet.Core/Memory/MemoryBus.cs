@@ -152,7 +152,7 @@ namespace GBDotNet.Core
                 else if (address < 0xC000)
                 {
                     //external RAM (8K)
-                    return cart[address - 0xA000];
+                    return cart[address];
                 }
                 else if (address < 0xE000)
                 {
@@ -237,7 +237,7 @@ namespace GBDotNet.Core
                 else if (address < 0xC000)
                 {
                     //external RAM (8K)
-                    cart[address - 0xA000] = value;
+                    cart[address] = value;
                 }
                 else if (address < 0xE000)
                 {
@@ -335,5 +335,7 @@ namespace GBDotNet.Core
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString() => cart.ToString();
     }
 }

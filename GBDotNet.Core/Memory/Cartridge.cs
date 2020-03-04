@@ -30,17 +30,17 @@ namespace GBDotNet.Core
         /// <summary>
         /// Loads a ROM from the given data.
         /// </summary>
-        public Cartridge(byte[] data) : base(data)
+        public Cartridge(byte[] data)
         {
-
+            Data = data;
         }
 
         /// <summary>
         /// Loads a ROM file from the given path.
         /// </summary>
-        public Cartridge(string path) : base(path)
+        public Cartridge(string path)
         {
-
+            Data = File.ReadAllBytes(path);
         }
 
         /// <summary>
@@ -55,5 +55,7 @@ namespace GBDotNet.Core
             if (cartridgeType == 0x03) return new MBC1(data);   //MBC1+RAM+BATTERY
             return new Cartridge(data);                         //ROM only
         }
+
+        public override string ToString() => "";
     }
 }
