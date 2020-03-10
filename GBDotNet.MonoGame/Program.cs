@@ -24,19 +24,17 @@ namespace MonoGameBoy
         [STAThread]
         public static void Main()
         {
-            using (var log = new StreamWriter(logPath))
+            using var log = new StreamWriter(logPath);
+            try
             {
-                try
-                {
-                    if (loggingEnabled) Console.SetOut(log);
-                    var emulator = Boot();
-                    using (var game = new MonoGameBoy(emulator, romPath, useBootRom, loggingEnabled))
-                        game.Run();
-                }
-                finally
-                {
-                    if (loggingEnabled) Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
-                }
+                if (loggingEnabled) Console.SetOut(log);
+                var emulator = Boot();
+                using var game = new MonoGameBoy(emulator, romPath, useBootRom, loggingEnabled);
+                game.Run();
+            }
+            finally
+            {
+                if (loggingEnabled) Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
             }
         }
 
