@@ -12,14 +12,14 @@ namespace MonoGameBoy
     {
         //TODO: load from command-line args
         //private const string romPath = @"C:\roms\gb\Tetris.gb";
-        //private const string romPath = @"C:\roms\gb\Dr. Mario (World).gb";
+        private const string romPath = @"C:\roms\gb\Dr. Mario (World).gb";
         //private const string romPath = @"C:\roms\gb\hello-brandon.gb";
-        private const string romPath = @"C:\roms\gb\Super Mario Land.gb";
+        //private const string romPath = @"C:\roms\gb\Super Mario Land.gb";
         //private const string romPath = @"C:\roms\gb\Super Mario Land 2.gb";
         //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\cpu_instrs.gb";
         private const string logPath = "monogameboy.log";
         private const bool useBootRom = false;
-        private const bool loggingEnabled = false;
+        private const bool loggingEnabled = true;
 
         [STAThread]
         public static void Main()
@@ -35,7 +35,7 @@ namespace MonoGameBoy
                 }
                 finally
                 {
-                    if (loggingEnabled) Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
+                    //if (loggingEnabled) Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
                 }
             }
         }

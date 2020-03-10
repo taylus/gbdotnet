@@ -102,7 +102,7 @@ namespace GBDotNet.Core
         public void Boot()
         {
             Registers.LCDControl.Data = 0x91;
-            Registers.LCDStatus.Data = 0x85;
+            //Registers.LCDStatus.Data = 0x85;
             Registers.BackgroundPalette.Data = 0xFC;
             Registers.SpritePalette0.Data = 0xFF;
             Registers.SpritePalette1.Data = 0xFF;
@@ -112,15 +112,17 @@ namespace GBDotNet.Core
         {
             //if (!Registers.LCDControl.Enabled) return;
             cycleCounter += elapsedCycles;
-            if (CurrentMode == PPUMode.HBlank) HBlank();
-            else if (CurrentMode == PPUMode.VBlank) VBlank();
-            else if (CurrentMode == PPUMode.OamScan) OamScan();
-            else if (CurrentMode == PPUMode.HDraw) HDraw();
+            if (CurrentMode == PPUMode.HBlank) Mode0_HBlank();
+            else if (CurrentMode == PPUMode.VBlank) Mode1_VBlank();
+            else if (CurrentMode == PPUMode.OamScan) Mode2_OamScan();
+            else if (CurrentMode == PPUMode.HDraw) Mode3_HDraw();
         }
 
-        private void HBlank()
+        private void Mode0_HBlank()
         {
             //wait 204 cycles and then draw the screen on the last line
+            //TODO: HDraw + HBlank should take 376 cycles w/ variable HDraw based on sprite count
+            //      see: https://gbdev.gg8.se/wiki/articles/Video_Display#LCD_Status_Register
             if (cycleCounter >= 204)
             {
                 cycleCounter = 0;
@@ -139,7 +141,7 @@ namespace GBDotNet.Core
             }
         }
 
-        private void VBlank()
+        private void Mode1_VBlank()
         {
             //wait 10 scanlines then restart at OAM scan
             if (cycleCounter >= 456)
@@ -155,9 +157,9 @@ namespace GBDotNet.Core
             }
         }
 
-        private void OamScan()
+        private void Mode2_OamScan()
         {
-            //wait 80 cycles then advance to HDraw
+            //wait 80 cycles then HDraw
             if (cycleCounter >= 80)
             {
                 cycleCounter = 0;
@@ -165,9 +167,9 @@ namespace GBDotNet.Core
             }
         }
 
-        private void HDraw()
+        private void Mode3_HDraw()
         {
-            //draw a scanline every 172 cycles
+            //draw a scanline after 172 cycles
             if (cycleCounter >= 172)
             {
                 cycleCounter = 0;
@@ -220,8 +222,11 @@ namespace GBDotNet.Core
             return screenPixels;
         }
 
-        public override string ToString() => $"{CurrentMode} LY: {CurrentLine}";
-
         private void RequestLCDStatInterrupt() => MemoryBus.InterruptFlags.LCDStatInterruptRequested = true;
+
+        public override string ToString()
+        {
+            return $"ppu:{(Registers.LCDControl.Enabled ? '+' : '-')}{(int)CurrentMode} LY:{CurrentLine}";
+        }
     }
 }

@@ -94,7 +94,11 @@
 
         public override string ToString()
         {
-            return $"AF: {AF:x4} BC: {BC:x4} DE: {DE:x4} HL: {HL:x4} SP: {SP:x4} PC: {PC:x4}";
+            string flags = (HasFlag(Flags.Zero) ? "Z" : "-") +
+                           (HasFlag(Flags.AddSubtract) ? "N" : "-") +
+                           (HasFlag(Flags.HalfCarry) ? "H" : "-") +
+                           (HasFlag(Flags.Carry) ? "C" : "-");
+            return $"A:{A:X2} F:{flags} BC:{BC:X4} DE:{DE:x4} HL:{HL:x4} SP:{SP:x4} PC:{PC:x4}";
         }
     }
 }

@@ -599,10 +599,10 @@ namespace GBDotNet.Core
         /// <see cref="https://gbdev.gg8.se/wiki/articles/Gameboy_Bootstrap_ROM"/>
         public void BootWithoutBootRom()
         {
-            Registers.AF = 0x0100;
-            Registers.BC = 0x0014;
-            Registers.DE = 0x0000;
-            Registers.HL = 0xC060;
+            Registers.AF = 0x01B0;
+            Registers.BC = 0x0013;
+            Registers.DE = 0x00D8;
+            Registers.HL = 0x014D;
             Registers.SP = 0xFFFE;
             Registers.PC = 0x0100;
         }
@@ -5155,6 +5155,6 @@ namespace GBDotNet.Core
             return newValue;
         }
 
-        public override string ToString() => $"{Registers} T: {TotalElapsedCycles}";
+        public override string ToString() => $"{Registers} (cy: {TotalElapsedCycles})";
     }
 }
