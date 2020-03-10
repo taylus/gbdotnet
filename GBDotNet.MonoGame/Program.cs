@@ -43,7 +43,8 @@ namespace MonoGameBoy
         private static Emulator Boot()
         {
             var ppuRegs = new PPURegisters();
-            var memoryBus = new MemoryBus(ppuRegs) { IsBootRomMapped = useBootRom };
+            var soundRegs = new SoundRegisters();
+            var memoryBus = new MemoryBus(ppuRegs, soundRegs) { IsBootRomMapped = useBootRom };
             //memoryBus.Attach(new GameLinkConsole());
             var ppu = new PPU(ppuRegs, memoryBus);
             ppu.Boot();
@@ -54,8 +55,9 @@ namespace MonoGameBoy
             var rom = Cartridge.LoadFrom(romPath);
             memoryBus.Load(rom);
 
+            var apu = new APU(soundRegs);
             var joypad = new Joypad(memoryBus.JoypadRegister);
-            return new Emulator(cpu, ppu, joypad);
+            return new Emulator(cpu, ppu, apu, joypad);
         }
     }
 }

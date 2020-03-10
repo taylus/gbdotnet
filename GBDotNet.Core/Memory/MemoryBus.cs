@@ -24,7 +24,7 @@ namespace GBDotNet.Core
         private GameLinkConsole gameLinkConsole;
 
         //TODO: audio
-        private readonly SoundRegisters soundRegisters = new SoundRegisters();
+        public SoundRegisters SoundRegisters { get; set; }
 
         //graphics
         public TileSet TileSet { get; set; }
@@ -82,9 +82,10 @@ namespace GBDotNet.Core
 
         private readonly Random random = new Random();
 
-        public MemoryBus(PPURegisters ppuRegisters)
+        public MemoryBus(PPURegisters ppuRegisters, SoundRegisters soundRegisters = null)
         {
             PPURegisters = ppuRegisters;
+            SoundRegisters = soundRegisters ?? new SoundRegisters();
             //Randomize(wram);
             //Randomize(zram);
             //Randomize(VideoMemory);
@@ -182,7 +183,7 @@ namespace GBDotNet.Core
                     else if (address == 0xFF02) return serialControl;
                     else if (Timer.MappedToAddress(address)) return Timer[address];
                     else if (address == 0xFF0F) return InterruptFlags.Data;
-                    else if (soundRegisters.MappedToAddress(address)) return soundRegisters[address];
+                    else if (SoundRegisters.MappedToAddress(address)) return SoundRegisters[address];
                     else if (address == 0xFF40) return PPURegisters.LCDControl.Data;
                     else if (address == 0xFF41) return PPURegisters.LCDStatus.Data;
                     else if (address == 0xFF42) return PPURegisters.ScrollY;
@@ -274,7 +275,7 @@ namespace GBDotNet.Core
                     else if (address == 0xFF02) serialControl = value;
                     else if (Timer.MappedToAddress(address)) Timer[address] = value;
                     else if (address == 0xFF0F) InterruptFlags.Data = (byte)(value | 0b1110_0000);  //upper 3 bits are unused and always read as 1
-                    else if (soundRegisters.MappedToAddress(address)) soundRegisters[address] = value;
+                    else if (SoundRegisters.MappedToAddress(address)) SoundRegisters[address] = value;
                     else if (address == 0xFF40) PPURegisters.LCDControl.Data = value;
                     else if (address == 0xFF41) PPURegisters.LCDStatus.Data = value;
                     else if (address == 0xFF42) PPURegisters.ScrollY = value;

@@ -79,13 +79,13 @@ namespace GBDotNet.Core
             window = new Window(this);
         }
 
-        public PPU(byte[] memory)
+        internal PPU(byte[] memory)
         {
             if (memory.Length != Memory.Size)
                 throw new ArgumentException($"Expected entire {Memory.Size} byte memory map, but got {memory.Length} bytes.", nameof(memory));
 
             Registers = new PPURegisters(new ArraySegment<byte>(memory, offset: 0xFF40, count: 12));
-            MemoryBus = new MemoryBus(Registers);
+            MemoryBus = new MemoryBus(Registers, new SoundRegisters());
             VideoMemory = new Memory(new ArraySegment<byte>(memory, offset: 0x8000, count: 8192));
             TileSet.UpdateFrom(VideoMemory);
             ObjectAttributeMemory = new Memory(new ArraySegment<byte>(memory, offset: 0xFE00, count: 160));
