@@ -6,11 +6,11 @@ namespace GBDotNet.Core
     public class APU
     {
         private const int samplesToGenerateBeforePlaying = 100;
-        private readonly IList<float> channel1Buffer = new List<float>(samplesToGenerateBeforePlaying);
-        private readonly IList<float> channel2Buffer = new List<float>(samplesToGenerateBeforePlaying);
-        private readonly IList<float> channel3Buffer = new List<float>(samplesToGenerateBeforePlaying);
-        private readonly IList<float> channel4Buffer = new List<float>(samplesToGenerateBeforePlaying);
+        private readonly PulseChannel channel1 = new PulseChannel(samplesToGenerateBeforePlaying);
+        private readonly PulseChannel channel2 = new PulseChannel(samplesToGenerateBeforePlaying);
+        //TODO: wave channel 3, noise channel 4
         private readonly IList<float> mixedBuffer = new List<float>(samplesToGenerateBeforePlaying);
+        //TODO: global sound control registers http://bgb.bircd.org/pandocs.htm#soundcontrolregisters
 
         public SoundRegisters Registers { get; private set; }
 
@@ -26,10 +26,7 @@ namespace GBDotNet.Core
             TickChannel3(elapsedCycles);
             TickChannel4(elapsedCycles);
 
-            if (channel1Buffer.Count >= samplesToGenerateBeforePlaying &&
-                channel2Buffer.Count >= samplesToGenerateBeforePlaying &&
-                channel3Buffer.Count >= samplesToGenerateBeforePlaying &&
-                channel4Buffer.Count >= samplesToGenerateBeforePlaying)
+            if (channel2.SampleBuffer.Count >= samplesToGenerateBeforePlaying)
             {
                 Mix();
             }
@@ -60,10 +57,8 @@ namespace GBDotNet.Core
             for (int i = 0; i < samplesToGenerateBeforePlaying; i++)
             {
                 float result = 0;
-                result += channel1Buffer[i];
-                result += channel2Buffer[i];
-                result += channel3Buffer[i];
-                result += channel4Buffer[i];
+                result += channel1.SampleBuffer[i];
+                result += channel2.SampleBuffer[i];
                 mixedBuffer[i] = result;
             }
         }
