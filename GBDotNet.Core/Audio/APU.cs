@@ -9,8 +9,17 @@ namespace GBDotNet.Core
         private readonly PulseChannel channel1 = new PulseChannel(samplesToGenerateBeforePlaying);
         private readonly PulseChannel channel2 = new PulseChannel(samplesToGenerateBeforePlaying);
         //TODO: wave channel 3, noise channel 4
+
         private readonly IList<float> mixedBuffer = new List<float>(samplesToGenerateBeforePlaying);
         //TODO: global sound control registers http://bgb.bircd.org/pandocs.htm#soundcontrolregisters
+
+        private int cyclesSinceLastFrameSequencerStep;
+        private const int cyclesPerFrameSequencerStep = 8192;   //512 Hz (4194304 Hz / 512 Hz = 8192 cycles)
+        private int frameSequencerStep;                         //0-7, different things update on different steps
+
+        private const int sampleRate = 44100;   //Hz
+        private int cyclesSinceLastSample;
+        private const int cyclesPerSample = (int)(CPU.ClockSpeed / sampleRate);
 
         public SoundRegisters Registers { get; private set; }
 
@@ -21,45 +30,54 @@ namespace GBDotNet.Core
 
         public void Tick(int elapsedCycles)
         {
-            TickChannel1(elapsedCycles);
-            TickChannel2(elapsedCycles);
-            TickChannel3(elapsedCycles);
-            TickChannel4(elapsedCycles);
+            //channel1.Tick();
+            channel2.Tick();
 
-            if (channel2.SampleBuffer.Count >= samplesToGenerateBeforePlaying)
+            TickFrameSequencer(elapsedCycles);
+            SampleChannels(elapsedCycles);
+        }
+
+        private void TickFrameSequencer(int elapsedCycles)
+        {
+            cyclesSinceLastFrameSequencerStep += elapsedCycles;
+            if (cyclesSinceLastFrameSequencerStep >= cyclesPerFrameSequencerStep)
             {
-                Mix();
+                cyclesSinceLastFrameSequencerStep = 0;
+                StepFrameSequencer();
             }
         }
 
-        private void TickChannel1(int elapsedCycles)
+        private void StepFrameSequencer()
         {
-            //TODO: do pulse channel things based off registers
-        }
-
-        private void TickChannel2(int elapsedCycles)
-        {
-            //TODO: do pulse channel things based off registers
-        }
-
-        private void TickChannel3(int elapsedCycles)
-        {
-            //TODO: do wave channel things based off registers
-        }
-
-        private void TickChannel4(int elapsedCycles)
-        {
-            //TODO: do noise channel things based off registers
-        }
-
-        private void Mix()
-        {
-            for (int i = 0; i < samplesToGenerateBeforePlaying; i++)
+            if (frameSequencerStep % 2 == 0)
             {
-                float result = 0;
-                result += channel1.SampleBuffer[i];
-                result += channel2.SampleBuffer[i];
-                mixedBuffer[i] = result;
+                //TODO: tick length counter every other step
+            }
+
+            if (frameSequencerStep == 7)
+            {
+                //TODO: tick volume envelope every 7th step
+            }
+
+            if (frameSequencerStep == 2 || frameSequencerStep == 6)
+            {
+                //TODO: tick sweep every 2nd and 6th steps
+            }
+
+            frameSequencerStep++;
+            if (frameSequencerStep > 7) frameSequencerStep = 0;
+        }
+
+        private void SampleChannels(int elapsedCycles)
+        {
+            cyclesSinceLastSample += elapsedCycles;
+            if (cyclesSinceLastSample >= cyclesPerSample)
+            {
+                cyclesSinceLastSample = 0;
+                float sample = 0;
+                //sample += channel1.Sample();
+                sample += channel2.Sample();
+                mixedBuffer.Add(sample);
             }
         }
     }

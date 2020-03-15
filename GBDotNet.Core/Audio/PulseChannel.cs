@@ -68,13 +68,6 @@ namespace GBDotNet.Core
         public int CalculateActualFrequency() => 131072 / (2048 - Frequency);
 
         /// <summary>
-        /// Initialized to (2048 - Frequency) * 4.
-        /// Decremented each CPU cycle.
-        /// When zero, reset back and push a sound sample.
-        /// </summary>
-        public int Timer { get; set; }
-
-        /// <summary>
         /// The current shape of the pulse wave (how wide are the pulses?)
         /// </summary>
         /// <see cref="dutyCyclePatterns"/>
@@ -84,7 +77,7 @@ namespace GBDotNet.Core
         /// The current bit position in the current duty cycle
         /// (determines if the next sound sample should be a 1 or a 0).
         /// </summary>
-        private int dutyPosition;
+        private int dutyCyclePosition;
 
         /// <summary>
         /// Which bits to output as a sound sample to create the pulse waveform.
@@ -98,6 +91,13 @@ namespace GBDotNet.Core
             0b01111110      //75%
         };
 
+        /// <summary>
+        /// Initialized to (2048 - Frequency) * 4.
+        /// Decremented each CPU cycle.
+        /// When zero, reset back and push a sound sample.
+        /// </summary>
+        private int timer;
+
         public IList<float> SampleBuffer { get; private set; }
 
         public PulseChannel(int sampleBufferSize)
@@ -105,9 +105,26 @@ namespace GBDotNet.Core
             SampleBuffer = new List<float>(sampleBufferSize);
         }
 
-        public void Tick(int elapsedCycles)
+        public void Tick()
         {
-
+            if (timer > 0) timer--;
+            if (timer == 0)
+            {
+                dutyCyclePosition++;
+                if (dutyCyclePosition > 7) dutyCyclePosition = 0;
+                //SampleBuffer.Add(Sample());
+                ResetTimer();
+            }
         }
+
+        public int Sample()
+        {
+            if (!Enabled) return 0;
+            var pattern = dutyCyclePatterns[CurrentDutyCycle];
+            var sampleBit = pattern.IsBitSet(7 - dutyCyclePosition);
+            return sampleBit ? Volume : 0;
+        }
+
+        private void ResetTimer() => timer = (2048 - Frequency) * 4;
     }
 }
