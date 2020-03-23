@@ -1,49 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace GBDotNet.Core
 {
-    /// <summary>
-    /// Lowest common denominator for all four of the Game Boy's sound channels.
-    /// </summary>
-    public abstract class SoundChannel
-    {
-        /// <summary>
-        /// Sound channel on/off.
-        /// </summary>
-        /// <remarks>
-        /// Stored in bit 7 of register NRx4.
-        /// </remarks>
-        public bool Enabled { get; set; }
-
-        /// <summary>
-        /// A measure of how long to keep playing this sound channel.
-        /// Decremented periodically, and when zero, the channel is silenced.
-        /// </summary>
-        /// <remarks>
-        /// Stored in varying bits of NRx1:
-        /// Channels 1, 2, and 4 use bits 5-0 or NRx1.
-        /// Channel 3 uses all 8 bits of NR31.
-        /// </remarks>
-        public int Length { get; set; }
-
-        /// <summary>
-        /// Length counter enable: when false, a length of zero does not silence the channel.
-        /// </summary>
-        /// <remarks>
-        /// Stored in bit 6 of register NRx4.
-        /// </remarks>
-        public bool LengthEnabled { get; set; }
-
-        /// <summary>
-        /// Current volume of the channel expressed as a 4 bit value (except 
-        /// the wave channel which is only 2 bits). A value of 0 means silence.
-        /// </summary>
-        /// <remarks>
-        /// Stored in varying bits of NRx2.
-        /// </remarks>
-        public int Volume { get; set; }
-    }
-
     /// <summary>
     /// Represents sound channels 1 and 2 of the Game Boy, which play oscillating pulse/square waves.
     /// </summary>
@@ -52,6 +10,27 @@ namespace GBDotNet.Core
     public class PulseChannel : SoundChannel
     {
         /// <summary>
+        /// Sound channel on/off, stored in bit 7 of register NRx4.
+        /// </summary>
+        public override bool Enabled => channelNumber == 1 ? apu.Registers.NR14.IsBitSet(7) : apu.Registers.NR24.IsBitSet(7);
+
+        public override int Length { get => throw new NotImplementedException(); }
+        public override bool LengthEnabled { get => throw new NotImplementedException(); }
+
+        /// <summary>
+        /// Current volume of the channel expressed as a 4 bit value.
+        /// A value of 0 means silence. Stored in bits 7-4 of NRx2.
+        /// </summary>
+        public override byte Volume
+        {
+            get
+            {
+                if (channelNumber == 1) return (byte)((apu.Registers.NR12 & 0b1111_0000) >> 4);
+                return (byte)((apu.Registers.NR22 & 0b1111_0000) >> 4);
+            }
+        }
+
+        /// <summary>
         /// How fast the pulse waves are oscillating.
         /// Higher frequency = higher pitched sound.
         /// </summary>
@@ -59,25 +38,38 @@ namespace GBDotNet.Core
         /// Stored in bits 2-0 of NRx4 + all bits in NRx3
         /// (making it an 11 bit number ranging 0-2047).
         /// </remarks>
-        public int Frequency { get; set; }
+        public int Frequency
+        {
+            get
+            {
+                if (channelNumber == 1) return ((apu.Registers.NR14 & 0b0000_0111) << 8) | (apu.Registers.NR13);
+                return ((apu.Registers.NR24 & 0b0000_0111) << 8) | (apu.Registers.NR23);
+            }
+        }
 
         /// <summary>
-        /// Calculate the actual frequency to play based on the Frequency bits.
-        /// </summary>
-        /// <see cref="http://bgb.bircd.org/pandocs.htm#soundchannel2tone"/>
-        public int CalculateActualFrequency() => 131072 / (2048 - Frequency);
-
-        /// <summary>
-        /// The current shape of the pulse wave (how wide are the pulses?)
+        /// The current shape of the pulse wave (how wide are the pulses?) stored in bits 7-6 of NRx1.
         /// </summary>
         /// <see cref="dutyCyclePatterns"/>
-        public int CurrentDutyCycle { get; set; }
+        public int CurrentDutyCycle
+        {
+            get
+            {
+                if (channelNumber == 1) return (apu.Registers.NR11 & 0b1100_0000) >> 6;
+                return (apu.Registers.NR21 & 0b1100_0000) >> 6;
+            }
+        }
 
         /// <summary>
         /// The current bit position in the current duty cycle
         /// (determines if the next sound sample should be a 1 or a 0).
         /// </summary>
         private int dutyCyclePosition;
+
+        /// <summary>
+        /// Is this channel number 1 or 2? (different capabilities and register usage)
+        /// </summary>
+        private readonly int channelNumber;
 
         /// <summary>
         /// Which bits to output as a sound sample to create the pulse waveform.
@@ -98,31 +90,32 @@ namespace GBDotNet.Core
         /// </summary>
         private int timer;
 
-        public IList<float> SampleBuffer { get; private set; }
+        private readonly APU apu;
 
-        public PulseChannel(int sampleBufferSize)
+        public PulseChannel(APU apu, int channelNumber)
         {
-            SampleBuffer = new List<float>(sampleBufferSize);
+            this.apu = apu;
+            this.channelNumber = channelNumber;
         }
 
-        public void Tick()
+        public byte Tick(int elapsedCycles)
         {
-            if (timer > 0) timer--;
-            if (timer == 0)
+            if (timer > 0) timer -= elapsedCycles;
+            if (timer <= 0)
             {
+                ResetTimer();
                 dutyCyclePosition++;
                 if (dutyCyclePosition > 7) dutyCyclePosition = 0;
-                //SampleBuffer.Add(Sample());
-                ResetTimer();
             }
+            return Sample();
         }
 
-        public int Sample()
+        public byte Sample()
         {
             if (!Enabled) return 0;
             var pattern = dutyCyclePatterns[CurrentDutyCycle];
             var sampleBit = pattern.IsBitSet(7 - dutyCyclePosition);
-            return sampleBit ? Volume : 0;
+            return sampleBit ? Volume : (byte)0;
         }
 
         private void ResetTimer() => timer = (2048 - Frequency) * 4;

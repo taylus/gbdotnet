@@ -18,25 +18,23 @@ namespace MonoGameBoy
         //private const string romPath = @"C:\roms\gb\Super Mario Land 2.gb";
         //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\cpu_instrs.gb";
         private const string logPath = "monogameboy.log";
-        private const bool useBootRom = false;
+        private const bool useBootRom = true;
         private const bool loggingEnabled = false;
 
         [STAThread]
         public static void Main()
         {
-            using (var log = new StreamWriter(logPath))
+            using var log = new StreamWriter(logPath);
+            try
             {
-                try
-                {
-                    if (loggingEnabled) Console.SetOut(log);
-                    var emulator = Boot();
-                    using (var game = new MonoGameBoy(emulator, romPath, useBootRom, loggingEnabled))
-                        game.Run();
-                }
-                finally
-                {
-                    if (loggingEnabled) Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
-                }
+                if (loggingEnabled) Console.SetOut(log);
+                var emulator = Boot();
+                using var game = new MonoGameBoy(emulator, romPath, useBootRom, loggingEnabled);
+                game.Run();
+            }
+            finally
+            {
+                if (loggingEnabled) Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
             }
         }
 

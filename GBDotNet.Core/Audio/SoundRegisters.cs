@@ -73,6 +73,7 @@ namespace GBDotNet.Core
             }
             set
             {
+                //TODO: https://gbdev.gg8.se/wiki/articles/Gameboy_sound_hardware#Trigger_Event
                 if (address == 0xFF10) NR10 = value;
                 else if (address == 0xFF11) NR11 = value;
                 else if (address == 0xFF12) NR12 = value;

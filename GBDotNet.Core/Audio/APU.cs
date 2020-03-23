@@ -1,41 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace GBDotNet.Core
 {
-    //https://emudev.de/gameboy-emulator/bleeding-ears-time-to-add-audio/
     public class APU
     {
-        private const int samplesToGenerateBeforePlaying = 100;
-        private readonly PulseChannel channel2 = new PulseChannel(samplesToGenerateBeforePlaying);
-        private readonly IList<float> mixedBuffer = new List<float>(samplesToGenerateBeforePlaying);
+        private readonly PulseChannel channel1;
+        private readonly PulseChannel channel2;
+        public byte[] SampleBuffer { get; } = new byte[3000];
+        private int nextSampleIndex = 0;
 
-        private const int sampleRate = 44100;   //Hz
+        public const int PlaybackSampleRate = 44100;   //Hz
         private int cyclesSinceLastSample;
-        private const int cyclesPerSample = (int)(CPU.ClockSpeed / sampleRate);
+        private const int cyclesPerSample = (int)(CPU.ClockSpeed / PlaybackSampleRate);
 
         public SoundRegisters Registers { get; private set; }
 
         public APU(SoundRegisters registers)
         {
+            channel1 = new PulseChannel(this, 1);
+            channel2 = new PulseChannel(this, 2);
             Registers = registers;
         }
 
         public void Tick(int elapsedCycles)
         {
-            channel2.Tick();
-            SampleChannels(elapsedCycles);
-        }
+            byte sample = channel1.Tick(elapsedCycles);
+            sample += channel2.Tick(elapsedCycles);
 
-        private void SampleChannels(int elapsedCycles)
-        {
             cyclesSinceLastSample += elapsedCycles;
             if (cyclesSinceLastSample >= cyclesPerSample)
             {
                 cyclesSinceLastSample = 0;
-                float sample = 0;
-                sample += channel2.Sample();
-                mixedBuffer.Add(sample);
+                SampleBuffer[nextSampleIndex++] = sample;
+                if (nextSampleIndex >= SampleBuffer.Length) nextSampleIndex = 0;
             }
         }
+
+        public void RestartSampleBuffer() => nextSampleIndex = 0;
     }
 }

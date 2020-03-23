@@ -16,6 +16,7 @@ namespace MonoGameBoy
         private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private GameBoyScreen screen;
+        private readonly GameBoyAudio audio;
         private KeyboardState previousKeyboardState;
         private KeyboardState currentKeyboardState;
         private readonly Emulator emulator;
@@ -43,6 +44,7 @@ namespace MonoGameBoy
             IsMouseVisible = true;
             //Window.IsBorderless = true;
             if (targetFrontendFps > 0) TargetElapsedTime = TimeSpan.FromSeconds(1 / targetFrontendFps);
+            audio = new GameBoyAudio(emulator.APU);
         }
 
         protected override void Initialize()
@@ -50,6 +52,7 @@ namespace MonoGameBoy
             base.Initialize();
             currentKeyboardState = previousKeyboardState = Keyboard.GetState();
             ShowScreen();
+            audio.Play();
             if (runInBackground) Task.Run(RunEmulator).ContinueWith(deadEmulator =>
             {
                 Console.WriteLine($"Emulator task unexpectedly faulted while executing instruction at ${emulator.CPU.Registers.LastPC:x4}:");
@@ -125,6 +128,7 @@ namespace MonoGameBoy
             SetWindowTitle(currentDisplayMode == DisplayMode.Screen ? "MonoGameBoy" : $"MonoGameBoy - {currentDisplayMode}", gameTime);
 
             previousKeyboardState = currentKeyboardState;
+            audio.Update();
             base.Update(gameTime);
         }
 
