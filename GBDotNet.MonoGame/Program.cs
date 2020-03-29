@@ -19,6 +19,7 @@ namespace MonoGameBoy
         public static void Main(string[] args)
         {
             ParseCommandLineArgs(args, out romPath);
+            if (string.IsNullOrWhiteSpace(romPath)) Environment.Exit(-1);
             Configure();
 
             StreamWriter logWriter = null;
