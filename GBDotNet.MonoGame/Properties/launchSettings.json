@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GBDotNet.MonoGame": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\roms\\gb\\Super Mario Land.gb\""
+    }
+  }
+}

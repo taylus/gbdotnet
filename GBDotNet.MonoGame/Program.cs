@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using GBDotNet.Core;
 using Microsoft.Extensions.Configuration;
@@ -12,37 +11,57 @@ namespace MonoGameBoy
     public static class Program
     {
         private static IConfiguration config;
-
-        //TODO: load from command-line args
-        //private const string romPath = @"C:\roms\gb\Tetris.gb";
-        //private const string romPath = @"C:\roms\gb\Dr. Mario (World).gb";
-        //private const string romPath = @"C:\roms\gb\hello-brandon.gb";
-        private const string romPath = @"C:\roms\gb\Super Mario Land.gb";
-        //private const string romPath = @"C:\roms\gb\Super Mario Land 2.gb";
-        //private const string romPath = @"D:\GitHub\gbdotnet\gb-test-roms\cpu_instrs\cpu_instrs.gb";
-        private const string logPath = "monogameboy.log";
-        private const bool useBootRom = false;
-        private const bool loggingEnabled = false;
+        private static string romPath;
+        private static string logPath;
+        private static bool useBootRom;
 
         [STAThread]
-        public static void Main()
+        public static void Main(string[] args)
         {
-            config = Configure();
-            using var log = new StreamWriter(logPath);
+            ParseCommandLineArgs(args, out romPath);
+            Configure();
+
+            StreamWriter logWriter = null;
+            bool loggingEnabled = !string.IsNullOrWhiteSpace(logPath);
+            if (loggingEnabled)
+            {
+                logWriter = new StreamWriter(logPath);
+                if (loggingEnabled) Console.SetOut(logWriter);
+            }
+
             try
             {
-                if (loggingEnabled) Console.SetOut(log);
                 var emulator = Boot();
                 using var game = new MonoGameBoy(emulator, romPath, useBootRom, loggingEnabled, config);
                 game.Run();
             }
             finally
             {
-                if (loggingEnabled) Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
+                if (logWriter != null) logWriter.Dispose();
             }
         }
 
-        private static IConfiguration Configure() => new ConfigurationBuilder()
+        private static void ParseCommandLineArgs(string[] args, out string romPath)
+        {
+            if (args.Length == 1)
+            {
+                romPath = args[0];
+            }
+            else
+            {
+                romPath = null;
+                Console.WriteLine("Usage: gbdotnet rom.gb");
+            }
+        }
+
+        private static void Configure()
+        {
+            config = BuildConfiguration();
+            logPath = config.GetSection("log")?.Value;
+            bool.TryParse(config.GetSection("useBootRom")?.Value, out useBootRom);
+        }
+
+        private static IConfiguration BuildConfiguration() => new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: true)
             .Build();
 
