@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using GBDotNet.Core;
+using Microsoft.Extensions.Configuration;
 
 namespace MonoGameBoy
 {
@@ -10,6 +11,8 @@ namespace MonoGameBoy
     /// </summary>
     public static class Program
     {
+        private static IConfiguration config;
+
         //TODO: load from command-line args
         //private const string romPath = @"C:\roms\gb\Tetris.gb";
         //private const string romPath = @"C:\roms\gb\Dr. Mario (World).gb";
@@ -24,12 +27,13 @@ namespace MonoGameBoy
         [STAThread]
         public static void Main()
         {
+            config = Configure();
             using var log = new StreamWriter(logPath);
             try
             {
                 if (loggingEnabled) Console.SetOut(log);
                 var emulator = Boot();
-                using var game = new MonoGameBoy(emulator, romPath, useBootRom, loggingEnabled);
+                using var game = new MonoGameBoy(emulator, romPath, useBootRom, loggingEnabled, config);
                 game.Run();
             }
             finally
@@ -37,6 +41,10 @@ namespace MonoGameBoy
                 if (loggingEnabled) Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
             }
         }
+
+        private static IConfiguration Configure() => new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: true)
+            .Build();
 
         private static Emulator Boot()
         {
