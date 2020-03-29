@@ -21,26 +21,24 @@ namespace GBDotNet.ConsoleApp
 
         public static void Main()
         {
-            using (var log = new StreamWriter(logPath))
+            using var log = new StreamWriter(logPath);
+            var stderr = Console.Error; //capture stderr to log exceptions both to log file and console
+            try
             {
-                var stderr = Console.Error; //capture stderr to log exceptions both to log file and console
-                try
-                {
-                    Console.SetOut(log);
-                    Start(romPath);
-                    //cpu.Breakpoints.Add(0x0223);
-                    Run();
-                }
-                catch (Exception ex)
-                {
-                    var emuEx = new EmulationException($"Error executing instruction at address ${cpu.Registers.LastPC:x4}, see inner exception for details.", ex);
-                    Console.WriteLine(emuEx);
-                    stderr.WriteLine(emuEx);
-                }
-                finally
-                {
-                    Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
-                }
+                Console.SetOut(log);
+                Start(romPath);
+                //cpu.Breakpoints.Add(0x0223);
+                Run();
+            }
+            catch (Exception ex)
+            {
+                var emuEx = new EmulationException($"Error executing instruction at address ${cpu.Registers.LastPC:x4}, see inner exception for details.", ex);
+                Console.WriteLine(emuEx);
+                stderr.WriteLine(emuEx);
+            }
+            finally
+            {
+                Process.Start(new ProcessStartInfo() { FileName = logPath, UseShellExecute = true });
             }
         }
 
