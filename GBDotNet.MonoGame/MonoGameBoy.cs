@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GBDotNet.Core;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,22 +23,25 @@ namespace MonoGameBoy
         private readonly string romPath;
         private string RomName => Path.GetFileName(romPath);
         private readonly bool useBootRom;
-        private static readonly GameBoyColorPalette palette = GameBoyColorPalette.Dmg;
+        private readonly GameBoyColorPalette palette;
         private bool paused = true;
         private DisplayMode currentDisplayMode;
         private readonly bool runInBackground = true;
         private readonly bool loggingEnabled;
+        private readonly IConfiguration config;
         private long frontendFrameCount = 0;
         private double frontendFps = 60;
         private const double targetFrontendFps = -1;
-        private bool runAtMaxSpeed = true;
+        private bool runAtMaxSpeed = false;
 
-        public MonoGameBoy(Emulator emulator, string romPath, bool useBootRom, bool loggingEnabled)
+        public MonoGameBoy(Emulator emulator, string romPath, bool useBootRom, bool loggingEnabled, IConfiguration config)
         {
             this.emulator = emulator;
             this.romPath = romPath;
             this.useBootRom = useBootRom;
             this.loggingEnabled = loggingEnabled;
+            this.config = config;
+            palette = GetColorPalette();
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -257,6 +261,24 @@ namespace MonoGameBoy
             if (loggingEnabled) Console.Clear();
             frontendFrameCount = 0;
             frontendFps = 60;
+        }
+
+        private GameBoyColorPalette GetColorPalette()
+        {
+            try
+            {
+                return new GameBoyColorPalette(new string[]
+                {
+                    config.GetSection("palette:0").Value,
+                    config.GetSection("palette:1").Value,
+                    config.GetSection("palette:2").Value,
+                    config.GetSection("palette:3").Value
+                });
+            }
+            catch
+            {
+                return GameBoyColorPalette.Dmg;
+            }
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using Microsoft.Xna.Framework;
 
 namespace MonoGameBoy
@@ -10,6 +13,11 @@ namespace MonoGameBoy
         public GameBoyColorPalette(params Color[] colors)
         {
             Colors = colors;
+        }
+
+        public GameBoyColorPalette(params string[] hexColors)
+        {
+            Colors = hexColors.Select(c => FromHex(c)).ToList();
         }
 
         public Color this[int i]
@@ -29,5 +37,19 @@ namespace MonoGameBoy
         /// </summary>
         public static GameBoyColorPalette Pocket = new GameBoyColorPalette(new Color(232, 232, 232),
             new Color(160, 160, 160), new Color(88, 88, 88), new Color(16, 16, 16));
+
+        private static Color FromHex(string hexString)
+        {
+            if (hexString.StartsWith("#")) hexString = hexString.Substring(1);
+            if (hexString.Length != 6) throw new ArgumentException("RGB color must be 6 hex digits.", nameof(hexString));
+            uint hex = uint.Parse(hexString, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            return new Color
+            {
+                R = (byte)(hex >> 16),
+                G = (byte)(hex >> 8),
+                B = (byte)hex,
+                A = byte.MaxValue
+            };
+        }
     }
 }
