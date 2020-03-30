@@ -26,6 +26,7 @@ Additional settings can be specified in `appsettings.json`.
 * <kbd>Z</kbd> = B
 * <kbd>Enter</kbd> = Start
 * <kbd>Right Shift</kbd> = Select
+* <kbd>Esc</kbd> = Exit
 
 ### Debug
 
@@ -40,4 +41,4 @@ Additional settings can be specified in `appsettings.json`.
 
 ## [Blargg's test ROMs](https://github.com/retrio/gb-test-roms)
 
-![CPU instructions test ROM results](screenshots/blargg_cpu_instrs.png "CPU instructions test ROM results")
+![cpu_instrs](screenshots/blargg_cpu_instrs.png "cpu_instrs") ![instr_timing](screenshots/blargg_instr_timing.png "instr_timing") ![mem_timing](screenshots/blargg_mem_timing.png "mem_timing") ![halt_bug](screenshots/blargg_halt_bug.png "halt_bug")
