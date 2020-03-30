@@ -2,7 +2,7 @@
   "profiles": {
     "GBDotNet.MonoGame": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\roms\\gb\\Super Mario Land.gb\""
+      "commandLineArgs": "\"C:\\roms\\gb\\Super Mario Land 2.gb\""
     }
   }
 }

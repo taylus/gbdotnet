@@ -283,7 +283,7 @@ namespace MonoGameBoy
 
         private void LogToConsoleAndLogFile(string message)
         {
-            Console.WriteLine(message);
+            if (Console.IsOutputRedirected) Console.WriteLine(message);
             Console.Error.WriteLine(message);
         }
     }
