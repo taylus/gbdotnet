@@ -32,9 +32,9 @@ namespace GBDotNet.Core
         {
             get
             {
-                if (address < RomBankSize) return Data[address];
-                else if (address < RomBankSize * 2) return SelectedRomBank[address - RomBankSize];
-                else if (address >= 0xA000 && address < 0xC000) return isExternalRamEnabled ?  SelectedRamBank[address - 0xA000] : (byte)0xFF;
+                if (address < RomBankSize) return Data[address]; //ROM0
+                else if (address < RomBankSize * 2) return SelectedRomBank[address - RomBankSize]; //ROMX
+                else if (address >= 0xA000 && address < 0xC000) return isExternalRamEnabled ? SelectedRamBank[address - 0xA000] : (byte)0xFF;
                 throw new ArgumentOutOfRangeException("Cartridge address must be between $0000-$7FFF (ROM) or $A000 - $BFFF (RAM)");
             }
             set
@@ -48,7 +48,7 @@ namespace GBDotNet.Core
                 {
                     //select ROM bank's lower 5 bits
                     value = (byte)(value & 0b0001_1111);
-                    if (value == 0) value = 1;  //MBC1 quirk/bug? 0 is treated as 1, making banks $20, $40, and $60 unusable
+                    if (value == 0) value = 1;  //MBC1 quirk/bug: 0 is treated as 1, making banks $20, $40, and $60 unusable
                     selectedRomBankNumber = (byte)((selectedRomBankNumber & 0b0110_0000) + value);
                 }
                 else if (address < 0x6000)
@@ -85,7 +85,7 @@ namespace GBDotNet.Core
         /// <see cref="http://gameboy.mongenel.com/dmg/asmmemmap.html"/>
         public ArraySegment<byte> GetRomBank(int bankNumber)
         {
-            if (bankNumber < NumberOfRomBanks) return new ArraySegment<byte>(Data, offset: bankNumber * RomBankSize, count: RomBankSize); 
+            if (bankNumber < NumberOfRomBanks) return new ArraySegment<byte>(Data, offset: bankNumber * RomBankSize, count: RomBankSize);
             throw new ArgumentException($"Bank number {bankNumber} exceeds number of banks in ROM ({NumberOfRomBanks}).", nameof(bankNumber));
         }
 
