@@ -49,14 +49,14 @@ namespace GBDotNet.Core
                     //select ROM bank's lower 5 bits
                     value = (byte)(value & 0b0001_1111);
                     if (value == 0) value = 1;  //MBC1 quirk/bug? 0 is treated as 1, making banks $20, $40, and $60 unusable
-                    selectedRomBankNumber = (byte)((selectedRomBankNumber & 0x0110_0000) + value);
+                    selectedRomBankNumber = (byte)((selectedRomBankNumber & 0b0110_0000) + value);
                 }
                 else if (address < 0x6000)
                 {
                     if (currentMode == Mode.Rom)
                     {
                         //select ROM bank's upper 2 bits if in ROM mode
-                        selectedRomBankNumber = (byte)((selectedRomBankNumber & 0x0001_1111) + ((value & 0b0011) << 5));
+                        selectedRomBankNumber = (byte)((selectedRomBankNumber & 0b0001_1111) + ((value & 0b0011) << 5));
                     }
                     else if (currentMode == Mode.Ram)
                     {
