@@ -15,7 +15,7 @@ namespace GBDotNet.Core
 
         public Memory(params byte[] bytes)
         {
-            Array.Resize(ref bytes, Size);
+            if (bytes.Length < Size) Array.Resize(ref bytes, Size);
             Data = bytes;
         }
 
